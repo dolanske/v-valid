@@ -1,0 +1,31 @@
+{
+  "name": "@dolanske/validate",
+  "version": "0.0.1",
+  "description": "Simple form validation for vue 3",
+  "main": "index.js",
+  "scripts": {
+    "test": "vitest watch"
+  },
+  "keywords": [
+    "form-validation",
+    "vue3",
+    "form",
+    "validation"
+  ],
+  "author": "dolanske",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^4.8.2",
+    "vitest": "^0.22.1",
+    "vue": "latest"
+  },
+  "dependencies": {
+    "lodash.isempty": "^4.4.0",
+    "lodash.isnil": "^4.0.0",
+    "vue-demi": "^0.13.11"
+  },
+  "peerDependencies": {
+    "@vue/composition-api": "latest",
+    "vue": "latest"
+  }
+}
