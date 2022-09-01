@@ -1,4 +1,4 @@
-import isNil from "lodash.isnil"
+import { isNil } from "lodash"
 
 /**
  * @Rule Input must be equal or greater than the provided amount

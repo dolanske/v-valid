@@ -1,5 +1,4 @@
-import isEmpty from "lodash.isempty"
-import isNil from "lodash.isnil"
+import { isEmpty, isNil } from "lodash"
 
 import type { ValidationRule } from "../types"
 

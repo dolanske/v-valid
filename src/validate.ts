@@ -1,14 +1,6 @@
 import { reactive, watch } from "vue-demi"
-import isEmpty from "lodash.isempty"
-import isNil from "lodash.isnil"
 
-import type {
-  Error,
-  Errors,
-  ValidationRule,
-  Rule,
-  ValidationOptions
-} from "./types"
+import type { Errors, ValidationRule, Rule, ValidationOptions } from "./types"
 
 /**
  *
