@@ -1,3 +1,4 @@
+import { isNil } from "lodash"
 import { emailRegex } from "../regex"
 
 /**
@@ -6,6 +7,8 @@ import { emailRegex } from "../regex"
 
 export const email = {
   _validate(value: string) {
+    if (isNil(value)) return false
+
     return emailRegex.test(value)
   },
   /* c8 ignore next 3 */

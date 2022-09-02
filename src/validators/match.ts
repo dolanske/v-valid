@@ -1,3 +1,4 @@
+import { isNil } from "lodash"
 import type { ValidationRule } from "../types"
 
 /**
@@ -10,6 +11,8 @@ export const match = (regex: RegExp | string): ValidationRule => {
 
   return {
     _validate(value: string): boolean {
+      if (isNil(value)) return false
+
       return r.test(value)
     },
     /* c8 ignore next 3 */
