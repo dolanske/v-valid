@@ -6,6 +6,7 @@ export { useValidation } from "./src/validate"
  */
 export { withMessage } from "./src/helpers/withMessage"
 export { validateIf } from "./src/helpers/validateIf"
+export { defineRule } from "./src/helpers/defineRule"
 
 /**
  * Validators

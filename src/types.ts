@@ -8,7 +8,10 @@ export interface Errors {
   [key: string]: Error
 }
 
-export type Message = ({}: { type?: string; value?: any }) => string
+export type Message = (
+  {}: { type?: string; value?: any },
+  ...args: any[]
+) => string
 
 export interface ValidationRule {
   _validate: (arg: any) => Promise<boolean> | boolean
