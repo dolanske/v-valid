@@ -1,10 +1,12 @@
 import { isEmpty, isNil } from "lodash"
-
 import type { ValidationRule } from "../types"
 
 /**
- * @Rule Input must not be empty, null or undefined
+ * @Rule Input must not be empty, null or undefined.
+ *
+ * If input is number with value 0, it will return true as value was provided
  */
+
 export const required: ValidationRule = {
   _validate(value: any) {
     // If value is missing in general
@@ -22,6 +24,7 @@ export const required: ValidationRule = {
     // For the last check, we look into Arrays, Objects, Maps and Sets
     return !isEmpty(value)
   },
+  /* c8 ignore next 3 */
   _message() {
     return "Value is required"
   }

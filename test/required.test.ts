@@ -1,10 +1,8 @@
 import { test, expect } from "vitest"
-
 import { required } from "../index"
 
-test("required", () => {
+test("[validators] Required", () => {
   // Should fail
-  expect(required._validate()).toBeFalsy()
   expect(required._validate("")).toBeFalsy()
   expect(required._validate({})).toBeFalsy()
   expect(required._validate([])).toBeFalsy()

@@ -1,4 +1,5 @@
 import { reactive, watch } from "vue-demi"
+import { merge } from "lodash"
 
 import type { Errors, ValidationRule, Rule, ValidationOptions } from "./types"
 
@@ -42,7 +43,7 @@ export function useValidation(
   reset()
 
   function _resetErrorObject() {
-    Object.assign(errors, {
+    merge(errors, {
       ...Object.keys(form).reduce(
         (a, v) => ({
           ...a,
@@ -86,7 +87,13 @@ export function useValidation(
             // Is error
             errors[key].type = ruleKey
             errors[key].invalid = true
-            errors[key].errors.add(_message())
+            errors[key].errors.add(
+              // Exposes some information which we can construct better messages to
+              _message({
+                type: ruleKey,
+                value
+              })
+            )
           }
         }
       }

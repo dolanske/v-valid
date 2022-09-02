@@ -8,9 +8,13 @@ export interface Errors {
   [key: string]: Error
 }
 
-export type ValidationRule = {
-  _validate: Function
-  _message: Function
+export type Message = ({}: { type?: string; value?: any }) => string
+
+export interface ValidationRule {
+  _validate: (arg: any) => Promise<boolean> | boolean
+  // These optional destructured parameters serve as a
+  // foundation to better compose error messages
+  _message: Message
 }
 
 export type Rule = {
