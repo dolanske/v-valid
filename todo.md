@@ -1,11 +1,7 @@
 # Todo
 
 - [Types] [] Correctly type all functions
-- [Validators] [] isStr()
-- [Validators] [] type.string etc
 
-- [Validators] [] isUrl()
-- [Validators] [] match() - regex matching
 - [Validators] [] maxValue() - or try to work this into maxLength, with boolean to check if spaces should be included or not (the regex `value.match(/\S/g).length >= min`)
 - [Validators] [] minValue() - or try to work this into minLength - same here
 - [Validators] [] earlist() - date related
@@ -30,4 +26,6 @@
 ## Done
 
 - [Validators] [x] isNum()
+- [Validators] [x] isUrl()
+- [Validators] [x] match() - regex matching
 - [Helpers] [x] withMessage() accept callback function which will expose stuff from useValidation.ts line 92
