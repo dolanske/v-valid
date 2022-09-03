@@ -70,7 +70,7 @@ export function useValidation(
 
     root.pending = true
 
-    return new Promise(async (resolve, reject) => {
+    return new Promise<Errors>(async (resolve, reject) => {
       for (const [key, value] of Object.entries(form)) {
         if (!Reflect.has(rules.value, key)) continue
 
@@ -81,24 +81,22 @@ export function useValidation(
 
           const result = await _validate(value)
 
+          errors[key].type = ruleKey
+
           if (!result) {
             root.anyError = true
-
-            // Is error
-            errors[key].type = ruleKey
             errors[key].invalid = true
-            errors[key].errors.add(
-              // Exposes some information which we can construct better messages to
-              _message(value)
-            )
+            errors[key].errors.add(_message(value))
           }
         }
       }
 
+      // Expose errors object either way
+      // REVIEW: Expand to include more useful information or whatever
       if (root.anyError) {
         reject(errors)
       } else {
-        resolve(true)
+        resolve(errors)
       }
 
       root.pending = false

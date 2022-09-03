@@ -1,4 +1,4 @@
-import { isNumber } from "lodash"
+import { isFunction, isObject, isString } from "lodash"
 import { Message, ValidationRule } from "../types"
 
 /**
@@ -9,15 +9,14 @@ import { Message, ValidationRule } from "../types"
  *
  * @param rule Custom rule method which must return a boolean
  *
- *
- * Simple rule without any parameters
+ * **Simple rule without any parameters**
  * ```ts
  * const rule = defineRule("Number larger than 10", (value) => {
  * return isNumber(value) && value > 10
  * })
  * ```
  *
- * Advanced rule, using multiple parameters
+ * **Advanced rule, using multiple parameters**
  * ```ts
  * const arrLenInBetween = defineRule(
  * (value, min, max) => `Array [`${value.join(', ')}`] length must bet between ${min} and ${max}`,
@@ -28,8 +27,8 @@ import { Message, ValidationRule } from "../types"
 
 export const defineRule = (
   // Message is either a string or a function with injected
-  message: string | ((...args: any[]) => string),
-  rule: (value: any, ...args: any[]) => boolean
+  message: string | Message,
+  rule: (value: any, ...args: any[]) => boolean | Promise<boolean>
 ) => {
   // args are the optional values you can input when creating a rule
   return (...args: any[]): ValidationRule => ({
@@ -43,4 +42,27 @@ export const defineRule = (
       return message(value, ...args)
     }
   })
+}
+
+/**
+ * **Experimental**
+ *
+ * Works exactly the same as defineRule but it is used as an object. When
+ * declared in the ruleset, it does not accept any parameters
+ */
+
+export const defineRuleObj = ({
+  message,
+  rule
+}: {
+  message: string | Message
+  rule: (value: any) => boolean | Promise<boolean>
+}): ValidationRule => {
+  return {
+    _validate: (value) => rule(value),
+    _message: (value) => {
+      if (typeof message === "string") return message
+      return message(value)
+    }
+  }
 }

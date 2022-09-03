@@ -1,7 +1,7 @@
 {
   "name": "@dolanske/validate",
   "version": "0.0.1",
-  "description": "Simple form validation for vue 3",
+  "description": "Model based form validation made for vue 3 project. Inspired by vuelidate with personal take on the API and implementation",
   "main": "index.js",
   "scripts": {
     "test": "vitest watch",
