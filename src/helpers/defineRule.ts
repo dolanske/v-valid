@@ -10,15 +10,22 @@ import { Message, ValidationRule } from "../types"
  * @param rule Custom rule method which must return a boolean
  *
  *
- * Example
+ * Simple rule without any parameters
  * ```ts
  * const rule = defineRule("Number larger than 10", (value) => {
  * return isNumber(value) && value > 10
  * })
  * ```
+ *
+ * Advanced rule, using multiple parameters
+ * ```ts
+ * const arrLenInBetween = defineRule(
+ * (value, min, max) => `Array [`${value.join(', ')}`] length must bet between ${min} and ${max}`,
+ * (value, min, max) => value.length >= min && value.length <= max
+ * )
+ * ```
  */
 
-// TODO: Properly document all possible examples
 export const defineRule = (
   // Message is either a string or a function with injected
   message: string | ((...args: any[]) => string),

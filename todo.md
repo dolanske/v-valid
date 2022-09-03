@@ -1,7 +1,5 @@
 # Todo
 
-- [Types] [] Correctly type all functions
-
 - [Validators] [] maxValue() - or try to work this into maxLength, with boolean to check if spaces should be included or not (the regex `value.match(/\S/g).length >= min`)
 - [Validators] [] minValue() - or try to work this into minLength - same here
 - [Validators] [] earlist() - date related
@@ -18,8 +16,8 @@
 - [Helpers] [] and()
 - [Helpers] [] or()
 
+- [Types] [] Correctly type all functions
 - [Documentation] [] Properly document every single file
-
 - [useValidation] [] Fix coverage
 
 ## Done
