@@ -3,30 +3,55 @@ import { test, expect, describe } from "vitest"
 import { computed, reactive } from "vue-demi"
 import { defineRule, useValidation } from "../index"
 
-// TODO: Test rules with no parameters
+const form = reactive({ one: [], two: [1, 2, 3] })
 
-test("[helpers] defineUrl", () => {
-  const customRule = defineRule(
-    ({}, length) => `Array with at least ${length} length`,
-    (value, length) => {
-      return isArray(value) && value.length >= length
-    }
-  )
+const arrAndMinLen = defineRule(
+  (_, length) => `Array with at least ${length} length`,
+  (value, length) => {
+    return isArray(value) && value.length >= length
+  }
+)
 
-  const form = reactive({ one: [], two: [1, 2, 3] })
-  const rules = computed(() => ({
-    one: {
-      custom: customRule(1)
-    },
-    two: {
-      custom: customRule(2)
-    }
-  }))
+const arrLenInBetween = defineRule(
+  (_, min, max) => `Array length must bet between ${min} and ${max}`,
+  (value, min, max) => value.length >= min && value.length <= max
+)
 
-  const { validate } = useValidation(form, rules)
+const noParamRule = defineRule(
+  "Must not be an array",
+  (value) => !isArray(value)
+)
 
-  validate().catch((e) => {
-    // expect(e.one.errors.size).toBe(1)
-    console.log(e)
+describe("[helpers] defineUrl", () => {
+  test("NO args", () => {
+    const rules = computed(() => ({
+      two: {
+        noParamRule: noParamRule()
+      }
+    }))
+
+    const { validate } = useValidation(form, rules)
+
+    validate().catch((e) => {
+      expect(e.one.invalid).toBeFalsy()
+    })
+  })
+
+  test("WITH args", () => {
+    const rules = computed(() => ({
+      one: {
+        arrAndMinLen: arrAndMinLen(1)
+      },
+      two: {
+        arrLenInBetween: arrLenInBetween(1, 3)
+      }
+    }))
+
+    const { validate } = useValidation(form, rules)
+
+    validate().catch((e) => {
+      expect(e.one.invalid).toBeTruthy()
+      expect(e.two.invalid).toBeFalsy()
+    })
   })
 })

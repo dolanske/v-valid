@@ -89,10 +89,7 @@ export function useValidation(
             errors[key].invalid = true
             errors[key].errors.add(
               // Exposes some information which we can construct better messages to
-              _message({
-                type: ruleKey,
-                value
-              })
+              _message(value)
             )
           }
         }

@@ -17,7 +17,6 @@
 - [Helpers] [] not() inverts the result
 - [Helpers] [] and()
 - [Helpers] [] or()
-- [Helpers] [] custom((value, { options }) => validator)
 
 - [Documentation] [] Properly document every single file
 
@@ -25,6 +24,7 @@
 
 ## Done
 
+- [Helpers] [x] defineRule
 - [Validators] [x] isNum()
 - [Validators] [x] isUrl()
 - [Validators] [x] match() - regex matching

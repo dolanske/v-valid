@@ -4,7 +4,9 @@ import { Message, ValidationRule } from "../types"
 /**
  * Helper used to create custom validation rules
  *
- * @param message Custom message to display in the returned error
+ * @param message Custom message or message callback to display in the returned
+ * error. Message callback exposes the validated value and all rule parameters
+ *
  * @param rule Custom rule method which must return a boolean
  *
  *
@@ -15,9 +17,6 @@ import { Message, ValidationRule } from "../types"
  * })
  * ```
  */
-
-// TODO: if we do not specify any parameters, should it return a function or an
-// object? aka instead of return (): ValidationRule we could do return {}: ValidationRule aleady
 
 // TODO: Properly document all possible examples
 export const defineRule = (
@@ -30,14 +29,11 @@ export const defineRule = (
     // the value from _validate is the actual value we are testing against
     // injected during validation
 
-    _validate: (value) => rule(value, args),
-    _message: (ctx) => {
+    _validate: (value) => rule(value, ...args),
+    _message: (value) => {
       if (typeof message === "string") return message
-
-      // ctx is injected during validation
-
       // ...args are the parameters user inputs when creating the rule
-      return message(ctx, ...args)
+      return message(value, ...args)
     }
   })
 }

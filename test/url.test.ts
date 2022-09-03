@@ -20,7 +20,6 @@ const invalid = [
 describe("[validators] Url", () => {
   test("Valid URLS", () => {
     for (const item of valid) {
-      console.log(item)
       expect(url._validate(item)).toBeTruthy()
     }
   })

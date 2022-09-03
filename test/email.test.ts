@@ -44,7 +44,6 @@ const invalid = [
 test.skip("[validators] Email", () => {
   // Should be valid
   for (const str of valid) {
-    console.log(str)
     expect(email._validate(str)).toBeTruthy()
   }
 

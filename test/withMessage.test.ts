@@ -13,9 +13,10 @@ describe("[helpers] withMessage", () => {
         // use withMessage helper to create custom error message We can either use
         // a string or specify a callback which also exposes some parameters such
         // as type and value (more to come maybe)
-        minLength: withMessage(({ type, value }) => {
-          // This should return 'minLength-2'
-          return `${type}-${value.length}`
+        minLength: withMessage((value) => {
+          // This should return '2'
+          expect(value).toHaveLength(2)
+          return value.length
         }, minLength(3))
       }
     }))
@@ -29,7 +30,7 @@ describe("[helpers] withMessage", () => {
       const errs = Array.from(e.field.errors)
 
       expect(errs).toHaveLength(1)
-      expect(errs[0]).toBe("minLength-2")
+      expect(errs[0]).toBe(2)
     })
   })
 
