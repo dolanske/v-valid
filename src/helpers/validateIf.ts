@@ -7,6 +7,15 @@ import { ValidationRule } from "../types"
  * @param rule Validation rule
  */
 
+/**
+ * TODO This hsould work with
+ * - [] A rule (also helpers like and, or and not)
+ * - [] a ref<boolean>
+ * - [] boolean
+ * - [] Promise<boolean>
+ * - [] () => boolean
+ */
+
 export const validateIf = (
   condition: boolean | (() => boolean),
   rule: ValidationRule

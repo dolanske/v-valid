@@ -8,9 +8,9 @@
 - [Validators] [] Check if there is more detailed regex for validating email
   address
 
-- [Helpers] [] validateIfNot()
-- [Helpers] [] or()
-- [Helpers] [] not() inverts the result
+- [Helpers] [] validateIfNot() REVIEW: is this necessary? could use
+  validateIf(not(...rules))
+
 - [Fix Helpers] [] defineRule does not properly type parameters
 - [Types] [] Correctly type all functions
 - [Documentation] [] Properly document every single file
@@ -32,3 +32,5 @@
 - [Helpers] [x] skip() - when writing large forms, this would allow you to
   quickly skip validation instead of commenting or whatever
 - [Helpers] [x] and()
+- [Helpers] [x] or()
+- [Helpers] [x] not() inverts the result
