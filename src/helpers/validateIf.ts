@@ -16,7 +16,8 @@ export const validateIf = (
   if (shouldValidate) return rule
 
   return {
-    _validate: () => true,
-    _message: () => ""
+    _skip: rule._skip,
+    validate: () => true,
+    label: () => ""
   }
 }

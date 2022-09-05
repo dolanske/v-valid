@@ -1,5 +1,6 @@
 import { isEmpty, isNil } from "lodash"
-import type { ValidationRule } from "../types"
+import { SKIP_PROTO } from "../defaults"
+import type { ValidationRuleObject } from "../types"
 
 /**
  * @Rule Input must not be empty, null or undefined.
@@ -7,8 +8,10 @@ import type { ValidationRule } from "../types"
  * If input is number with value 0, it will return true as value was provided
  */
 
-export const required: ValidationRule = {
-  _validate(value: any) {
+export const required: ValidationRuleObject = {
+  _skip: false,
+  skip: SKIP_PROTO,
+  validate(value: any) {
     // If value is missing in general
     if (isNil(value) || value === "null" || value === "undefined") return false
 
@@ -25,7 +28,7 @@ export const required: ValidationRule = {
     return !isEmpty(value)
   },
   /* c8 ignore next 3 */
-  _message() {
+  label() {
     return "Value is required"
   }
 }

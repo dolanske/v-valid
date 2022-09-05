@@ -1,19 +1,19 @@
 import { test, expect, describe } from "vitest"
-import { withMessage, minLength, useValidation } from "../index"
+import { withLabel, minLength, useValidation } from "../index"
 import { computed, reactive } from "vue-demi"
 
 // Prepare testing form
 const form = reactive({ field: [1, 2] })
 
-describe("[helpers] withMessage", () => {
+describe("[helpers] withLabel", () => {
   test("Test custom message as a callback", () => {
     // Prepare rules
     const rules = computed(() => ({
       field: {
-        // use withMessage helper to create custom error message We can either use
+        // use withLabel helper to create custom error message We can either use
         // a string or specify a callback which also exposes some parameters such
         // as type and value (more to come maybe)
-        minLength: withMessage((value) => {
+        minLength: withLabel((value) => {
           // This should return '2'
           expect(value).toHaveLength(2)
           return value.length
@@ -36,7 +36,7 @@ describe("[helpers] withMessage", () => {
 
   test("Simple custom message as a string", () => {
     const rules = computed(() => ({
-      field: { minLenegth: withMessage("Hello world", minLength(3)) }
+      field: { minLenegth: withLabel("Hello world", minLength(3)) }
     }))
 
     const { validate } = useValidation(form, rules)

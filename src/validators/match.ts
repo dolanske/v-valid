@@ -1,4 +1,5 @@
 import { isNil } from "lodash"
+import { SKIP_PROTO } from "../defaults"
 import type { ValidationRule } from "../types"
 
 /**
@@ -6,18 +7,23 @@ import type { ValidationRule } from "../types"
  * @param regex Regex validation rule
  */
 
-export const match = (regex: RegExp | string): ValidationRule => {
+const match = (regex: RegExp | string): ValidationRule => {
   const r = typeof regex === "string" ? new RegExp(regex) : regex
 
   return {
-    _validate(value: string): boolean {
+    _skip: false,
+    validate(value: string): boolean {
       if (isNil(value)) return false
 
       return r.test(value)
     },
     /* c8 ignore next 3 */
-    _message(): string {
+    label(): string {
       return "Value does not match the provided rule."
     }
   }
 }
+
+match.skip = SKIP_PROTO
+
+export { match }

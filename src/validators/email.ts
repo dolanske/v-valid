@@ -1,18 +1,22 @@
 import { isNil } from "lodash"
+import { SKIP_PROTO } from "../defaults"
 import { emailRegex } from "../regex"
+import { ValidationRuleObject } from "../types"
 
 /**
  * @Rule Input must be a valid email address
  */
 
-export const email = {
-  _validate(value: string) {
+export const email: ValidationRuleObject = {
+  _skip: false,
+  skip: SKIP_PROTO,
+  validate(value: string) {
     if (isNil(value)) return false
 
     return emailRegex.test(value)
   },
   /* c8 ignore next 3 */
-  _message() {
+  label() {
     return "Value must be in a valid email format"
   }
 }

@@ -1,4 +1,5 @@
 import { isMap, isNil, isObject, isSet } from "lodash"
+import { SKIP_PROTO } from "../defaults"
 import type { ValidationRule } from "../types"
 
 /**
@@ -7,9 +8,10 @@ import type { ValidationRule } from "../types"
  * @param max Maximunm allowed length the input must satisfy
  */
 
-export const maxLength = (max: number): ValidationRule => {
+const maxLength = (max: number): ValidationRule => {
   return {
-    _validate(value: any) {
+    _skip: false,
+    validate(value: any) {
       if (isNil(value)) return false
       if (isSet(value) || isMap(value)) return value.size <= max
       if (isObject(value)) {
@@ -19,8 +21,12 @@ export const maxLength = (max: number): ValidationRule => {
       return value?.length ? value.length <= max : false
     },
     /* c8 ignore next 3 */
-    _message() {
+    label() {
       return `Value must be equal or smaller than ${max} characters`
     }
   }
 }
+
+maxLength.skip = SKIP_PROTO
+
+export { maxLength }

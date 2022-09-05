@@ -20,13 +20,13 @@ const invalid = [
 describe("[validators] Url", () => {
   test("Valid URLS", () => {
     for (const item of valid) {
-      expect(url._validate(item)).toBeTruthy()
+      expect(url.validate(item)).toBeTruthy()
     }
   })
 
   test("Invalid URLS", () => {
     for (const item of invalid) {
-      expect(url._validate(item)).toBeFalsy()
+      expect(url.validate(item)).toBeFalsy()
     }
   })
 })

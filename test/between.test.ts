@@ -1,6 +1,6 @@
 import { describe, test, expect } from "vitest"
 import { computed, reactive } from "vue-demi"
-import { useValidation } from "../src/validate"
+import { useValidation } from "../src/core/validate"
 import { between } from "../src/validators/between"
 
 const form = reactive({ num: 10, bad: 20 })

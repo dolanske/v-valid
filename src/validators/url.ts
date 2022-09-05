@@ -1,8 +1,11 @@
 import { isNil } from "lodash"
-import { ValidationRule } from "../types"
+import { SKIP_PROTO } from "../defaults"
+import { ValidationRule, ValidationRuleObject } from "../types"
 
-export const url: ValidationRule = {
-  _validate(value: any) {
+export const url: ValidationRuleObject = {
+  _skip: false,
+  skip: SKIP_PROTO,
+  validate(value: any) {
     if (isNil(value)) return false
 
     try {
@@ -12,7 +15,7 @@ export const url: ValidationRule = {
       return false
     }
   },
-  _message() {
+  label() {
     return "Value must be a valid URL"
   }
 }

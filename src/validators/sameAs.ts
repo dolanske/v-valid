@@ -1,3 +1,4 @@
+import { SKIP_PROTO } from "../defaults"
 import type { ValidationRule } from "../types"
 
 /**
@@ -7,17 +8,19 @@ import type { ValidationRule } from "../types"
  * @param leanient Wether to compare values as == or === (default ===)
  */
 
-export const sameAs = (
-  compared: any,
-  leanient: boolean = false
-): ValidationRule => {
+const sameAs = (compared: any, leanient: boolean = false): ValidationRule => {
   return {
-    _validate(value: any) {
+    _skip: false,
+    validate(value: any) {
       return leanient ? value == compared : value === compared
     },
     /* c8 ignore next 3 */
-    _message() {
+    label() {
       return "Values do not match"
     }
   }
 }
+
+sameAs.skip = SKIP_PROTO
+
+export { sameAs }

@@ -6,30 +6,30 @@ import { defineRule, useValidation, defineRuleObj } from "../index"
 const form = reactive({ one: [], two: [1, 2, 3] })
 
 const arrAndMinLen = defineRule(
-  (_, length) => `Array with at least ${length} length`,
   (value, length) => {
     return isArray(value) && value.length >= length
-  }
+  },
+  (_, length) => `Array with at least ${length} length`
 )
 
 const arrLenInBetween = defineRule(
-  (_, min, max) => `Array length must bet between ${min} and ${max}`,
-  (value, min, max) => value.length >= min && value.length <= max
+  (value, min, max) => value.length >= min && value.length <= max,
+  (_, min, max) => `Array length must bet between ${min} and ${max}`
 )
 
 const noParamRule = defineRule(
-  "Must not be an array",
-  (value) => !isArray(value)
+  (value) => !isArray(value),
+  "Must not be an array"
 )
 
 const asyncRule = defineRule(
-  "This rule should take 1s to validate",
   () =>
     new Promise((resolve) => {
       setTimeout(() => {
         resolve(true)
       }, 500)
-    })
+    }),
+  "This rule should take 1s to validate"
 )
 
 describe("[helpers] defineRule", () => {
@@ -80,14 +80,14 @@ describe("[helpers] defineRule", () => {
       const end = Date.now()
       // If value is larger than 500, we can safeuly assume the validation was
       // performed asynchronously
-      expect(end - start).toBeGreaterThan(500)
+      expect(end - start).toBeGreaterThanOrEqual(500)
     })
   })
 })
 
 const requiredClone = defineRuleObj({
-  message: "Value is required",
-  rule: (value) => !isNil(value)
+  rule: (value) => !isNil(value),
+  message: "The value is required"
 })
 
 describe("[helpers] defineRuleObj", () => {

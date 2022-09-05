@@ -8,13 +8,19 @@ export interface Errors {
   [key: string]: Error
 }
 
-export type Message = (value: any, ...args: any[]) => string
+export type Label = (value: any, ...args: any[]) => string
 
 export interface ValidationRule {
-  _validate: (arg: any) => Promise<boolean> | boolean
+  _skip: boolean
+
+  validate: (arg: any) => Promise<boolean> | boolean
   // These optional destructured parameters serve as a
   // foundation to better compose error messages
-  _message: Message
+  label: Label
+}
+
+export interface ValidationRuleObject extends ValidationRule {
+  skip: () => void
 }
 
 export type Rule = {

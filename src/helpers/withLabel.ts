@@ -1,31 +1,32 @@
 import { isNil } from "lodash"
-import type { ValidationRule, Message } from "../types"
+import type { ValidationRule, Label } from "../types"
 
 /**
  *
  * Helper method which adds custom message to any validation.
  *
  * ```ts
- * minLength: withMessage("Too short!", minLength(10))
+ * minLength: withLabel("Too short!", minLength(10))
  * ```
  *
  * @param message Custom message to display in the returned error
  * @param validator Validation rule
  */
 
-export const withMessage = (
-  message: string | Message,
+export const withLabel = (
+  message: string | Label,
   validator: ValidationRule
 ): ValidationRule => {
-  const { _validate } = validator
+  const { validate } = validator
 
-  if (isNil(_validate)) {
-    throw new Error("[withMessage] Missing validator function")
+  if (isNil(validate)) {
+    throw new Error("[withLabel] Missing validator function")
   }
 
   return {
-    _validate,
-    _message: (args) => {
+    _skip: validator._skip,
+    validate,
+    label: (args) => {
       if (typeof message === "string") return message
       return message(args)
     }

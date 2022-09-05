@@ -44,11 +44,11 @@ const invalid = [
 test.skip("[validators] Email", () => {
   // Should be valid
   for (const str of valid) {
-    expect(email._validate(str)).toBeTruthy()
+    expect(email.validate(str)).toBeTruthy()
   }
 
   // Should be invalid
   for (const str of invalid) {
-    expect(email._validate(str)).toBeFalsy()
+    expect(email.validate(str)).toBeFalsy()
   }
 })

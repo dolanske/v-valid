@@ -1,7 +1,7 @@
 import { reactive, watch } from "vue-demi"
 import { merge } from "lodash"
 
-import type { Errors, ValidationRule, Rule, ValidationOptions } from "./types"
+import type { Errors, ValidationRule, Rule, ValidationOptions } from "../types"
 
 /**
  *
@@ -77,22 +77,25 @@ export function useValidation(
         const itemRules: Rule = rules.value[key]
 
         for (const [ruleKey, ruleData] of Object.entries(itemRules)) {
-          const { _message, _validate }: ValidationRule = ruleData
+          const { label, validate, _skip }: ValidationRule = ruleData
 
-          const result = await _validate(value)
+          if (_skip) {
+            continue
+          }
+
+          const result = await validate(value)
 
           errors[key].type = ruleKey
 
           if (!result) {
             root.anyError = true
             errors[key].invalid = true
-            errors[key].errors.add(_message(value))
+            errors[key].errors.add(label(value))
           }
         }
       }
 
       // Expose errors object either way
-      // REVIEW: Expand to include more useful information or whatever
       if (root.anyError) {
         reject(errors)
       } else {

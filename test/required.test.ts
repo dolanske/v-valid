@@ -3,17 +3,17 @@ import { required } from "../index"
 
 test("[validators] Required", () => {
   // Should fail
-  expect(required._validate("")).toBeFalsy()
-  expect(required._validate({})).toBeFalsy()
-  expect(required._validate([])).toBeFalsy()
-  expect(required._validate(new Set())).toBeFalsy()
-  expect(required._validate(new Map())).toBeFalsy()
+  expect(required.validate("")).toBeFalsy()
+  expect(required.validate({})).toBeFalsy()
+  expect(required.validate([])).toBeFalsy()
+  expect(required.validate(new Set())).toBeFalsy()
+  expect(required.validate(new Map())).toBeFalsy()
 
   // Should pass
-  expect(required._validate("test")).toBeTruthy()
-  expect(required._validate(0)).toBeTruthy()
-  expect(required._validate({ foo: "bar" })).toBeTruthy()
-  expect(required._validate(["test"])).toBeTruthy()
-  expect(required._validate(new Set("test"))).toBeTruthy()
-  expect(required._validate(new Map([["foo", "bar"]]))).toBeTruthy()
+  expect(required.validate("test")).toBeTruthy()
+  expect(required.validate(0)).toBeTruthy()
+  expect(required.validate({ foo: "bar" })).toBeTruthy()
+  expect(required.validate(["test"])).toBeTruthy()
+  expect(required.validate(new Set("test"))).toBeTruthy()
+  expect(required.validate(new Map([["foo", "bar"]]))).toBeTruthy()
 })

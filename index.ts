@@ -1,12 +1,13 @@
 // Main Export
-export { useValidation } from "./src/validate"
+export { useValidation } from "./src/core/validate"
 
 /**
  * Helpers
  */
-export { withMessage } from "./src/helpers/withMessage"
+export { withLabel } from "./src/helpers/withLabel"
 export { validateIf } from "./src/helpers/validateIf"
 export { defineRule, defineRuleObj } from "./src/helpers/defineRule"
+export { and } from "./src/helpers/and"
 
 /**
  * Validators

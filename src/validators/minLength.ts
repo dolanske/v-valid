@@ -1,4 +1,5 @@
 import { isMap, isNil, isObject, isSet } from "lodash"
+import { SKIP_PROTO } from "../defaults"
 import type { ValidationRule } from "../types"
 
 /**
@@ -6,9 +7,10 @@ import type { ValidationRule } from "../types"
  *
  * @param min Minimum allowed length the input must satisfy
  */
-export const minLength = (min: number): ValidationRule => {
+const minLength = (min: number) => {
   return {
-    _validate(value: string | Set<any> | Map<any, any> | any[] | object) {
+    _skip: false,
+    validate(value: string | Set<any> | Map<any, any> | any[] | object) {
       if (isNil(value)) return false
       if (isSet(value) || isMap(value)) return value.size >= min
       if (isObject(value)) {
@@ -18,8 +20,12 @@ export const minLength = (min: number): ValidationRule => {
       return value?.length ? value.length >= min : false
     },
     /* c8 ignore next 3 */
-    _message() {
+    label() {
       return `Value must be at least ${min} characters long`
     }
-  }
+  } as ValidationRule
 }
+
+minLength.skip = SKIP_PROTO
+
+export { minLength }

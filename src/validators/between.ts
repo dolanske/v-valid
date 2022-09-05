@@ -1,4 +1,5 @@
 import { isNil } from "lodash"
+import { SKIP_PROTO } from "../defaults"
 import { type } from "./type"
 
 /**
@@ -8,11 +9,12 @@ import { type } from "./type"
  * @param max Maximum value
  */
 
-export const between = (min: number | Date, max: number | Date) => ({
-  _validate(value: any) {
+const between = (min: number | Date, max: number | Date) => ({
+  _skip: false,
+  validate(value: any) {
     if (isNil(value)) return false
 
-    if (type.date._validate(value)) {
+    if (type.date.validate(value)) {
       min = min instanceof Date ? min.getTime() : new Date(min).getTime()
       max = max instanceof Date ? max.getTime() : new Date(max).getTime()
       value =
@@ -21,5 +23,9 @@ export const between = (min: number | Date, max: number | Date) => ({
 
     return value >= min && value <= max
   },
-  _message: () => `Value must be between ${min} and ${max}`
+  label: () => `Value must be between ${min} and ${max}`
 })
+
+between.skip = SKIP_PROTO
+
+export { between }

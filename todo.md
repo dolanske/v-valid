@@ -4,17 +4,14 @@
 - [Validators] [] minValue() - or try to work this into minLength - same here
 - [Validators] [] earlist() - date related
 - [Validators] [] latest() - date related
-
 - [Validators] [] isSpecialChar() - is value special character
 - [Validators] [] Check if there is more detailed regex for validating email
   address
 
 - [Helpers] [] validateIfNot()
-- [Helpers] [] and()
 - [Helpers] [] or()
 - [Helpers] [] not() inverts the result
-- [FIX Helpers] [] defineRule does not properly type parameters
-
+- [Fix Helpers] [] defineRule does not properly type parameters
 - [Types] [] Correctly type all functions
 - [Documentation] [] Properly document every single file
 - [useValidation] [] Fix coverage
@@ -30,4 +27,8 @@
 - [Validators] [x] isUrl()
 - [Validators] [x] between() - number / date
 - [Validators] [x] match() - regex matching
-- [Helpers] [x] withMessage() accept callback function which will expose stuff from useValidation.ts line 92
+- [Helpers] [x] withLabel() accept callback function which will expose stuff
+  from useValidation.ts line 92
+- [Helpers] [x] skip() - when writing large forms, this would allow you to
+  quickly skip validation instead of commenting or whatever
+- [Helpers] [x] and()
