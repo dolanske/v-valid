@@ -1,5 +1,5 @@
 import { isNil } from "lodash"
-import { SKIP_PROTO } from "../defaults"
+import { SKIP_PROTO } from "../shared"
 import { type } from "./type"
 
 /**

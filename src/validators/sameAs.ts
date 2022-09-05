@@ -1,4 +1,4 @@
-import { SKIP_PROTO } from "../defaults"
+import { SKIP_PROTO } from "../shared"
 import type { ValidationRule } from "../types"
 
 /**

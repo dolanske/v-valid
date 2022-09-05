@@ -1,28 +1,15 @@
 import { ValidationRule } from "../types"
+import { validateEntries } from "../shared"
 
+/**
+ * @rule Value must pass every provided check
+ * @param rules Single or multiple validation rules
+ */
 export const and = (...rules: ValidationRule[]): ValidationRule => {
   return {
     // Figure out how to add these
     _skip: false,
-    validate(value: any) {
-      return new Promise<boolean>(async (resolve) => {
-        const results: boolean[] = []
-
-        for (const rule of rules) {
-          if (!rule.validate) {
-            // If anything is missing, we can just break out of validating and
-            resolve(false)
-            break
-          }
-
-          const result = await rule.validate(value)
-          results.push(result)
-        }
-
-        // We resolve either way, but its either true or false
-        resolve(results.every((result) => result))
-      })
-    },
+    validate: (value: any) => validateEntries(value, rules, "every"),
     label() {
       return "Value did not pass all the required checks"
     }

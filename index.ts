@@ -8,6 +8,8 @@ export { withLabel } from "./src/helpers/withLabel"
 export { validateIf } from "./src/helpers/validateIf"
 export { defineRule, defineRuleObj } from "./src/helpers/defineRule"
 export { and } from "./src/helpers/and"
+export { or } from "./src/helpers/or"
+export { not } from "./src/helpers/not"
 
 /**
  * Validators

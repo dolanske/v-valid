@@ -8,7 +8,7 @@ import {
   isSet,
   isString
 } from "lodash"
-import { SKIP_PROTO } from "../defaults"
+import { SKIP_PROTO } from "../shared"
 import { ValidationRule, ValidationRuleObject } from "../types"
 
 interface Type {
