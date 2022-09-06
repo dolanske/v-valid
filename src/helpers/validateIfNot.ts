@@ -4,31 +4,31 @@ import { isRef, Ref } from "vue-demi"
 import { SKIP_PROTO } from "../shared"
 
 /**
- * @Rule Perform validation if provided condition is met
+ * @Rule Perform validation if provided condition is not met
  * @param condition Boolean or function returning boolean
  * @param rule Validation rule
  */
 
-export const validateIf = (
+export const validateIfNot = (
   condition: boolean | (() => boolean) | Ref<boolean> | Promise<boolean>,
   rule: ValidationRule
 ): ValidationRule | Promise<ValidationRule> => {
   // Boolean
   if (isBoolean(condition)) {
-    return condition ? rule : SKIP_PROTO()
+    return condition ? SKIP_PROTO() : rule
   }
 
   // ref
   if (isRef(condition)) {
-    return condition.value ? rule : SKIP_PROTO()
+    return condition.value ? SKIP_PROTO() : rule
   }
 
   // Function returning boolean
   if (isFunction(condition)) {
-    return condition() ? rule : SKIP_PROTO()
+    return condition() ? SKIP_PROTO() : rule
   }
 
   return condition.then((result) => {
-    return result ? rule : SKIP_PROTO()
+    return result ? SKIP_PROTO() : rule
   })
 }

@@ -1,7 +1,9 @@
 import { test, expect } from "vitest"
 import { validateIf, minLength, useValidation, maxLength } from "../index"
-import { computed, reactive } from "vue-demi"
+import { computed, reactive, ref } from "vue-demi"
 import { isArray } from "lodash"
+
+const shouldValidate = ref(false)
 
 // Prepare testing form
 const form = reactive({ field: [1, 2] })

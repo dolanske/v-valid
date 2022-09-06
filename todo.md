@@ -11,6 +11,16 @@
 - [Helpers] [] validateIfNot() REVIEW: is this necessary? could use
   validateIf(not(...rules))
 
+- [Helpers] do() / test() should be able to perform validation outside of the scope, essentially as shortening `method(params).validate(value)`
+
+```ts
+
+if (do(maxLength(3),[1,2,3,4])) {
+
+}
+
+```
+
 - [Fix Helpers] [] defineRule does not properly type parameters
 - [Types] [] Correctly type all functions
 - [Documentation] [] Properly document every single file
