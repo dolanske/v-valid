@@ -7,19 +7,10 @@
 - [Validators] [] isSpecialChar() - is value special character
 - [Validators] [] Check if there is more detailed regex for validating email
   address
+- [Validators] [] length
 
-- [Helpers] [] validateIfNot() REVIEW: is this necessary? could use
-  validateIf(not(...rules))
-
-- [Helpers] do() / test() should be able to perform validation outside of the scope, essentially as shortening `method(params).validate(value)`
-
-```ts
-
-if (do(maxLength(3),[1,2,3,4])) {
-
-}
-
-```
+- [Helpers] do() / test() should be able to perform validation outside of the
+  scope, essentially as shortening `method(params).validate(value)`
 
 - [Fix Helpers] [] defineRule does not properly type parameters
 - [Types] [] Correctly type all functions
@@ -44,3 +35,5 @@ if (do(maxLength(3),[1,2,3,4])) {
 - [Helpers] [x] and()
 - [Helpers] [x] or()
 - [Helpers] [x] not() inverts the result
+- [Helpers] [x] validateIfNot() REVIEW: is this necessary? could use
+  validateIf(not(...rules))

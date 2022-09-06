@@ -3,12 +3,12 @@ import { validateIf, minLength, useValidation, maxLength } from "../index"
 import { computed, reactive, ref } from "vue-demi"
 import { isArray } from "lodash"
 
-const shouldValidate = ref(false)
-
 // Prepare testing form
 const form = reactive({ field: [1, 2] })
 
-test("[helpers] validateIf", () => {
+const testRef = ref(true)
+
+test("[Helpers] validateIf", () => {
   const rules = computed(() => ({
     field: {
       // If condition is met (in this example it is); the condition should
@@ -28,6 +28,7 @@ test("[helpers] validateIf", () => {
   validate().catch((e) => {
     // For simplicity, we just check if the errors for field is length 1, which
     // if the condition failed, should indeed be 1
-    expect(Array.from(e.field.errors)).toHaveLength(2)
+    expect(e.field.errors.minLength).toBeTruthy()
+    expect(e.field.errors.maxLength).toBeTruthy()
   })
 })

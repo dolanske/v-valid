@@ -6,10 +6,12 @@ export { useValidation } from "./src/core/validate"
  */
 export { withLabel } from "./src/helpers/withLabel"
 export { validateIf } from "./src/helpers/validateIf"
+export { validateIfNot } from "./src/helpers/validateIfNot"
 export { defineRule, defineRuleObj } from "./src/helpers/defineRule"
 export { and } from "./src/helpers/and"
 export { or } from "./src/helpers/or"
 export { not } from "./src/helpers/not"
+export { test } from "./src/helpers/test"
 
 /**
  * Validators

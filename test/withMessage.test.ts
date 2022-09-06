@@ -27,22 +27,19 @@ describe("[helpers] withLabel", () => {
     validate().catch((e) => {
       // Only look for errors
       // Errors are a Set, so first turn it into an array and get the first one
-      const errs = Array.from(e.field.errors)
-
-      expect(errs).toHaveLength(1)
-      expect(errs[0]).toBe(2)
+      expect(e.field.errors.minLength).toBe(2)
     })
   })
 
   test("Simple custom message as a string", () => {
     const rules = computed(() => ({
-      field: { minLenegth: withLabel("Hello world", minLength(3)) }
+      field: { minLength: withLabel("Hello world", minLength(3)) }
     }))
 
     const { validate } = useValidation(form, rules)
 
     validate().catch((e) => {
-      expect(Array.from(e.field.errors)[0]).toBe("Hello world")
+      expect(e.field.errors.minLength).toBe("Hello world")
     })
   })
 })

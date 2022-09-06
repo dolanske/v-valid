@@ -48,9 +48,10 @@ export function useValidation(
         (a, v) => ({
           ...a,
           [v]: {
-            type: null,
+            id: null,
+            value: null,
             invalid: false,
-            errors: new Set()
+            errors: {}
           }
         }),
         {}
@@ -83,14 +84,15 @@ export function useValidation(
             continue
           }
 
-          const result = await validate(value)
+          const passed = await validate(value)
 
-          errors[key].type = ruleKey
+          errors[key].id = key
+          errors[key].value = value
 
-          if (!result) {
+          if (!passed) {
             root.anyError = true
             errors[key].invalid = true
-            errors[key].errors.add(label(value))
+            errors[key].errors[ruleKey] = label(value)
           }
         }
       }

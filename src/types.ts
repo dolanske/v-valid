@@ -1,7 +1,9 @@
 export type Error = {
-  type: string | null
+  id: string | null
+  value: any
   invalid: boolean
-  errors: Set<string>
+  // errors: Map<string, string>
+  errors: { [key: string]: string }
 }
 
 export interface Errors {
