@@ -1,6 +1,6 @@
-# 🧾 Validate
+# Validate forms
 
-You know what they say, you can not trust a thief. You know who you can trust even less? That's right, the u s e r 😤. Therefore we need to strictly watch their every step and every action. Especially when we ask THEM (dear god) to input something in a form and send it to us (YIKES).
+You know what they say, you can not trust a thief or a murderer. You know who you can trust even less? That's right, the u s e r 😤. Therefore we need to strictly watch their every step and every action. Especially when we ask THEM (dear god) to input something in a form and send it to us (YIKES).
 
 ## Example + Setup
 
