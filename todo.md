@@ -24,9 +24,10 @@
 
 - [Fix Helpers] [] defineRule does not properly type parameters
 - [Types] [] Correctly type all functions
-- [Documentation] [] Properly document every single file
+- [Documentation] [x] Properly document every single file
 - [useValidation] [] Fix coverage
 - [Types] [] Allow passing any validator value as a ref (use unref())
+- [Core] [] Validate nested params? ()
 
 ## Done
 

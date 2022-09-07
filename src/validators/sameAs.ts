@@ -1,4 +1,4 @@
-import { isRef } from "vue-demi"
+import { unref } from "vue-demi"
 import { SKIP_PROTO } from "../shared"
 import type { ValidationRule } from "../types"
 
@@ -13,10 +13,9 @@ const sameAs = (compared: any, lenient: boolean = false): ValidationRule => {
   return {
     _skip: false,
     validate(value: any) {
-      if (isRef(value)) value = value.value
-      if (isRef(compared)) compared = compared.value
-
-      return lenient ? value == compared : value === compared
+      return lenient
+        ? unref(value) == unref(compared)
+        : unref(value) === unref(compared)
     },
     /* c8 ignore next 3 */
     label() {
