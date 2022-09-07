@@ -1,26 +1,37 @@
 # Todo
 
-- [Validators] [] maxValue() - or try to work this into maxLength, with boolean to check if spaces should be included or not (the regex `value.match(/\S/g).length >= min`)
-- [Validators] [] minValue() - or try to work this into minLength - same here
-- [Validators] [] earlist() - date related
-- [Validators] [] latest() - date related
-- [Validators] [] isSpecialChar() - is value special character
+- [Plugins] string
+
+  - [Validator] minLenWithoutSpace()
+  - [Validator] maxLenWithoutSpace()
+  - [Validator] hasSpecialChars()
+  - [Validator] search([...words] | regex)
+  - [Validator] passwordStrength(find a good regex, optional regex)
+  - [Validator] mustContain
+
+- [Plugins] date
+  - [Validator] before
+  - [Validator] after
+
+## 1.0.0
+
 - [Validators] [] Check if there is more detailed regex for validating email
   address
-- [Validators] [] length
+- [Validators] [] minValue `<number | date>`
+- [Validators] [] maxValue `<number | date>`
 
-- [Helpers] do() / test() should be able to perform validation outside of the
-  scope, essentially as shortening `method(params).validate(value)`
+- [Core] Pass parameters into `validate(...args)` to only validate part of the form
 
 - [Fix Helpers] [] defineRule does not properly type parameters
 - [Types] [] Correctly type all functions
 - [Documentation] [] Properly document every single file
 - [useValidation] [] Fix coverage
-
-- [CodeClymate] Check if all validators can be rewritten using defineRule
+- [Types] [] Allow passing any validator value as a ref (use unref())
 
 ## Done
 
+- [Helpers] [x] do() / test() should be able to perform validation outside of the
+  scope, essentially as shortening `method(params).validate(value)`
 - [Helpers] [x] async() - Implemented in defineRule
 - [Helpers] [x] validateIf()
 - [Helpers] [x] defineRule
@@ -35,5 +46,5 @@
 - [Helpers] [x] and()
 - [Helpers] [x] or()
 - [Helpers] [x] not() inverts the result
-- [Helpers] [x] validateIfNot() REVIEW: is this necessary? could use
+- [Helpers] [x] validateIfNot()
   validateIf(not(...rules))

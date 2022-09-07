@@ -87,7 +87,7 @@ describe("[helpers] defineRule", () => {
 
 const requiredClone = defineRuleObj({
   rule: (value) => !isNil(value),
-  message: "The value is required"
+  label: "The value is required"
 })
 
 describe("[helpers] defineRuleObj", () => {

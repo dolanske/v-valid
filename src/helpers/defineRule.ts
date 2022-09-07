@@ -7,7 +7,7 @@ import { Label, ValidationRule } from "../types"
  * Helper used to create custom validation rules
  *
  * @param rule Custom rule method which must return a boolean
- * @param message Custom message or message callback to display in the returned
+ * @param label Custom message or message callback to display in the returned
  * error. Label callback exposes the validated value and all rule parameters
  *
  * **Simple rule without any parameters**
@@ -29,9 +29,9 @@ import { Label, ValidationRule } from "../types"
 const DEFAULTlabel = "Value did not pass the validation rule"
 
 export const defineRule = (
-  // Label is either a string or a function with injected
   rule: (value: any, ...args: any[]) => boolean | Promise<boolean>,
-  message: string | Label
+  // Label is either a string or a function with injected value and parameters
+  label: string | Label
 ) => {
   // args are the optional values you can input when creating a rule
   return (...args: any[]): ValidationRule => ({
@@ -40,11 +40,11 @@ export const defineRule = (
     _skip: false,
     validate: (value) => rule(value, ...args),
     label: (value) => {
-      if (isNil(message)) return DEFAULTlabel
+      if (isNil(label)) return DEFAULTlabel
 
-      if (typeof message === "string") return message
+      if (typeof label === "string") return label
       // ...args are the parameters user inputs when creating the rule
-      return message(value, ...args)
+      return label(value, ...args)
     }
   })
 }
@@ -58,18 +58,18 @@ export const defineRule = (
 
 export const defineRuleObj = ({
   rule,
-  message
+  label
 }: {
   rule: (value: any) => boolean | Promise<boolean>
-  message?: string | Label
+  label?: string | Label
 }): ValidationRule => {
   return {
     _skip: false,
     validate: (value) => rule(value),
     label: (value) => {
-      if (isNil(message)) return DEFAULTlabel
-      if (typeof message === "string") return message
-      return message(value)
+      if (isNil(label)) return DEFAULTlabel
+      if (typeof label === "string") return label
+      return label(value)
     }
   }
 }

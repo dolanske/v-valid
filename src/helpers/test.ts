@@ -15,7 +15,7 @@ import { ValidationRule } from "../types"
 
 export const test = (
   rule: ValidationRule,
-  value: unknown
+  value: any
 ): Promise<boolean> | boolean => {
   const result = rule.validate(value)
 

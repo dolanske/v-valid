@@ -1,4 +1,4 @@
-import { test, expect } from "vitest"
+import { test, expect, describe } from "vitest"
 import { email } from "../index"
 
 const valid = [
@@ -41,14 +41,18 @@ const invalid = [
   'this is"really"notallowed@example.com'
 ]
 
-test.skip("[validators] Email", () => {
-  // Should be valid
-  for (const str of valid) {
-    expect(email.validate(str)).toBeTruthy()
-  }
+describe("[Validators] Email", () => {
+  test.skip("Valid emails", () => {
+    for (const str of valid) {
+      console.log("Valid", str)
+      expect(email.validate(str)).toBeTruthy()
+    }
+  })
 
-  // Should be invalid
-  for (const str of invalid) {
-    expect(email.validate(str)).toBeFalsy()
-  }
+  test.skip("Invalid emails", () => {
+    for (const str of invalid) {
+      console.log("invalid", str)
+      expect(email.validate(str)).toBeFalsy()
+    }
+  })
 })

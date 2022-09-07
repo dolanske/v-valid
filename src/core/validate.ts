@@ -112,6 +112,6 @@ export function useValidation(
     errors,
     reset,
     validate,
-    status: root
+    state: root
   }
 }

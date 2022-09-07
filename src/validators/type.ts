@@ -9,7 +9,7 @@ import {
   isString
 } from "lodash"
 import { SKIP_PROTO } from "../shared"
-import { ValidationRule, ValidationRuleObject } from "../types"
+import { ValidationRuleObject } from "../types"
 
 interface Type {
   str: ValidationRuleObject
@@ -19,6 +19,7 @@ interface Type {
   set: ValidationRuleObject
   map: ValidationRuleObject
   date: ValidationRuleObject
+  symbol: ValidationRuleObject
 }
 
 export const type: Type = {
@@ -119,5 +120,19 @@ export const type: Type = {
       return isDate(d)
     },
     label: ({ value }) => `Value <${typeof value}> must be a valid Date object`
+  },
+  symbol: {
+    /**
+     * @Rule Checkes wether value is a Symbol
+     * @param value Input value
+     */
+    _skip: false,
+    skip: SKIP_PROTO,
+    validate: (value: any) => {
+      if (isNil(value)) return false
+
+      return typeof value === "symbol"
+    },
+    label: ({ value }) => `Value <${typeof value}> must be a Symbol`
   }
 }
