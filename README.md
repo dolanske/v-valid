@@ -1,6 +1,6 @@
-# Validate
+# 🧾 Validate
 
-You know what they say, you can not trust a thief. You know who you can trust even less? That's right, the user of your page. Therefore we need to strictly watch their every step and every action. Especially when we ask THEM (dear god) to input something in a form and send it to us (YIKES).
+You know what they say, you can not trust a thief. You know who you can trust even less? That's right, the u s e r 😤. Therefore we need to strictly watch their every step and every action. Especially when we ask THEM (dear god) to input something in a form and send it to us (YIKES).
 
 ## Example + Setup
 
@@ -69,7 +69,8 @@ You know what they say, you can not trust a thief. You know who you can trust ev
 
      if (errors) {
        // Handle errors or reset form
-       // Resetting form clears all errors though, so it is recommended to display them in some manner and reset them when user begins using the form again
+       // Resetting form clears all errors though, so it is recommended to display
+       // them in some manner and reset them when user begins using the form again
 
        reset()
      }
@@ -344,7 +345,8 @@ const arrAndMinLen = defineRule(
   (_, length) => `Array with at least ${length} length`
 )
 
-// Asynchronous rule, the main usecase here is validating login passwords or other API related things
+// Asynchronous rule, the main usecase here is validating
+// login passwords or other API related things
 const checkPassword = defineRule(
   (password) =>
     new Promise((resolve) => {
@@ -370,6 +372,7 @@ const result = test(minLength(5), [1, 2, 3]) // False
 const result = test(maxLength(5), [1, 2, 3]) // True
 const result = test(type.symbol, Symbol()) // True
 
-// with `and`, `not` and `or` or any async custom validators we have to acustom for the returned promise
+// with `and`, `not` and `or` or any async
+// custom validators we have to acustom for the returned promise
 const result = await test(or(type.str, type.num), "Hello World") // True
 ```
