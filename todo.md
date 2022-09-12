@@ -22,6 +22,7 @@
 - [Types] [] Correctly type all functions
 - [useValidation] [] Fix coverage
 - [Types] [] Allow passing any validator value as a ref (use unref())
+- [Core] [] Validate nested params? ()
 
 ## Done
 

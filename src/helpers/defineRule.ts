@@ -34,7 +34,7 @@ export const defineRule = (
   label: string | Label
 ) => {
   // args are the optional values you can input when creating a rule
-  return (...args: any[]): ValidationRule => ({
+  return (...args: unknown[]): ValidationRule => ({
     // the value from validate is the actual value we are testing against
     // injected during validation
     _skip: false,
