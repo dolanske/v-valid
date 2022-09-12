@@ -96,6 +96,10 @@ Returns
 - `errors` an object which contains all form fields and their status
 - `state` an object which includes state of the entire form
 
+### Help needed
+
+After writing all of this and spending tens of hours on this project I realized that there is no support for forms with nested fields etc. And honestly at the moment I don't even know how I'd implement it. Any feedback / help / PRs are very helpful. I am still learning :)
+
 ---
 
 ## Validators

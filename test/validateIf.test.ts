@@ -23,12 +23,13 @@ test("[Helpers] validateIf", () => {
     }
   }))
 
-  const { validate } = useValidation(form, rules)
+  const { validate, state } = useValidation(form, rules)
 
-  validate().catch((e) => {
+  validate("minLength").catch((e) => {
     // For simplicity, we just check if the errors for field is length 1, which
     // if the condition failed, should indeed be 1
     expect(e.field.errors.minLength).toBeTruthy()
-    expect(e.field.errors.maxLength).toBeTruthy()
+    // expect(e.field.errors.maxLength).toBeTruthy()
+    expect(e.field.errors.maxLength).toBeFalsy()
   })
 })

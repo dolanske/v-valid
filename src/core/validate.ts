@@ -16,8 +16,12 @@ export function useValidation(
   rules: any,
   { proactive = false, autoclear = false }: ValidationOptions = {}
 ) {
-  const errors = reactive<Errors>({})
-  const root = reactive({ anyError: false, pending: false })
+  // const errors = reactive<Errors>({})
+  const root = reactive<{
+    anyError: boolean
+    pending: boolean
+    errors: Errors
+  }>({ anyError: false, pending: false, errors: {} })
 
   if (autoclear) {
     watch(
@@ -43,7 +47,7 @@ export function useValidation(
   reset()
 
   function _resetErrorObject() {
-    merge(errors, {
+    merge(root.errors, {
       ...Object.keys(form).reduce(
         (a, v) => ({
           ...a,
@@ -66,7 +70,7 @@ export function useValidation(
     _resetErrorObject()
   }
 
-  async function validate() {
+  async function validate(...validateOnly: string[]) {
     reset()
 
     root.pending = true
@@ -78,6 +82,10 @@ export function useValidation(
         const itemRules: Rule = rules.value[key]
 
         for (const [ruleKey, ruleData] of Object.entries(itemRules)) {
+          // In case we want to validate only certain fields
+          if (validateOnly.length > 0 && !validateOnly.includes(ruleKey))
+            continue
+
           const { label, validate, _skip }: ValidationRule = ruleData
 
           if (_skip) {
@@ -86,22 +94,22 @@ export function useValidation(
 
           const passed = await validate(value)
 
-          errors[key].id = key
-          errors[key].value = value
+          root.errors[key].id = key
+          root.errors[key].value = value
 
           if (!passed) {
             root.anyError = true
-            errors[key].invalid = true
-            errors[key].errors[ruleKey] = label(value)
+            root.errors[key].invalid = true
+            root.errors[key].errors[ruleKey] = label(value)
           }
         }
       }
 
       // Expose errors object either way
       if (root.anyError) {
-        reject(errors)
+        reject(root.errors)
       } else {
-        resolve(errors)
+        resolve(root.errors)
       }
 
       root.pending = false
@@ -109,7 +117,7 @@ export function useValidation(
   }
 
   return {
-    errors,
+    errors: root.errors,
     reset,
     validate,
     state: root

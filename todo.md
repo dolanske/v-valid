@@ -15,21 +15,19 @@
 
 ## 1.0.0
 
-- [Validators] [] Check if there is more detailed regex for validating email
-  address
 - [Validators] [] minValue `<number | date>`
 - [Validators] [] maxValue `<number | date>`
 
-- [Core] Pass parameters into `validate(...args)` to only validate part of the form
-
 - [Fix Helpers] [] defineRule does not properly type parameters
 - [Types] [] Correctly type all functions
-- [Documentation] [] Properly document every single file
 - [useValidation] [] Fix coverage
 - [Types] [] Allow passing any validator value as a ref (use unref())
 
 ## Done
 
+- [Validators] [x] Check if there is more detailed regex for validating email address
+- [Core] [x] Pass parameters into `validate(...args)` to only validate part of the form
+- [Core] [x] Merge errors into state
 - [Helpers] [x] do() / test() should be able to perform validation outside of the
   scope, essentially as shortening `method(params).validate(value)`
 - [Helpers] [x] async() - Implemented in defineRule
