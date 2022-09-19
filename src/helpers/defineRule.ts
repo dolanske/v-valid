@@ -26,21 +26,28 @@ import { Label, ValidationRule } from "../types"
  * ```
  */
 
-const DEFAULTlabel = "Value did not pass the validation rule"
+const DEFAULT_LABEL = "Value did not pass the validation rule"
 
-export const defineRule = (
-  rule: (value: any, ...args: any[]) => boolean | Promise<boolean>,
-  // Label is either a string or a function with injected value and parameters
-  label: string | Label
-) => {
+export type DefineRulefn = (
+  value: any,
+  ...args: any[]
+) => boolean | Promise<boolean>
+export type DefineRuleLabel = string | Label
+
+type DefineRuleObject = {
+  rule: DefineRulefn
+  label?: DefineRuleLabel
+}
+
+export const defineRule = <T>(rule: DefineRulefn, label?: DefineRuleLabel) => {
   // args are the optional values you can input when creating a rule
-  return (...args: unknown[]): ValidationRule => ({
+  return (...args: T[]): ValidationRule => ({
     // the value from validate is the actual value we are testing against
     // injected during validation
     _skip: false,
     validate: (value) => rule(value, ...args),
     label: (value) => {
-      if (isNil(label)) return DEFAULTlabel
+      if (isNil(label)) return DEFAULT_LABEL
 
       if (typeof label === "string") return label
       // ...args are the parameters user inputs when creating the rule
@@ -60,14 +67,14 @@ export const defineRuleObj = ({
   rule,
   label
 }: {
-  rule: (value: any) => boolean | Promise<boolean>
-  label?: string | Label
+  rule: DefineRulefn
+  label?: DefineRuleLabel
 }): ValidationRule => {
   return {
     _skip: false,
     validate: (value) => rule(value),
     label: (value) => {
-      if (isNil(label)) return DEFAULTlabel
+      if (isNil(label)) return DEFAULT_LABEL
       if (typeof label === "string") return label
       return label(value)
     }

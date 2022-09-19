@@ -1,4 +1,5 @@
 import { isNil } from "lodash"
+import { Ref, unref } from "vue-demi"
 import { SKIP_PROTO } from "../shared"
 import { type } from "./type"
 
@@ -9,10 +10,16 @@ import { type } from "./type"
  * @param max Maximum value
  */
 
-const between = (min: number | Date, max: number | Date) => ({
+const between = (
+  min: number | Date | Ref<number | Date>,
+  max: number | Date | Ref<number | Date>
+) => ({
   _skip: false,
   validate(value: any) {
     if (isNil(value)) return false
+
+    min = unref(min)
+    max = unref(max)
 
     if (type.date.validate(value)) {
       min = min instanceof Date ? min.getTime() : new Date(min).getTime()

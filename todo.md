@@ -18,10 +18,8 @@
 - [Validators] [] minValue `<number | date>`
 - [Validators] [] maxValue `<number | date>`
 
-- [Fix Helpers] [] defineRule does not properly type parameters
 - [Types] [] Correctly type all functions
 - [useValidation] [] Fix coverage
-- [Types] [] Allow passing any validator value as a ref (use unref())
 - [Core] [] Validate nested params? ()
 
 ## Done
@@ -47,3 +45,8 @@
 - [Helpers] [x] not() inverts the result
 - [Helpers] [x] validateIfNot()
   validateIf(not(...rules))
+- [Types] [x] Allow passing any validator value as a ref (use unref())
+
+## Can't do
+
+- [Fix Helpers] [] defineRule does not properly type parameters

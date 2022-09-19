@@ -1,5 +1,9 @@
 import { ValidationRule, ValidationRuleObject } from "./types"
 
+/**
+ * @internal
+ * Sets validation skip to true
+ */
 export const SKIP_PROTO = function (...args: any[]): ValidationRule {
   return {
     _skip: true,
@@ -8,6 +12,10 @@ export const SKIP_PROTO = function (...args: any[]): ValidationRule {
   }
 }
 
+/**
+ * @internal
+ * Validates multiple rules
+ */
 export const validateEntries = (
   value: any,
   rules: Array<ValidationRule | ValidationRuleObject>,

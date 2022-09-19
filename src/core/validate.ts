@@ -1,5 +1,5 @@
 import { reactive, watch } from "vue-demi"
-import { merge } from "lodash"
+import { mapKeys, merge } from "lodash"
 
 import type { Errors, ValidationRule, Rule, ValidationOptions } from "../types"
 

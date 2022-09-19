@@ -1,4 +1,5 @@
 import { isMap, isNil, isObject, isSet } from "lodash"
+import { Ref, unref } from "vue-demi"
 import { SKIP_PROTO } from "../shared"
 import type { ValidationRule } from "../types"
 
@@ -7,11 +8,12 @@ import type { ValidationRule } from "../types"
  *
  * @param min Minimum allowed length the input must satisfy
  */
-const minLength = (min: number) => {
+const minLength = (min: number | Ref<number>) => {
   return {
     _skip: false,
     validate(value: string | Set<any> | Map<any, any> | any[] | object) {
       if (isNil(value)) return false
+      min = unref(min)
       if (isSet(value) || isMap(value)) return value.size >= min
       if (isObject(value)) {
         return Object.keys(value).length >= min

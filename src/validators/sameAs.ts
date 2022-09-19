@@ -1,4 +1,4 @@
-import { unref } from "vue-demi"
+import { Ref, unref } from "vue-demi"
 import { SKIP_PROTO } from "../shared"
 import type { ValidationRule } from "../types"
 
@@ -9,10 +9,15 @@ import type { ValidationRule } from "../types"
  * @param lenient Wether to compare values as == or === (default ===)
  */
 
-const sameAs = (compared: any, lenient: boolean = false): ValidationRule => {
+const sameAs = (
+  compared: any | Ref<any>,
+  lenient: boolean = false
+): ValidationRule => {
   return {
     _skip: false,
     validate(value: any) {
+      compared = unref(compared)
+
       return lenient
         ? unref(value) == unref(compared)
         : unref(value) === unref(compared)
