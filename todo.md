@@ -10,8 +10,11 @@
   - [Validator] mustContain
 
 - [Plugins] date
+
   - [Validator] before
   - [Validator] after
+
+- [Core] [] Fix async validation timing out
 
 ## 1.0.0
 
