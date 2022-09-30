@@ -21,6 +21,7 @@
 - [Types] [] Correctly type all functions
 - [useValidation] [] Fix coverage
 - [Core] [] Validate nested params? ()
+- [Core] [] Make error object form structure
 
 ## Done
 

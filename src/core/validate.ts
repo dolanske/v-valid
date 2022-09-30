@@ -1,67 +1,64 @@
-import { reactive, watch } from "vue-demi"
-import { mapKeys, merge } from "lodash"
+import { reactive, watch, Ref, ComputedRef } from "vue-demi"
+import { clone, isPlainObject, merge, cloneDeep, set, get } from "lodash"
+import { parsePath } from "../utils"
+import type {
+  Errors,
+  ValidationRule,
+  Rule,
+  ValidationOptions,
+  Error
+} from "../types"
 
-import type { Errors, ValidationRule, Rule, ValidationOptions } from "../types"
+//*---------------- SECTION ----------------*/
+// Setup and helpers
 
-/**
- *
- * @param form {Computed}
- * @param rules
- * @param options
- * @returns
- */
+export const emptyErrorObject: Error = {
+  id: null,
+  value: null,
+  invalid: false,
+  errors: {}
+}
+
+export async function iterateIn(
+  obj: { [key: string]: any },
+  callback: (key: string, value: any, path: string) => Promise<void> | void,
+  path: string = ""
+) {
+  for (const key in obj) {
+    const newPath = `${path} ${key}`
+
+    if (isPlainObject(obj[key])) {
+      await iterateIn(obj[key], callback, newPath)
+    } else {
+      await callback(key, obj[key], newPath)
+    }
+  }
+}
+
+//*---------------- SECTION ----------------*/
+// Main validation method
 
 export function useValidation(
-  form: object,
+  form: any,
   rules: any,
   { proactive = false, autoclear = false }: ValidationOptions = {}
 ) {
-  // const errors = reactive<Errors>({})
   const root = reactive<{
     anyError: boolean
     pending: boolean
     errors: Errors
   }>({ anyError: false, pending: false, errors: {} })
 
-  if (autoclear) {
-    watch(
-      form,
-      () => {
-        reset()
-      },
-      { deep: true }
-    )
-  }
-
-  if (proactive) {
-    watch(
-      form,
-      () => {
-        validate()
-      },
-      { deep: true }
-    )
-  }
+  if (autoclear) watch(form, () => reset(), { deep: true })
+  if (proactive) watch(form, () => validate(), { deep: true })
 
   // Initial assignment
   reset()
 
   function _resetErrorObject() {
-    merge(root.errors, {
-      ...Object.keys(form).reduce(
-        (a, v) => ({
-          ...a,
-          [v]: {
-            id: null,
-            value: null,
-            invalid: false,
-            errors: {}
-          }
-        }),
-        {}
-      )
+    iterateIn(root.errors, (key, value, path) => {
+      set(root.errors, path, cloneDeep(emptyErrorObject))
     })
-
     Object.assign(root, { anyError: false, pending: false })
   }
 
@@ -76,34 +73,40 @@ export function useValidation(
     root.pending = true
 
     return new Promise<Errors>(async (resolve, reject) => {
-      for (const [key, value] of Object.entries(form)) {
-        if (!Reflect.has(rules.value, key)) continue
+      await iterateIn(form, async (key, value, path) => {
+        path = parsePath(path)
 
-        const itemRules: Rule = rules.value[key]
+        // Create an errors object following the structure of the form
+        set(root.errors, path, cloneDeep(emptyErrorObject))
 
-        for (const [ruleKey, ruleData] of Object.entries(itemRules)) {
-          // In case we want to validate only certain fields
-          if (validateOnly.length > 0 && !validateOnly.includes(ruleKey))
+        // Get all rules for an object
+        const pathRules: Rule = get(rules.value, path)
+
+        // Iterate over available rules and perform validation
+        for (const [ruleKey, ruleData] of Object.entries(pathRules)) {
+          if (validateOnly.length > 0 && !validateOnly.includes(ruleKey)) {
             continue
+          }
 
           const { label, validate, _skip }: ValidationRule = ruleData
 
-          if (_skip) {
-            continue
-          }
+          if (_skip) continue
 
-          const passed = await validate(value)
+          const didPass = await validate(value)
 
-          root.errors[key].id = key
-          root.errors[key].value = value
+          set(root.errors, `${path}.id`, key)
+          set(root.errors, `${path}.value`, value)
 
-          if (!passed) {
+          if (!didPass) {
             root.anyError = true
-            root.errors[key].invalid = true
-            root.errors[key].errors[ruleKey] = label(value)
+
+            set(root.errors, `${path}.invalid`, true)
+            set(root.errors, `${path}.errors.${ruleKey}`, label(value))
           }
         }
-      }
+      })
+
+      root.pending = false
 
       // Expose errors object either way
       if (root.anyError) {

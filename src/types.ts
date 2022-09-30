@@ -2,7 +2,6 @@ export type Error = {
   id: string | null
   value: any
   invalid: boolean
-  // errors: Map<string, string>
   errors: { [key: string]: string }
 }
 

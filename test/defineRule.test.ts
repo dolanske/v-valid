@@ -29,7 +29,7 @@ const asyncRule = defineRule(
         resolve(true)
       }, 500)
     }),
-  "This rule should take 1s to validate"
+  "This rule should take 0.5s to validate"
 )
 
 describe("[helpers] defineRule", () => {
@@ -77,8 +77,6 @@ describe("[helpers] defineRule", () => {
     const start = Date.now()
 
     await validate().then((e) => {
-      console.log(e)
-
       const end = Date.now()
       // If value is larger than 500, we can safeuly assume the validation was
       // performed asynchronously
