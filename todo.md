@@ -18,9 +18,6 @@
 
 ## 1.0.0
 
-- [Validators] [] minValue `<number | date>`
-- [Validators] [] maxValue `<number | date>`
-
 - [Types] [] Correctly type all functions
 - [useValidation] [] Fix coverage
 
@@ -50,6 +47,8 @@
 - [Types] [x] Allow passing any validator value as a ref (use unref())
 - [Core] [x] Validate nested params? ()
 - [Core] [x] Make error object form structure
+- [Validators] [x] minValue `<number | date>`
+- [Validators] [x] maxValue `<number | date>`
 
 ## Can't do
 
