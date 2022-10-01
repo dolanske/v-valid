@@ -1,21 +1,22 @@
-import { isNil } from "lodash"
-import { SKIP_PROTO } from "../shared"
-import { ValidationRule, ValidationRuleObject } from "../types"
+import { isNil } from 'lodash'
+import { SKIP_PROTO } from '../shared'
+import type { ValidationRuleObject } from '../types'
 
 export const url: ValidationRuleObject = {
   _skip: false,
   skip: SKIP_PROTO,
   validate(value: any) {
-    if (isNil(value)) return false
+    if (isNil(value))
+      return false
 
     try {
-      new URL(value)
-      return true
-    } catch (e) {
+      return new URL(value) instanceof URL
+    }
+    catch (e) {
       return false
     }
   },
   label() {
-    return "Value must be a valid URL"
-  }
+    return 'Value must be a valid URL'
+  },
 }

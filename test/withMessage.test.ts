@@ -1,12 +1,12 @@
-import { test, expect, describe } from "vitest"
-import { withLabel, minLength, useValidation } from "../index"
-import { computed, reactive } from "vue-demi"
+import { describe, expect, test } from 'vitest'
+import { computed, reactive } from 'vue-demi'
+import { minLength, useValidation, withLabel } from '../index'
 
 // Prepare testing form
 const form = reactive({ field: [1, 2] })
 
-describe("[helpers] withLabel", () => {
-  test("Test custom message as a callback", () => {
+describe('[helpers] withLabel', () => {
+  test('Test custom message as a callback', () => {
     // Prepare rules
     const rules = computed(() => ({
       field: {
@@ -17,8 +17,8 @@ describe("[helpers] withLabel", () => {
           // This should return '2'
           expect(value).toHaveLength(2)
           return value.length
-        }, minLength(3))
-      }
+        }, minLength(3)),
+      },
     }))
 
     // Get the validation trigger method
@@ -31,15 +31,15 @@ describe("[helpers] withLabel", () => {
     })
   })
 
-  test("Simple custom message as a string", () => {
+  test('Simple custom message as a string', () => {
     const rules = computed(() => ({
-      field: { minLength: withLabel("Hello world", minLength(3)) }
+      field: { minLength: withLabel('Hello world', minLength(3)) },
     }))
 
     const { validate } = useValidation(form, rules)
 
     validate().catch((e) => {
-      expect(e.field.errors.minLength).toBe("Hello world")
+      expect(e.field.errors.minLength).toBe('Hello world')
     })
   })
 })

@@ -1,5 +1,5 @@
-import { isNil } from "lodash"
-import type { ValidationRule, Label } from "../types"
+import { isNil } from 'lodash'
+import type { Label, ValidationRule } from '../types'
 
 /**
  *
@@ -15,20 +15,20 @@ import type { ValidationRule, Label } from "../types"
 
 export const withLabel = (
   message: string | Label,
-  validator: ValidationRule
+  validator: ValidationRule,
 ): ValidationRule => {
   const { validate } = validator
 
-  if (isNil(validate)) {
-    throw new Error("[withLabel] Missing validator function")
-  }
+  if (isNil(validate))
+    throw new Error('[withLabel] Missing validator function')
 
   return {
     _skip: validator._skip,
     validate,
     label: (args) => {
-      if (typeof message === "string") return message
+      if (typeof message === 'string')
+        return message
       return message(args)
-    }
+    },
   }
 }

@@ -14,13 +14,13 @@ You know what they say, you can not trust a thief or a murderer. You know who yo
 
    ```js
    import {
-     useValidation,
+     minLength,
      required,
      type,
-     minLength,
+     useValidation,
      validateIf
-   } from "@dolanske/validate"
-   import { computed, reactive } from "vue"
+   } from '@dolanske/validate'
+   import { computed, reactive } from 'vue'
 
    // Create your form
    const form = reactive({ value: [1, 2, 3] })
@@ -166,7 +166,7 @@ Requires input to be a number or Date within the specified bounds.
 const rules = computed(() => ({
   numberVal: { between: between(0, 10) },
   dateVal: {
-    between: between(new Date("12/24/2020"), new Date("12/24/2022").getTime())
+    between: between(new Date('12/24/2020'), new Date('12/24/2022').getTime())
   }
 }))
 ```
@@ -197,7 +197,7 @@ Requires input to be the same as the provided value in the rule.
 
 ```js
 const rules = computed(() => ({
-  name: { sameAs: sameAs("Hello world") }
+  name: { sameAs: sameAs('Hello world') }
 }))
 ```
 
@@ -256,7 +256,7 @@ Allows you to add a custom error message to ant validation rule.
 ```js
 const rules = computed(() => ({
   name: {
-    required: withLabel("You MUST fill this input!!", required)
+    required: withLabel('You MUST fill this input!!', required)
   }
 }))
 ```
@@ -352,12 +352,12 @@ const arrAndMinLen = defineRule(
 // Asynchronous rule, the main usecase here is validating
 // login passwords or other API related things
 const checkPassword = defineRule(
-  (password) =>
+  password =>
     new Promise((resolve) => {
       const result = await someApiCall(password)
       resolve(result)
     }),
-  "Incorrect password. Please try again."
+  'Incorrect password. Please try again.'
 )
 ```
 
@@ -378,5 +378,5 @@ const result = test(type.symbol, Symbol()) // True
 
 // with `and`, `not` and `or` or any async
 // custom validators we have to acustom for the returned promise
-const result = await test(or(type.str, type.num), "Hello World") // True
+const result = await test(or(type.str, type.num), 'Hello World') // True
 ```

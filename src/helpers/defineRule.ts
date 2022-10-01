@@ -1,5 +1,5 @@
-import { isFunction, isNil, isObject, isString } from "lodash"
-import { Label, ValidationRule } from "../types"
+import { isNil } from 'lodash'
+import type { Label, ValidationRule } from '../types'
 
 // REVIEW: Is this the best way to define this API
 
@@ -26,7 +26,7 @@ import { Label, ValidationRule } from "../types"
  * ```
  */
 
-const DEFAULT_LABEL = "Value did not pass the validation rule"
+const DEFAULT_LABEL = 'Value did not pass the validation rule'
 
 export type DefineRulefn = (
   value: any,
@@ -34,10 +34,10 @@ export type DefineRulefn = (
 ) => boolean | Promise<boolean>
 export type DefineRuleLabel = string | Label
 
-type DefineRuleObject = {
-  rule: DefineRulefn
-  label?: DefineRuleLabel
-}
+// interface DefineRuleObject {
+//   rule: DefineRulefn
+//   label?: DefineRuleLabel
+// }
 
 export const defineRule = <T>(rule: DefineRulefn, label?: DefineRuleLabel) => {
   // args are the optional values you can input when creating a rule
@@ -45,14 +45,16 @@ export const defineRule = <T>(rule: DefineRulefn, label?: DefineRuleLabel) => {
     // the value from validate is the actual value we are testing against
     // injected during validation
     _skip: false,
-    validate: (value) => rule(value, ...args),
+    validate: value => rule(value, ...args),
     label: (value) => {
-      if (isNil(label)) return DEFAULT_LABEL
+      if (isNil(label))
+        return DEFAULT_LABEL
 
-      if (typeof label === "string") return label
+      if (typeof label === 'string')
+        return label
       // ...args are the parameters user inputs when creating the rule
       return label(value, ...args)
-    }
+    },
   })
 }
 
@@ -65,18 +67,20 @@ export const defineRule = <T>(rule: DefineRulefn, label?: DefineRuleLabel) => {
 
 export const defineRuleObj = ({
   rule,
-  label
+  label,
 }: {
   rule: DefineRulefn
   label?: DefineRuleLabel
 }): ValidationRule => {
   return {
     _skip: false,
-    validate: (value) => rule(value),
+    validate: value => rule(value),
     label: (value) => {
-      if (isNil(label)) return DEFAULT_LABEL
-      if (typeof label === "string") return label
+      if (isNil(label))
+        return DEFAULT_LABEL
+      if (typeof label === 'string')
+        return label
       return label(value)
-    }
+    },
   }
 }

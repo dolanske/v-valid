@@ -1,6 +1,6 @@
-//TODO: Figure out naming
+// TODO: Figure out naming
 
-import { ValidationRule } from "../types"
+import type { ValidationRule } from '../types'
 
 /**
  * Shorthand for calling `rule(...args).validate(value)`
@@ -15,13 +15,12 @@ import { ValidationRule } from "../types"
 
 export const test = (
   rule: ValidationRule,
-  value: any
+  value: any,
 ): Promise<boolean> | boolean => {
   const result = rule.validate(value)
 
-  if (result instanceof Promise) {
+  if (result instanceof Promise)
     return result
-  }
 
   return result
 }

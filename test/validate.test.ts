@@ -1,21 +1,22 @@
-import { expect, test, describe } from "vitest"
-import { get, set, cloneDeep, assignWith } from "lodash"
-import { parsePath } from "../src/utils"
-import { computed, reactive } from "vue-demi"
-import { type } from "../src/validators/type"
-import { minLength } from "../src/validators/minLength"
-import { maxLength } from "../src/validators/maxLength"
-import { emptyErrorObject, iterateIn } from "../src/core/validate"
-import { Rule, ValidationRule, Errors } from "../src/types"
+import { describe, test } from 'vitest'
+import { cloneDeep, get, set } from 'lodash'
+import { computed, reactive } from 'vue-demi'
+import { parsePath } from '../src/utils'
+import { type } from '../src/validators/type'
+import { minLength } from '../src/validators/minLength'
+import { maxLength } from '../src/validators/maxLength'
+import { emptyErrorObject, iterateIn } from '../src/core/validate'
+import type { Rule, ValidationRule } from '../src/types'
+// import { Errors } from '../src/types'
 
-describe("[Core] Main validation method", () => {
-  test("Test deep iteration", async () => {
+describe('[Core] Main validation method', () => {
+  test('Test deep iteration', async () => {
     const form = reactive({
       first: 10,
       nested: {
-        foo: "Hello",
-        bar: [1, 2, 3, 4, 5]
-      }
+        foo: 'Hello',
+        bar: [1, 2, 3, 4, 5],
+      },
     })
 
     const rules = computed(() => ({
@@ -24,9 +25,9 @@ describe("[Core] Main validation method", () => {
         foo: { minLength: minLength(6) },
         bar: {
           mustBeAnArray: type.arr,
-          maxLength: maxLength(3)
-        }
-      }
+          maxLength: maxLength(3),
+        },
+      },
     }))
 
     // Create errors objects, which is just the form but data replaced with error objects
@@ -51,13 +52,13 @@ describe("[Core] Main validation method", () => {
 
       // Iterate over available rules and perform validation
       for (const [ruleKey, ruleData] of Object.entries(pathRules)) {
-        if (validateOnly.length > 0 && !validateOnly.includes(ruleKey)) {
+        if (validateOnly.length > 0 && !validateOnly.includes(ruleKey))
           continue
-        }
 
         const { label, validate, _skip }: ValidationRule = ruleData
 
-        if (_skip) continue
+        if (_skip)
+          continue
 
         const didPass = await validate(value)
 

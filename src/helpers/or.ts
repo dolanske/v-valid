@@ -1,5 +1,5 @@
-import { ValidationRule } from "../types"
-import { validateEntries } from "../shared"
+import type { ValidationRule } from '../types'
+import { validateEntries } from '../shared'
 
 /**
  * @rule Value must pass at least one of the provided checks
@@ -9,9 +9,9 @@ export const or = (...rules: ValidationRule[]): ValidationRule => {
   return {
     // Figure out how to add these
     _skip: false,
-    validate: (value: any) => validateEntries(value, rules, "some"),
+    validate: (value: any) => validateEntries(value, rules, 'some'),
     label() {
-      return "Value did not pass any of the required checks"
-    }
+      return 'Value did not pass any of the required checks'
+    },
   }
 }

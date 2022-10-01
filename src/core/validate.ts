@@ -1,47 +1,46 @@
-import { reactive, watch, Ref, ComputedRef } from "vue-demi"
-import { clone, isPlainObject, merge, cloneDeep, set, get } from "lodash"
-import { parsePath } from "../utils"
+import { reactive, watch } from 'vue-demi'
+import { cloneDeep, get, isPlainObject, set } from 'lodash'
+import { parsePath } from '../utils'
 import type {
+  Error,
   Errors,
-  ValidationRule,
   Rule,
   ValidationOptions,
-  Error
-} from "../types"
+  ValidationRule,
+} from '../types'
 
-//*---------------- SECTION ----------------*/
+//* ---------------- SECTION ----------------*/
 // Setup and helpers
 
 export const emptyErrorObject: Error = {
   id: null,
   value: null,
   invalid: false,
-  errors: {}
+  errors: {},
 }
 
 export async function iterateIn(
   obj: { [key: string]: any },
   callback: (key: string, value: any, path: string) => Promise<void> | void,
-  path: string = ""
+  path = '',
 ) {
   for (const key in obj) {
     const newPath = `${path} ${key}`
 
-    if (isPlainObject(obj[key])) {
+    if (isPlainObject(obj[key]))
       await iterateIn(obj[key], callback, newPath)
-    } else {
+    else
       await callback(key, obj[key], newPath)
-    }
   }
 }
 
-//*---------------- SECTION ----------------*/
+//* ---------------- SECTION ----------------*/
 // Main validation method
 
 export function useValidation(
   form: any,
   rules: any,
-  { proactive = false, autoclear = false }: ValidationOptions = {}
+  { proactive = false, autoclear = false }: ValidationOptions = {},
 ) {
   const root = reactive<{
     anyError: boolean
@@ -49,8 +48,10 @@ export function useValidation(
     errors: Errors
   }>({ anyError: false, pending: false, errors: {} })
 
-  if (autoclear) watch(form, () => reset(), { deep: true })
-  if (proactive) watch(form, () => validate(), { deep: true })
+  if (autoclear)
+    watch(form, () => reset(), { deep: true })
+  if (proactive)
+    watch(form, () => validate(), { deep: true })
 
   // Initial assignment
   reset()
@@ -72,8 +73,8 @@ export function useValidation(
 
     root.pending = true
 
-    return new Promise<Errors>(async (resolve, reject) => {
-      await iterateIn(form, async (key, value, path) => {
+    return new Promise<Errors>((resolve, reject) => {
+      iterateIn(form, async (key, value, path) => {
         path = parsePath(path)
 
         // Create an errors object following the structure of the form
@@ -84,13 +85,13 @@ export function useValidation(
 
         // Iterate over available rules and perform validation
         for (const [ruleKey, ruleData] of Object.entries(pathRules)) {
-          if (validateOnly.length > 0 && !validateOnly.includes(ruleKey)) {
+          if (validateOnly.length > 0 && !validateOnly.includes(ruleKey))
             continue
-          }
 
           const { label, validate, _skip }: ValidationRule = ruleData
 
-          if (_skip) continue
+          if (_skip)
+            continue
 
           const didPass = await validate(value)
 
@@ -109,11 +110,10 @@ export function useValidation(
       root.pending = false
 
       // Expose errors object either way
-      if (root.anyError) {
+      if (root.anyError)
         reject(root.errors)
-      } else {
+      else
         resolve(root.errors)
-      }
 
       root.pending = false
     })
@@ -123,6 +123,6 @@ export function useValidation(
     errors: root.errors,
     reset,
     validate,
-    state: root
+    state: root,
   }
 }

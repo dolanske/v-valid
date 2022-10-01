@@ -1,7 +1,8 @@
-import { isBoolean, isFunction } from "lodash"
-import { ValidationRule } from "../types"
-import { isRef, Ref } from "vue-demi"
-import { SKIP_PROTO } from "../shared"
+import { isBoolean, isFunction } from 'lodash'
+import type { Ref } from 'vue-demi'
+import { isRef } from 'vue-demi'
+import type { ValidationRule } from '../types'
+import { SKIP_PROTO } from '../shared'
 
 /**
  * @Rule Perform validation if provided condition is met
@@ -11,22 +12,19 @@ import { SKIP_PROTO } from "../shared"
 
 export const validateIf = (
   condition: boolean | (() => boolean) | Ref<boolean> | Promise<boolean>,
-  rule: ValidationRule
+  rule: ValidationRule,
 ): ValidationRule | Promise<ValidationRule> => {
   // Boolean
-  if (isBoolean(condition)) {
+  if (isBoolean(condition))
     return condition ? rule : SKIP_PROTO()
-  }
 
   // ref
-  if (isRef(condition)) {
+  if (isRef(condition))
     return condition.value ? rule : SKIP_PROTO()
-  }
 
   // Function returning boolean
-  if (isFunction(condition)) {
+  if (isFunction(condition))
     return condition() ? rule : SKIP_PROTO()
-  }
 
   return condition.then((result) => {
     return result ? rule : SKIP_PROTO()

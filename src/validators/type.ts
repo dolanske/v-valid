@@ -6,10 +6,10 @@ import {
   isNumber,
   isObject,
   isSet,
-  isString
-} from "lodash"
-import { SKIP_PROTO } from "../shared"
-import { ValidationRuleObject } from "../types"
+  isString,
+} from 'lodash'
+import { SKIP_PROTO } from '../shared'
+import type { ValidationRuleObject } from '../types'
 
 interface Type {
   str: ValidationRuleObject
@@ -31,10 +31,11 @@ export const type: Type = {
     _skip: false,
     skip: SKIP_PROTO,
     validate: (value: any) => {
-      if (isNil(value)) return false
+      if (isNil(value))
+        return false
       return isString(value)
     },
-    label: ({ value }) => `Value <${typeof value}> must be a string`
+    label: ({ value }) => `Value <${typeof value}> must be a string`,
   },
   num: {
     /**
@@ -44,10 +45,11 @@ export const type: Type = {
     _skip: false,
     skip: SKIP_PROTO,
     validate: (value: any) => {
-      if (isNil(value)) return false
+      if (isNil(value))
+        return false
       return isNumber(value)
     },
-    label: ({ value }) => `Value <${typeof value}> must be a number`
+    label: ({ value }) => `Value <${typeof value}> must be a number`,
   },
   arr: {
     /**
@@ -57,10 +59,11 @@ export const type: Type = {
     _skip: false,
     skip: SKIP_PROTO,
     validate: (value: any) => {
-      if (isNil(value)) return false
+      if (isNil(value))
+        return false
       return isArray(value)
     },
-    label: ({ value }) => `Value <${typeof value}> must be an Array`
+    label: ({ value }) => `Value <${typeof value}> must be an Array`,
   },
   obj: {
     /**
@@ -74,7 +77,7 @@ export const type: Type = {
         return false
       return isObject(value)
     },
-    label: ({ value }) => `Value <${typeof value}> must be an Object`
+    label: ({ value }) => `Value <${typeof value}> must be an Object`,
   },
   set: {
     /**
@@ -84,10 +87,11 @@ export const type: Type = {
     _skip: false,
     skip: SKIP_PROTO,
     validate: (value: any) => {
-      if (isNil(value)) return false
+      if (isNil(value))
+        return false
       return isSet(value)
     },
-    label: ({ value }) => `Value <${typeof value}> must be a Set`
+    label: ({ value }) => `Value <${typeof value}> must be a Set`,
   },
   map: {
     /**
@@ -97,10 +101,11 @@ export const type: Type = {
     _skip: false,
     skip: SKIP_PROTO,
     validate: (value: any) => {
-      if (isNil(value)) return false
+      if (isNil(value))
+        return false
       return isMap(value)
     },
-    label: ({ value }) => `Value <${typeof value}> must be a Map`
+    label: ({ value }) => `Value <${typeof value}> must be a Map`,
   },
   date: {
     /**
@@ -110,16 +115,18 @@ export const type: Type = {
     _skip: false,
     skip: SKIP_PROTO,
     validate: (value: any) => {
-      if (isNil(value) || value == "Invalid Date") return false
+      if (isNil(value) || value === 'Invalid Date')
+        return false
 
       // If it is a date object already, just check it
-      if (isDate(value) && value.getTime()) return true
+      if (isDate(value) && value.getTime())
+        return true
 
       // If value is a string, try and parse it
       const d = new Date(value)
       return isDate(d)
     },
-    label: ({ value }) => `Value <${typeof value}> must be a valid Date object`
+    label: ({ value }) => `Value <${typeof value}> must be a valid Date object`,
   },
   symbol: {
     /**
@@ -129,10 +136,11 @@ export const type: Type = {
     _skip: false,
     skip: SKIP_PROTO,
     validate: (value: any) => {
-      if (isNil(value)) return false
+      if (isNil(value))
+        return false
 
-      return typeof value === "symbol"
+      return typeof value === 'symbol'
     },
-    label: ({ value }) => `Value <${typeof value}> must be a Symbol`
-  }
+    label: ({ value }) => `Value <${typeof value}> must be a Symbol`,
+  },
 }

@@ -1,7 +1,7 @@
-import { isArray, isNil } from "lodash"
-import { test, expect, describe } from "vitest"
-import { computed, reactive } from "vue-demi"
-import { defineRule, useValidation, defineRuleObj } from "../index"
+import { isArray, isNil } from 'lodash'
+import { describe, expect, test } from 'vitest'
+import { computed, reactive } from 'vue-demi'
+import { defineRule, defineRuleObj, useValidation } from '../index'
 
 const form = reactive({ one: [], two: [1, 2, 3] })
 
@@ -9,17 +9,17 @@ const arrAndMinLen = defineRule(
   (value, length) => {
     return isArray(value) && value.length >= length
   },
-  (_, length) => `Array with at least ${length} length`
+  (_, length) => `Array with at least ${length} length`,
 )
 
 const arrLenInBetween = defineRule(
   (value, min, max) => value.length >= min && value.length <= max,
-  (_, min, max) => `Array length must bet between ${min} and ${max}`
+  (_, min, max) => `Array length must bet between ${min} and ${max}`,
 )
 
 const noParamRule = defineRule(
-  (value) => !isArray(value),
-  "Must not be an array"
+  value => !isArray(value),
+  'Must not be an array',
 )
 
 const asyncRule = defineRule(
@@ -29,15 +29,15 @@ const asyncRule = defineRule(
         resolve(true)
       }, 500)
     }),
-  "This rule should take 0.5s to validate"
+  'This rule should take 0.5s to validate',
 )
 
-describe("[helpers] defineRule", () => {
-  test("NO args", () => {
+describe('[helpers] defineRule', () => {
+  test('NO args', () => {
     const rules = computed(() => ({
       two: {
-        noParamRule: noParamRule()
-      }
+        noParamRule: noParamRule(),
+      },
     }))
 
     const { validate } = useValidation(form, rules)
@@ -47,14 +47,14 @@ describe("[helpers] defineRule", () => {
     })
   })
 
-  test("WITH args", () => {
+  test('WITH args', () => {
     const rules = computed(() => ({
       one: {
-        arrAndMinLen: arrAndMinLen(1)
+        arrAndMinLen: arrAndMinLen(1),
       },
       two: {
-        arrLenInBetween: arrLenInBetween(1, 3)
-      }
+        arrLenInBetween: arrLenInBetween(1, 3),
+      },
     }))
 
     const { validate } = useValidation(form, rules)
@@ -65,18 +65,18 @@ describe("[helpers] defineRule", () => {
     })
   })
 
-  test("ASYNC", async () => {
+  test('ASYNC', async () => {
     const rules = computed(() => ({
       two: {
-        asyncRule: asyncRule()
-      }
+        asyncRule: asyncRule(),
+      },
     }))
 
     const { validate } = useValidation(form, rules)
 
     const start = Date.now()
 
-    await validate().then((e) => {
+    await validate().then(() => {
       const end = Date.now()
       // If value is larger than 500, we can safeuly assume the validation was
       // performed asynchronously
@@ -86,15 +86,15 @@ describe("[helpers] defineRule", () => {
 })
 
 const requiredClone = defineRuleObj({
-  rule: (value) => !isNil(value),
-  label: "The value is required"
+  rule: value => !isNil(value),
+  label: 'The value is required',
 })
 
-describe("[helpers] defineRuleObj", () => {
-  test("Clone of required", () => {
+describe('[helpers] defineRuleObj', () => {
+  test('Clone of required', () => {
     const rules = computed(() => ({
       one: { requiredClone },
-      two: { requiredClone }
+      two: { requiredClone },
     }))
 
     const { validate } = useValidation(form, rules)

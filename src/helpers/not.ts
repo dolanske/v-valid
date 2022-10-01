@@ -1,5 +1,5 @@
-import { ValidationRule } from "../types"
-import { validateEntries } from "../shared"
+import type { ValidationRule } from '../types'
+import { validateEntries } from '../shared'
 
 /**
  * @rule Value must fail the check or list of all provided checks
@@ -9,9 +9,9 @@ export const not = (...rules: ValidationRule[]): ValidationRule => {
   return {
     // Figure out how to add these
     _skip: false,
-    validate: (value: any) => validateEntries(value, rules, "none"),
+    validate: (value: any) => validateEntries(value, rules, 'none'),
     label() {
-      return "Value must not pass any of the checks"
-    }
+      return 'Value must not pass any of the checks'
+    },
   }
 }

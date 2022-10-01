@@ -1,6 +1,7 @@
-import { Ref, unref } from "vue-demi"
-import { SKIP_PROTO } from "../shared"
-import type { ValidationRule } from "../types"
+import type { Ref } from 'vue-demi'
+import { unref } from 'vue-demi'
+import { SKIP_PROTO } from '../shared'
+import type { ValidationRule } from '../types'
 
 /**
  * @Rule Input must match the provided `compared` value, either by value or by type & value
@@ -11,7 +12,7 @@ import type { ValidationRule } from "../types"
 
 const sameAs = (
   compared: any | Ref<any>,
-  lenient: boolean = false
+  lenient = false,
 ): ValidationRule => {
   return {
     _skip: false,
@@ -19,13 +20,13 @@ const sameAs = (
       compared = unref(compared)
 
       return lenient
-        ? unref(value) == unref(compared)
+        ? unref(value) === unref(compared)
         : unref(value) === unref(compared)
     },
     /* c8 ignore next 3 */
     label() {
-      return "Values do not match"
-    }
+      return 'Values do not match'
+    },
   }
 }
 

@@ -1,4 +1,4 @@
-export type Error = {
+export interface Error {
   id: string | null
   value: any
   invalid: boolean
@@ -24,7 +24,7 @@ export interface ValidationRuleObject extends ValidationRule {
   skip: () => void
 }
 
-export type Rule = {
+export interface Rule {
   [key: string]: ValidationRule
 }
 
