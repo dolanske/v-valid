@@ -23,8 +23,6 @@
 
 - [Types] [] Correctly type all functions
 - [useValidation] [] Fix coverage
-- [Core] [] Validate nested params? ()
-- [Core] [] Make error object form structure
 
 ## Done
 
@@ -50,6 +48,8 @@
 - [Helpers] [x] validateIfNot()
   validateIf(not(...rules))
 - [Types] [x] Allow passing any validator value as a ref (use unref())
+- [Core] [x] Validate nested params? ()
+- [Core] [x] Make error object form structure
 
 ## Can't do
 

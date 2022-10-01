@@ -1,4 +1,5 @@
 import { isNil } from 'lodash'
+import { SKIP_PROTO } from '../shared'
 import type { Label, ValidationRule } from '../types'
 
 // REVIEW: Is this the best way to define this API
@@ -39,7 +40,7 @@ export type DefineRuleLabel = string | Label
 //   label?: DefineRuleLabel
 // }
 
-export const defineRule = <T>(rule: DefineRulefn, label?: DefineRuleLabel) => {
+const defineRule = <T>(rule: DefineRulefn, label?: DefineRuleLabel) => {
   // args are the optional values you can input when creating a rule
   return (...args: T[]): ValidationRule => ({
     // the value from validate is the actual value we are testing against
@@ -65,7 +66,7 @@ export const defineRule = <T>(rule: DefineRulefn, label?: DefineRuleLabel) => {
  * declared in the ruleset, it does not accept any parameters
  */
 
-export const defineRuleObj = ({
+const defineRuleObj = ({
   rule,
   label,
 }: {
@@ -78,9 +79,18 @@ export const defineRuleObj = ({
     label: (value) => {
       if (isNil(label))
         return DEFAULT_LABEL
+
       if (typeof label === 'string')
         return label
       return label(value)
     },
   }
+}
+
+defineRule.skip = SKIP_PROTO
+defineRuleObj.skip = SKIP_PROTO
+
+export {
+  defineRule,
+  defineRuleObj,
 }

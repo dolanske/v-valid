@@ -6,7 +6,6 @@ import { type } from './type'
 
 /**
  * @Rule Checks if value is between the provided range
- *
  * @param min Minimum value
  * @param max Maximum value
  */
@@ -32,7 +31,7 @@ const between = (
 
     return value >= min && value <= max
   },
-  label: () => `Value must be between ${min} and ${max}`,
+  label: () => `Value must be between ${unref(min)} and ${unref(max)}`,
 })
 
 between.skip = SKIP_PROTO

@@ -5,7 +5,6 @@ import type { ValidationRule } from '../types'
 
 /**
  * @Rule Input must match the provided `compared` value, either by value or by type & value
- *
  * @param compared The value we compare to the input
  * @param lenient Wether to compare values as == or === (default ===)
  */

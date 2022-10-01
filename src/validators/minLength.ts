@@ -6,7 +6,6 @@ import type { ValidationRule } from '../types'
 
 /**
  * @Rule Input must be equal or greater than the provided amount
- *
  * @param min Minimum allowed length the input must satisfy
  */
 const minLength = (min: number | Ref<number>) => {
@@ -15,7 +14,9 @@ const minLength = (min: number | Ref<number>) => {
     validate(value: string | Set<any> | Map<any, any> | any[] | object) {
       if (isNil(value))
         return false
+
       min = unref(min)
+
       if (isSet(value) || isMap(value))
         return value.size >= min
       if (isObject(value))
@@ -25,7 +26,7 @@ const minLength = (min: number | Ref<number>) => {
     },
     /* c8 ignore next 3 */
     label() {
-      return `Value must be at least ${min} characters long`
+      return `Value must have a minimum length of ${unref(min)}`
     },
   } as ValidationRule
 }

@@ -2,6 +2,10 @@ import { isNil } from 'lodash'
 import { SKIP_PROTO } from '../shared'
 import type { ValidationRuleObject } from '../types'
 
+/**
+ * @Rule Input must be a valid URL
+ */
+
 export const url: ValidationRuleObject = {
   _skip: false,
   skip: SKIP_PROTO,

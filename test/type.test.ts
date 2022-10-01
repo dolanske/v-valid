@@ -47,7 +47,7 @@ describe('[Validators] Type', () => {
   })
 
   test('MAP type', () => {
-    /* prettier-ignore */ expect(type.map.validate(new Map([['one', 1], ['two', 2]]))).toBeTruthy()
+    expect(type.map.validate(new Map([['one', 1], ['two', 2]]))).toBeTruthy()
     expect(type.map.validate(new Map())).toBeTruthy()
 
     expect(type.map.validate([])).toBeFalsy()

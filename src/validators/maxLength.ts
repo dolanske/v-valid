@@ -6,8 +6,7 @@ import type { ValidationRule } from '../types'
 
 /**
  * @Rule Input must be equal or lesser than the provided amount
- *
- * @param max Maximunm allowed length the input must satisfy
+ * @param max Maximum allowed length the input must satisfy
  */
 
 const maxLength = (max: number | Ref<number>): ValidationRule => {
@@ -26,7 +25,7 @@ const maxLength = (max: number | Ref<number>): ValidationRule => {
     },
     /* c8 ignore next 3 */
     label() {
-      return `Value must be equal or smaller than ${max} characters`
+      return `Value must have a maximum length of ${unref(max)}`
     },
   }
 }
