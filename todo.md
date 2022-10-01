@@ -5,21 +5,14 @@
   - [Validator] minLenWithoutSpace()
   - [Validator] maxLenWithoutSpace()
   - [Validator] hasSpecialChars()
-  - [Validator] search([...words] | regex)
   - [Validator] passwordStrength(find a good regex, optional regex)
-  - [Validator] mustContain
-
-- [Plugins] date
-
-  - [Validator] before
-  - [Validator] after
-
-- [Core] [] Fix async validation timing out
+  - [Validator] has(...words | words[])
 
 ## 1.0.0
 
 - [Types] [] Correctly type all functions
 - [useValidation] [] Fix coverage
+- [Core] Decide wether I want to go with plugins or offer all validators from one folder
 
 ## Done
 
@@ -49,6 +42,7 @@
 - [Core] [x] Make error object form structure
 - [Validators] [x] minValue `<number | date>`
 - [Validators] [x] maxValue `<number | date>`
+- [Core] [x] Fix async validation timing out
 
 ## Can't do
 
