@@ -322,10 +322,10 @@ Performs validation if the provided conition is met. Due to implementation limit
 const rule = computed(() => ({
   name: {
     // We want to check min length of value but only if value is an array
-    minLength: validateIf(Array.isArray(form.value), minLength(5))
+    minLength: validateIf(Array.isArray(form.value), minLength(5)),
 
     // If value is not a number, required it to match "Hello World"
-    sameAs: validateIfNot(typeof form.value === 'number', sameAs("Hello World"))
+    sameAs: validateIfNot(typeof form.value === 'number', sameAs('Hello World'))
   }
 }))
 ```
@@ -343,9 +343,7 @@ Helper which is used to create and store custom validation rules.
 ```js
 // Rule which requires value to be an array and be at least n length
 const arrAndMinLen = defineRule(
-  (value, length) => {
-    return isArray(value) && value.length >= length
-  },
+  (value, length) => isArray(value) && value.length >= length,
   (_, length) => `Array with at least ${length} length`
 )
 
@@ -374,7 +372,7 @@ Perform a synthetic validation outside of any validation scope.
 ```js
 const result = test(minLength(5), [1, 2, 3]) // False
 const result = test(maxLength(5), [1, 2, 3]) // True
-const result = test(type.symbol, Symbol()) // True
+const result = test(type.symbol, Symbol('Symbol')) // True
 
 // with `and`, `not` and `or` or any async
 // custom validators we have to acustom for the returned promise
