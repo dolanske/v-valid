@@ -20,7 +20,8 @@ const sameAs = (
       compared = unref(compared)
 
       return lenient
-        ? unref(value) === unref(compared)
+        // eslint-disable-next-line eqeqeq
+        ? unref(value) == unref(compared)
         : unref(value) === unref(compared)
     },
     /* c8 ignore next 3 */

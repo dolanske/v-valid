@@ -115,7 +115,8 @@ export const type: Type = {
     _skip: false,
     skip: SKIP_PROTO,
     validate: (value: any) => {
-      if (isNil(value) || value === 'Invalid Date')
+      // eslint-disable-next-line eqeqeq
+      if (isNil(value) || value == 'Invalid Date')
         return false
 
       // If it is a date object already, just check it

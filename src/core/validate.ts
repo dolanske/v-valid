@@ -28,7 +28,7 @@ export async function iterateIn(
     const newPath = `${path} ${key}`
 
     if (isPlainObject(obj[key]))
-      await iterateIn(obj[key], callback, newPath)
+      iterateIn(obj[key], callback, newPath)
     else
       await callback(key, obj[key], newPath)
   }
@@ -73,8 +73,9 @@ export function useValidation(
 
     root.pending = true
 
-    return new Promise<Errors>((resolve, reject) => {
-      iterateIn(form, async (key, value, path) => {
+    // eslint-disable-next-line no-async-promise-executor
+    return new Promise<Errors>(async (resolve, reject) => {
+      await iterateIn(form, async (key, value, path) => {
         path = parsePath(path)
 
         // Create an errors object following the structure of the form
@@ -82,6 +83,9 @@ export function useValidation(
 
         // Get all rules for an object
         const pathRules: Rule = get(rules.value, path)
+
+        if (!pathRules)
+          return
 
         // Iterate over available rules and perform validation
         for (const [ruleKey, ruleData] of Object.entries(pathRules)) {
@@ -105,6 +109,8 @@ export function useValidation(
             set(root.errors, `${path}.errors.${ruleKey}`, label(value))
           }
         }
+
+        return Promise.resolve()
       })
 
       root.pending = false

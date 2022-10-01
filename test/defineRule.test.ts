@@ -27,7 +27,7 @@ const asyncRule = defineRule(
     new Promise((resolve) => {
       setTimeout(() => {
         resolve(true)
-      }, 500)
+      }, 50)
     }),
   'This rule should take 0.5s to validate',
 )
@@ -80,7 +80,7 @@ describe('[helpers] defineRule', () => {
       const end = Date.now()
       // If value is larger than 500, we can safeuly assume the validation was
       // performed asynchronously
-      expect(end - start).toBeGreaterThanOrEqual(500)
+      expect(end - start).toBeGreaterThanOrEqual(50)
     })
   })
 })
