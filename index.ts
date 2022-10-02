@@ -30,4 +30,4 @@ export { maxValue } from './src/validators/maxValue'
 export { maxLenNoSpace } from './src/validators/string/maxLenNoSpace'
 export { minLenNoSpace } from './src/validators/string/minLenNoSpace'
 export { hasSpecialChars } from './src/validators/string/hasSpecialChars'
-
+export { contains } from './src/validators/string/contains'

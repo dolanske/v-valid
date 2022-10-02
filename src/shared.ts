@@ -50,19 +50,3 @@ export const validateEntries = (
     }
   })
 }
-
-/**
- * @internal defaults for validation method and object
- */
-
-// export const _: ValidationRuleObject = {
-//   _skip: false,
-//   skip: SKIP_PROTO,
-//   validate(value: any) {
-//     return false
-//   },
-//   /* c8 ignore next 3 */
-//   label() {
-//     return ''
-//   },
-// }

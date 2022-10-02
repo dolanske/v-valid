@@ -1,12 +1,14 @@
+# Stuff
 
 - [Types] [] Correctly type all functions
 - [useValidation] [] Fix coverage
-- [Type] [] Add multiple error messages 
-- [Validator] [x] minLenWithoutSpace()
-- [Validator] [x] maxLenWithoutSpace()
-- [Validator] [] hasSpecialChars()
+- [Label] [] Add multiple error messages 
+- [Label] [] Update error messages to follow the same rules
+
 - [Validator] passwordStrength(find a good regex, optional regex)
-- [Validator] has(...words | words[])
+
+- [Documentation] Add /string/* methods to Documentation
+- [Documentation] Update documentation to use nested form example
 
 ## Done
 
@@ -37,7 +39,10 @@
 - [Validators] [x] minValue `<number | date>`
 - [Validators] [x] maxValue `<number | date>`
 - [Core] [x] Fix async validation timing out
-
+- [Validator] [x] minLenWithoutSpace()
+- [Validator] [x] maxLenWithoutSpace()
+- [Validator] [x] hasSpecialChars()
+- [Validator] [x] contains(...words | words[])
 ## Can't do
 
 - [Fix Helpers] [] defineRule does not properly type parameters
