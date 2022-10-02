@@ -27,3 +27,7 @@ export { url } from './src/validators/url'
 export { between } from './src/validators/between'
 export { minValue } from './src/validators/minValue'
 export { maxValue } from './src/validators/maxValue'
+export { maxLenNoSpace } from './src/validators/string/maxLenNoSpace'
+export { minLenNoSpace } from './src/validators/string/minLenNoSpace'
+export { hasSpecialChars } from './src/validators/string/hasSpecialChars'
+

@@ -1,18 +1,12 @@
-# Todo
-
-- [Plugins] string
-
-  - [Validator] minLenWithoutSpace()
-  - [Validator] maxLenWithoutSpace()
-  - [Validator] hasSpecialChars()
-  - [Validator] passwordStrength(find a good regex, optional regex)
-  - [Validator] has(...words | words[])
-
-## 1.0.0
 
 - [Types] [] Correctly type all functions
 - [useValidation] [] Fix coverage
-- [Core] Decide wether I want to go with plugins or offer all validators from one folder
+- [Type] [] Add multiple error messages 
+- [Validator] [x] minLenWithoutSpace()
+- [Validator] [x] maxLenWithoutSpace()
+- [Validator] [] hasSpecialChars()
+- [Validator] passwordStrength(find a good regex, optional regex)
+- [Validator] has(...words | words[])
 
 ## Done
 

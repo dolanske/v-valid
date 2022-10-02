@@ -9,7 +9,7 @@ import type { ValidationRule } from '../types'
  * @param min Minimum allowed value
  */
 
-const minValue = (min: number | Date | Ref<number | Date>) => {
+const minValue = (min: number | Date | Ref<number | Date>): ValidationRule => {
   return {
     _skip: false,
     validate(value: number | Date) {
@@ -29,7 +29,7 @@ const minValue = (min: number | Date | Ref<number | Date>) => {
     label() {
       return `Minimum allowed value is ${unref(min)}`
     },
-  } as ValidationRule
+  }
 }
 
 minValue.skip = SKIP_PROTO
