@@ -9,7 +9,7 @@ import type { ValidationRule } from '../../types'
 const contains = (toInclude: string | string[]): ValidationRule => {
   return {
     _skip: false,
-    validate(value) {
+    validate: (value) => {
       if (isNil(value) || typeof value !== 'string')
         return false
 
@@ -19,7 +19,7 @@ const contains = (toInclude: string | string[]): ValidationRule => {
 
       return toInclude.every((s: string) => value.toLowerCase().includes(s.toLowerCase()))
     },
-    label(value) {
+    label: (value) => {
       const vals = typeof toInclude === 'string' ? toInclude : toInclude.join(',')
 
       if (typeof value !== 'string')

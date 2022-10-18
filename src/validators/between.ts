@@ -15,7 +15,7 @@ const between = (
   max: number | Date | Ref<number | Date>,
 ) => ({
   _skip: false,
-  validate(value: any) {
+  validate: (value: any) => {
     if (isNil(value))
       return false
 
@@ -31,7 +31,11 @@ const between = (
 
     return value >= min && value <= max
   },
-  label: () => `Value must be between ${unref(min)} and ${unref(max)}`,
+  label: () => {
+    // Add error that
+
+    return `Value must be between ${unref(min)} and ${unref(max)}`
+  },
 })
 
 between.skip = SKIP_PROTO

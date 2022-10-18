@@ -12,7 +12,7 @@ import type { ValidationRule } from '../types'
 const minValue = (min: number | Date | Ref<number | Date>): ValidationRule => {
   return {
     _skip: false,
-    validate(value: number | Date) {
+    validate: (value: number | Date) => {
       if (isNil(value))
         return false
 
@@ -26,7 +26,7 @@ const minValue = (min: number | Date | Ref<number | Date>): ValidationRule => {
       return false
     },
     /* c8 ignore next 3 */
-    label() {
+    label: () => {
       return `Minimum allowed value is ${unref(min)}`
     },
   }

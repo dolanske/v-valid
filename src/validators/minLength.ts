@@ -11,7 +11,7 @@ import type { ValidationRule } from '../types'
 const minLength = (min: number | Ref<number>) => {
   return {
     _skip: false,
-    validate(value: string | Set<any> | Map<any, any> | any[] | object) {
+    validate: (value: string | Set<any> | Map<any, any> | any[] | object) => {
       if (isNil(value))
         return false
 
@@ -25,7 +25,7 @@ const minLength = (min: number | Ref<number>) => {
       return value?.length ? value.length >= min : false
     },
     /* c8 ignore next 3 */
-    label() {
+    label: () => {
       return `Value must have a minimum length of ${unref(min)}`
     },
   } as ValidationRule

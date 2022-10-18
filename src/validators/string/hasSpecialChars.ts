@@ -10,12 +10,12 @@ import type { ValidationRuleObject } from '../../types'
 export const hasSpecialChars: ValidationRuleObject = {
   _skip: false,
   skip: SKIP_PROTO,
-  validate(value: any) {
+  validate: (value: any) => {
     if (isNil(value))
       return false
     return !noSpecialCharsRegex.test(value)
   },
-  label(value) {
+  label: (value) => {
     if (typeof value !== 'string')
       return 'Input value must be a string and contain no special characters.'
 

@@ -12,14 +12,14 @@ const match = (regex: RegExp | string): ValidationRule => {
 
   return {
     _skip: false,
-    validate(value: string): boolean {
+    validate: (value: string) => {
       if (isNil(value))
         return false
 
       return r.test(value)
     },
     /* c8 ignore next 3 */
-    label(): string {
+    label: () => {
       return 'Value does not match the provided rule.'
     },
   }

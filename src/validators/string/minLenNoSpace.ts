@@ -13,7 +13,7 @@ import { noSpaceRegex } from '../../regex'
 const minLenNoSpace = (min: number | Ref<number>): ValidationRule => {
   return {
     _skip: false,
-    validate(value: string) {
+    validate: (value: string) => {
       if (isNil(value) || typeof value !== 'string')
         return false
 
@@ -26,7 +26,7 @@ const minLenNoSpace = (min: number | Ref<number>): ValidationRule => {
       return match.length >= min
     },
     /* c8 ignore next 3 */
-    label() {
+    label: () => {
       return `Minimum allowed value excluding empty spaces is ${min}`
     },
   }

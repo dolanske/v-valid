@@ -1,12 +1,13 @@
 # TODO
 
 - [Types] [] Correctly type all functions
-- [useValidation] [] Fix coverage
 - [Label] [] Add multiple error messages
 - [Label] [] Update error messages to follow the same rules
 
 - [Core] Make it possible to use a simple object for rules
 - [Core] Add tests for core
+- [Core] [] Fix coverage
+
 - [Validator] passwordStrength(find a good regex, optional regex)
 
 - [Documentation] Add /string/* methods to Documentation

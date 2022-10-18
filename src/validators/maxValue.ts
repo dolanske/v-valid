@@ -12,7 +12,7 @@ import type { ValidationRule } from '../types'
 const maxValue = (max: number | Date | Ref<number | Date>) => {
   return {
     _skip: false,
-    validate(value: number | Date) {
+    validate: (value: number | Date) => {
       if (isNil(value))
         return false
 
@@ -26,7 +26,7 @@ const maxValue = (max: number | Date | Ref<number | Date>) => {
       return false
     },
     /* c8 ignore next 3 */
-    label() {
+    label: () => {
       return `Maximum allowed value is ${unref(max)}`
     },
   } as ValidationRule

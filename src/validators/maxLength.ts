@@ -12,7 +12,7 @@ import type { ValidationRule } from '../types'
 const maxLength = (max: number | Ref<number>): ValidationRule => {
   return {
     _skip: false,
-    validate(value: any) {
+    validate: (value: any) => {
       if (isNil(value))
         return false
       max = unref(max)
@@ -24,7 +24,7 @@ const maxLength = (max: number | Ref<number>): ValidationRule => {
       return value?.length ? value.length <= max : false
     },
     /* c8 ignore next 3 */
-    label() {
+    label: () => {
       return `Value must have a maximum length of ${unref(max)}`
     },
   }

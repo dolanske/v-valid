@@ -10,7 +10,7 @@ import type { ValidationRuleObject } from '../types'
 export const required: ValidationRuleObject = {
   _skip: false,
   skip: SKIP_PROTO,
-  validate(value: any) {
+  validate: (value: any) => {
     // If value is missing in general
     if (isNil(value) || value === 'null' || value === 'undefined')
       return false
@@ -28,7 +28,7 @@ export const required: ValidationRuleObject = {
     return !isEmpty(value)
   },
   /* c8 ignore next 3 */
-  label() {
+  label: () => {
     return 'Value is required'
   },
 }

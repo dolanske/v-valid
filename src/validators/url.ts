@@ -9,7 +9,7 @@ import type { ValidationRuleObject } from '../types'
 export const url: ValidationRuleObject = {
   _skip: false,
   skip: SKIP_PROTO,
-  validate(value: any) {
+  validate: (value: any) => {
     if (isNil(value))
       return false
 
@@ -20,7 +20,7 @@ export const url: ValidationRuleObject = {
       return false
     }
   },
-  label() {
+  label: () => {
     return 'Value must be a valid URL'
   },
 }

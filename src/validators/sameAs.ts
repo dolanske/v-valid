@@ -15,7 +15,7 @@ const sameAs = (
 ): ValidationRule => {
   return {
     _skip: false,
-    validate(value: any) {
+    validate: (value: any) => {
       compared = unref(compared)
 
       return lenient
@@ -24,7 +24,7 @@ const sameAs = (
         : unref(value) === unref(compared)
     },
     /* c8 ignore next 3 */
-    label() {
+    label: () => {
       return 'Values do not match'
     },
   }

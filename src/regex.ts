@@ -8,3 +8,8 @@ export const noSpecialCharsRegex = /[^a-zA-Z0-9]/
 
 // This regex checks the length of a string without counting the space
 export const noSpaceRegex = /\S/g
+
+// Password validation
+export const hasUppercase = /(?=.*[A-Z])/
+export const hasLowercase = /(?=.*[a-z])/
+export const hasNumber = /(?=.*[0-9])/

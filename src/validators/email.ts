@@ -10,14 +10,14 @@ import type { ValidationRuleObject } from '../types'
 export const email: ValidationRuleObject = {
   _skip: false,
   skip: SKIP_PROTO,
-  validate(value: string) {
+  validate: (value: string) => {
     if (isNil(value))
       return false
 
     return emailRegex.test(value)
   },
   /* c8 ignore next 3 */
-  label() {
+  label: () => {
     return 'Value must be in a valid email format'
   },
 }
