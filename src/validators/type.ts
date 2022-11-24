@@ -7,6 +7,7 @@ import {
   isObject,
   isSet,
   isString,
+  isSymbol,
 } from 'lodash'
 import { SKIP_PROTO } from '../shared'
 import type { ValidationRuleObject } from '../types'
@@ -140,7 +141,7 @@ export const type: Type = {
       if (isNil(value))
         return false
 
-      return typeof value === 'symbol'
+      return isSymbol(value)
     },
     label: ({ value }) => `Value <${typeof value}> must be a Symbol`,
   },

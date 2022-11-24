@@ -1,3 +1,4 @@
+import type { ComputedRef } from 'vue-demi'
 import { reactive, watch } from 'vue-demi'
 import { cloneDeep, get, isPlainObject, set } from 'lodash'
 import { parsePath } from '../utils'
@@ -23,7 +24,7 @@ export async function iterateIn(
   obj: { [key: string]: any },
   callback: (key: string, value: any, path: string) => Promise<void> | void,
   path = '',
-) {
+): Promise<void> {
   for (const key in obj) {
     const newPath = `${path} ${key}`
 
@@ -38,8 +39,8 @@ export async function iterateIn(
 // Main validation method
 
 export function useValidation(
-  form: any,
-  rules: any,
+  form: Record<string, any>,
+  rules: ComputedRef<Record<string, any>>,
   { proactive = false, autoclear = false }: ValidationOptions = {},
 ) {
   const root = reactive<{
@@ -50,14 +51,14 @@ export function useValidation(
 
   if (autoclear)
     watch(form, () => reset(), { deep: true })
-  if (proactive)
+  else if (proactive)
     watch(form, () => validate(), { deep: true })
 
   // Initial assignment
   reset()
 
   function _resetErrorObject() {
-    iterateIn(root.errors, (key, value, path) => {
+    iterateIn(root.errors, (a, b, path) => {
       set(root.errors, path, cloneDeep(emptyErrorObject))
     })
     Object.assign(root, { anyError: false, pending: false })
@@ -126,9 +127,13 @@ export function useValidation(
   }
 
   return {
-    errors: root.errors,
     reset,
     validate,
-    state: root,
+
+    root,
+
+    // Nice names
+    errors: root.errors,
+    run: validate,
   }
 }

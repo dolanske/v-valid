@@ -3,7 +3,7 @@ import { computed, reactive } from 'vue-demi'
 import { useValidation } from '../src/core/validate'
 import { between } from '../src/validators/between'
 
-const form = reactive({ num: 10, bad: 20 })
+const form = reactive({ num: 10, bad: 20, worst: null })
 const form2 = reactive({
   date1: new Date('10/10/2020'),
   date2: new Date('10/10/2020').getTime(),
@@ -18,6 +18,9 @@ describe('[Validators] between', () => {
       bad: {
         range: between(0, 15),
       },
+      worst: {
+        range: between(0, 10)
+      }
     }))
 
     const { validate } = useValidation(form, rules)
@@ -25,6 +28,7 @@ describe('[Validators] between', () => {
     validate().catch((e) => {
       expect(e.num.invalid).toBeFalsy()
       expect(e.bad.invalid).toBeTruthy()
+      expect(e.worst.invalid).toBeTruthy()
     })
   })
 

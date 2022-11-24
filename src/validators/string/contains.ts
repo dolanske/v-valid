@@ -19,8 +19,9 @@ const contains = (toInclude: string | string[]): ValidationRule => {
 
       return toInclude.every((s: string) => value.toLowerCase().includes(s.toLowerCase()))
     },
-    label: (value) => {
-      const vals = typeof toInclude === 'string' ? toInclude : toInclude.join(',')
+    label: (value: any) => {
+      // toInclude is either a string or an array of strings
+      const vals = typeof toInclude === 'string' ? toInclude : toInclude.join(', ')
 
       if (typeof value !== 'string')
         return `Input must be a string and must contain <${vals}>`

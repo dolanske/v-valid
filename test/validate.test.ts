@@ -1,16 +1,29 @@
-import { describe, test } from 'vitest'
-import { cloneDeep, get, set } from 'lodash'
+import { describe, expect, test } from 'vitest'
 import { computed, reactive } from 'vue-demi'
-import { parsePath } from '../src/utils'
 import { type } from '../src/validators/type'
 import { minLength } from '../src/validators/minLength'
 import { maxLength } from '../src/validators/maxLength'
-import { emptyErrorObject, iterateIn } from '../src/core/validate'
-import type { Rule, ValidationRule } from '../src/types'
-// import { Errors } from '../src/types'
+import { useValidation } from '../src/core/validate'
 
 describe('[Core] Main validation method', () => {
-  test('Test deep iteration', async () => {
+  test('Simple Test', async () => {
+    const form = reactive({ identifier: 10 })
+    const rules = computed(() => ({
+      identifier: {
+        number: type.num,
+        minLength: minLength(15),
+      },
+    }))
+
+    const { validate, errors, root } = useValidation(form, rules)
+    validate()
+      .finally(() => {
+        expect(root.anyError).toBeTruthy()
+        expect(errors.identifier.invalid).toBeTruthy()
+      })
+  })
+
+  test('Test Deep Nesting', async () => {
     const form = reactive({
       first: 10,
       nested: {
@@ -30,51 +43,14 @@ describe('[Core] Main validation method', () => {
       },
     }))
 
-    // Create errors objects, which is just the form but data replaced with error objects
-    const errors = {}
-    const root = reactive<{
-      anyError: boolean
-      pending: boolean
-      errors: any
-    }>({ anyError: false, pending: false, errors: null })
-    const validateOnly: string[] = []
+    const {
+      run, root,
+    } = useValidation(form, rules)
 
-    root.pending = true
-
-    await iterateIn(form, async (key, value, path) => {
-      path = parsePath(path)
-
-      // Create an errors object following the structure of the form
-      set(errors, path, cloneDeep(emptyErrorObject))
-
-      // Get all rules for an object
-      const pathRules: Rule = get(rules.value, path)
-
-      // Iterate over available rules and perform validation
-      for (const [ruleKey, ruleData] of Object.entries(pathRules)) {
-        if (validateOnly.length > 0 && !validateOnly.includes(ruleKey))
-          continue
-
-        const { label, validate, _skip }: ValidationRule = ruleData
-
-        if (_skip)
-          continue
-
-        const didPass = await validate(value)
-
-        set(errors, `${path}.id`, key)
-        set(errors, `${path}.value`, value)
-
-        if (!didPass) {
-          root.anyError = true
-
-          set(errors, `${path}.invalid`, true)
-          set(errors, `${path}.errors.${ruleKey}`, label(value))
-        }
-      }
-    })
-
-    root.errors = errors as typeof errors
-    root.pending = false
+    run()
+      .finally(() => {
+        expect(root.anyError).toBeTruthy()
+        // expect(errors.nested.bar)
+      })
   })
 })

@@ -25,8 +25,7 @@ const between = (
     if (type.date.validate(value)) {
       min = min instanceof Date ? min.getTime() : new Date(min).getTime()
       max = max instanceof Date ? max.getTime() : new Date(max).getTime()
-      value
-        = value instanceof Date ? value.getTime() : new Date(value).getTime()
+      value = value instanceof Date ? value.getTime() : new Date(value).getTime()
     }
 
     return value >= min && value <= max
