@@ -1,5 +1,5 @@
 import type { ComputedRef } from 'vue-demi'
-import { reactive, watch } from 'vue-demi'
+import { isRef, reactive, unref, watch } from 'vue-demi'
 import { cloneDeep, get, isPlainObject, set } from 'lodash'
 import { parsePath } from '../utils'
 import type {
@@ -21,7 +21,7 @@ export const emptyErrorObject: Error = {
 }
 
 export async function iterateIn(
-  obj: { [key: string]: any },
+  obj: Record<string, any>,
   callback: (key: string, value: any, path: string) => Promise<void> | void,
   path = '',
 ): Promise<void> {
@@ -40,7 +40,7 @@ export async function iterateIn(
 
 export function useValidation(
   form: Record<string, any>,
-  rules: ComputedRef<Record<string, any>>,
+  rules: ComputedRef<Record<string, any>> | Record<string, any>,
   { proactive = false, autoclear = false }: ValidationOptions = {},
 ) {
   const root = reactive<{
@@ -49,10 +49,13 @@ export function useValidation(
     errors: Errors
   }>({ anyError: false, pending: false, errors: {} })
 
-  if (autoclear)
-    watch(form, () => reset(), { deep: true })
-  else if (proactive)
+  if (autoclear) { watch(form, () => reset(), { deep: true }) }
+  else if (proactive) {
     watch(form, () => validate(), { deep: true })
+
+    if (isRef(rules))
+      watch(rules, () => validate(), { deep: true })
+  }
 
   // Initial assignment
   reset()
@@ -83,7 +86,8 @@ export function useValidation(
         set(root.errors, path, cloneDeep(emptyErrorObject))
 
         // Get all rules for an object
-        const pathRules: Rule = get(rules.value, path)
+        const _rules = unref(rules)
+        const pathRules: Rule = get(_rules, path)
 
         if (!pathRules)
           return

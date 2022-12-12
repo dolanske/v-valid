@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { computed, reactive } from 'vue-demi'
+import { computed, reactive, ref } from 'vue-demi'
 import { type } from '../src/validators/type'
 import { minLength } from '../src/validators/minLength'
 import { maxLength } from '../src/validators/maxLength'
@@ -15,11 +15,11 @@ describe('[Core] Main validation method', () => {
       },
     }))
 
-    const { validate, errors, root } = useValidation(form, rules)
+    const { validate, root } = useValidation(form, rules)
     validate()
-      .finally(() => {
+      .catch((e) => {
         expect(root.anyError).toBeTruthy()
-        expect(errors.identifier.invalid).toBeTruthy()
+        expect(e.identifier.invalid).toBeTruthy()
       })
   })
 
@@ -48,9 +48,29 @@ describe('[Core] Main validation method', () => {
     } = useValidation(form, rules)
 
     run()
-      .finally(() => {
+      .catch((e) => {
         expect(root.anyError).toBeTruthy()
-        // expect(errors.nested.bar)
+        expect(e.nested.foo.errors.minLength).toBe('Value must have a minimum length of 6')
+      })
+  })
+
+  test('Change rule parameters after defining useValidation', async () => {
+    const form = reactive({ a: 5 })
+    const amount = ref(3)
+    const rules = computed(() => ({
+      a: {
+        minLength: minLength(amount),
+      },
+    }))
+
+    const { run, root } = useValidation(form, rules)
+
+    amount.value = 10
+
+    run()
+      .catch((e) => {
+        expect(e.a.errors.minLength).toBe(`Value must have a minimum length of ${amount.value}`)
+        expect(root.anyError).toBeTruthy()
       })
   })
 })

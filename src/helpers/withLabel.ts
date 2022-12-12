@@ -17,13 +17,13 @@ export const withLabel = (
   message: string | Label,
   validator: ValidationRule,
 ): ValidationRule => {
-  const { validate } = validator
+  const { validate, _skip } = validator
 
   if (isNil(validate))
     throw new Error('[withLabel] Missing validator function')
 
   return {
-    _skip: validator._skip,
+    _skip,
     validate,
     label: (args) => {
       if (typeof message === 'string')

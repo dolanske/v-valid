@@ -9,7 +9,7 @@ export interface Errors {
   [key: string]: Error
 }
 
-export type Label = (value: any, ...args: any[]) => string
+export type Label = (value: any, args?: Record<string, unknown>) => string
 
 export interface ValidationRule {
   _skip: boolean

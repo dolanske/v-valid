@@ -4,8 +4,8 @@
 - [Label] [] Add multiple error messages
 - [Label] [] Update error messages to follow the same rules
 
-- [Core] Make it possible to use a simple object for rules
-- [Core] Add tests for core
+- [Core] [] Make it possible to use a simple object for rules
+- [Core] [] Add tests for core
 - [Core] [] Fix coverage
 
 - [Validator] passwordStrength(find a good regex, optional regex)
