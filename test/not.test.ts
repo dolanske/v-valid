@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest'
 import { computed, reactive } from 'vue-demi'
-import { between, not, type, useValidation } from '../index'
+import { $not, between, type, useValidation } from '../index'
 
 const form = reactive({
   first: 10,
@@ -10,10 +10,10 @@ const form = reactive({
 test('[Helpers] not', () => {
   const rules = computed(() => ({
     first: {
-      notStringAndNotBetween: not(type.num, between(15, 20)),
+      notStringAndNotBetween: $not(type.num, between(15, 20)),
     },
     second: {
-      notNumber: not(type.num),
+      notNumber: $not(type.num),
     },
   }))
 

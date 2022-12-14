@@ -3,10 +3,13 @@
 - [Types] [] Correctly type all functions
 - [Label] [] Add multiple error messages
 - [Label] [] Update error messages to follow the same rules
+- [Helpers] [] Add a $ prefix to make them visually stand out
 
-- [Core] [] Make it possible to use a simple object for rules
-- [Core] [] Add tests for core
+
+- [Core] [x] Add tests for core
 - [Core] [] Fix coverage
+
+- [Documentation] Rewrite $def & $defParam documentation
 
 - [Validator] passwordStrength(find a good regex, optional regex)
 
@@ -15,6 +18,8 @@
 
 ## Done
 
+- [Core] [x] Make it possible to use a simple object for rules
+- [Core] [x] Add tests for core
 - [Validators] [x] Check if there is more detailed regex for validating email address
 - [Core] [x] Pass parameters into `validate(...args)` to only validate part of the form
 - [Core] [x] Merge errors into state
@@ -46,7 +51,4 @@
 - [Validator] [x] maxLenWithoutSpace()
 - [Validator] [x] hasSpecialChars()
 - [Validator] [x] contains(...words | words[])
-
-## Can't do
-
-- [Fix Helpers] [] defineRule does not properly type parameters
+- [Fix_Helpers] [x] defineRule does not properly type parameters (I did it tho)

@@ -1,7 +1,7 @@
 import { expect, test } from 'vitest'
 import { computed, reactive } from 'vue-demi'
 import { isArray } from 'lodash'
-import { maxLength, minLength, useValidation, validateIf } from '../index'
+import { $validateIf, maxLength, minLength, useValidation } from '../index'
 
 // Prepare testing form
 const form = reactive({ field: [1, 2] })
@@ -12,12 +12,12 @@ test('[Helpers] validateIf', () => {
       // If condition is met (in this example it is); the condition should
       // normally apply. There fore we expect the array to have length of at
       // least 5
-      minLength: validateIf(true, minLength(5)),
+      minLength: $validateIf(true, minLength(5)),
 
       // We can also provide a callback which must return a boolean. In this
       // case we're check if the field is an array and then applying a validator
       // for its length
-      maxLength: validateIf(() => isArray(form.field), maxLength(1)),
+      maxLength: $validateIf(() => isArray(form.field), maxLength(1)),
     },
   }))
 

@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { computed, reactive, ref } from 'vue-demi'
+import { reactive, ref } from 'vue-demi'
 import { type } from '../src/validators/type'
 import { minLength } from '../src/validators/minLength'
 import { maxLength } from '../src/validators/maxLength'
@@ -8,12 +8,12 @@ import { useValidation } from '../src/core/validate'
 describe('[Core] Main validation method', () => {
   test('Simple Test', async () => {
     const form = reactive({ identifier: 10 })
-    const rules = computed(() => ({
+    const rules = {
       identifier: {
         number: type.num,
         minLength: minLength(15),
       },
-    }))
+    }
 
     const { validate, root } = useValidation(form, rules)
     validate()
@@ -32,7 +32,7 @@ describe('[Core] Main validation method', () => {
       },
     })
 
-    const rules = computed(() => ({
+    const rules = {
       first: { mustBeANum: type.num },
       nested: {
         foo: { minLength: minLength(6) },
@@ -41,7 +41,7 @@ describe('[Core] Main validation method', () => {
           maxLength: maxLength(3),
         },
       },
-    }))
+    }
 
     const {
       run, root,
@@ -57,11 +57,11 @@ describe('[Core] Main validation method', () => {
   test('Change rule parameters after defining useValidation', async () => {
     const form = reactive({ a: 5 })
     const amount = ref(3)
-    const rules = computed(() => ({
+    const rules = {
       a: {
         minLength: minLength(amount),
       },
-    }))
+    }
 
     const { run, root } = useValidation(form, rules)
 

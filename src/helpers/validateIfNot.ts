@@ -10,7 +10,7 @@ import { SKIP_PROTO } from '../shared'
  * @param rule Validation rule
  */
 
-export const validateIfNot = (
+export const $validateIfNot = (
   condition: boolean | (() => boolean) | Ref<boolean> | Promise<boolean>,
   rule: ValidationRule,
 ): ValidationRule | Promise<ValidationRule> => {

@@ -5,7 +5,7 @@ import { SKIP_PROTO, validateEntries } from '../shared'
  * @rule Value must pass every provided check
  * @param rules Single or multiple validation rules
  */
-const and = (...rules: ValidationRule[]): ValidationRule => {
+const $and = (...rules: ValidationRule[]): ValidationRule => {
   return {
     _skip: false,
     validate: (value: any) => validateEntries(value, rules, 'every'),
@@ -15,6 +15,6 @@ const and = (...rules: ValidationRule[]): ValidationRule => {
   }
 }
 
-and.skip = SKIP_PROTO
+$and.skip = SKIP_PROTO
 
-export { and }
+export { $and }

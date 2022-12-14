@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest'
 import { computed, reactive } from 'vue-demi'
-import { between, or, type, useValidation } from '../index'
+import { $or, between, type, useValidation } from '../index'
 
 const form = reactive({
   first: 10,
@@ -9,7 +9,7 @@ const form = reactive({
 })
 
 const check = {
-  all: or(type.num, between(2, 100)),
+  all: $or(type.num, between(2, 100)),
 }
 
 test('[Helpers] or', () => {

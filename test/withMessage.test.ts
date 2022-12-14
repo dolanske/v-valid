@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 import { computed, reactive } from 'vue-demi'
-import { minLength, useValidation, withLabel } from '../index'
+import { $withLabel, minLength, useValidation } from '../index'
 
 // Prepare testing form
 const form = reactive({ field: [1, 2] })
@@ -13,7 +13,7 @@ describe('[helpers] withLabel', () => {
         // use withLabel helper to create custom error message We can either use
         // a string or specify a callback which also exposes some parameters such
         // as type and value (more to come maybe)
-        minLength: withLabel((value) => {
+        minLength: $withLabel((value) => {
           // This should return '2'
           expect(value).toHaveLength(2)
           return value.length
@@ -33,7 +33,7 @@ describe('[helpers] withLabel', () => {
 
   test('Simple custom message as a string', () => {
     const rules = computed(() => ({
-      field: { minLength: withLabel('Hello world', minLength(3)) },
+      field: { minLength: $withLabel('Hello world', minLength(3)) },
     }))
 
     const { validate } = useValidation(form, rules)

@@ -26,7 +26,7 @@ You know what they say, you can not trust a thief or a murderer. You know who yo
    const form = reactive({ value: [1, 2, 3] })
 
    // Create rules your form must conform to
-   const rules = computed(() => ({
+   const rules = {
      // Rule keys must match the keys of your form
      value: {
        // Value is rquired
@@ -38,7 +38,7 @@ You know what they say, you can not trust a thief or a murderer. You know who yo
          minLength(1)
        )
      }
-   }))
+   }
 
    // Create your validation instance
    const { validate, errors, reset } = useValidation(form, rules)
@@ -96,10 +96,6 @@ Returns
 - `errors` an object which contains all form fields and their status
 - `state` an object which includes state of the entire form
 
-### Help needed
-
-After writing all of this and spending tens of hours on this project I realized that there is no support for forms with nested fields etc. And honestly at the moment I don't even know how I'd implement it. Any feedback / help / PRs are very helpful. I am still learning :)
-
 ---
 
 ## Validators
@@ -111,9 +107,9 @@ Collection of validators used to construct rule objects
 Requires non-empty value.
 
 ```js
-const rules = computed(() => ({
+const rules = {
   name: { required }
-}))
+}
 ```
 
 ---
@@ -128,9 +124,9 @@ Requires input to have a minimal specified length.
   - `string`, `Set<any>`, `Map<any, any>`, `any[]` and `Object`
 
 ```js
-const rules = computed(() => ({
+const rules = {
   name: { minLength: minLength(10) }
-}))
+}
 ```
 
 ---
@@ -145,9 +141,9 @@ Requires input to have a maximum specified length.
   - `string`, `Set<any>`, `Map<any, any>`, `any[]`, `Object`
 
 ```js
-const rules = computed(() => ({
+const rules = {
   name: { minLength: minLength(10) }
-}))
+}
 ```
 
 ---
@@ -163,12 +159,12 @@ Requires input to be a number or Date within the specified bounds.
   - `number`, `Date`
 
 ```js
-const rules = computed(() => ({
+const rules = {
   numberVal: { between: between(0, 10) },
   dateVal: {
     between: between(new Date('12/24/2020'), new Date('12/24/2022').getTime())
   }
-}))
+}
 ```
 
 ---
@@ -196,9 +192,9 @@ Requires input to be the same as the provided value in the rule.
   - `any`
 
 ```js
-const rules = computed(() => ({
+const rules = {
   name: { sameAs: sameAs('Hello world') }
-}))
+}
 ```
 
 ---
@@ -214,11 +210,11 @@ Requires value to match the provided regular expression check.
 
 ```js
 // Checks wether string contains only letters and numbers
-const rules = computed(() => ({
+const rules = {
   name: {
     noSpecialChars: match(/[^a-zA-Z0-9]/)
   }
-}))
+}
 ```
 
 ---
@@ -238,9 +234,9 @@ This is a special object rule in which you need to specify the type you want to 
   - `type.symbol` - requires value to be an instance of `Symbol`
 
 ```js
-const rules = computed(() => ({
+const rules = {
   name: { array: type.arr }
-}))
+}
 ```
 
 ## Helpers
@@ -254,17 +250,17 @@ Allows you to add a custom error message to ant validation rule.
   - `ValidationRule | ValidationRuleObject` rule
 
 ```js
-const rules = computed(() => ({
+const rules = {
   name: {
     required: withLabel('You MUST fill this input!!', required)
   }
-}))
+}
 ```
 
 We can also use a method instead of a string when creating custom label. This method receives the validated `value` as the first parameter and all the subsequent parameters from the validation rule. If there are any.
 
 ```js
-const rules = computed(() => ({
+const rules = {
   name: {
     between: withLabel(
       (value, min, max) =>
@@ -274,7 +270,7 @@ const rules = computed(() => ({
       between(5, 10)
     )
   }
-}))
+}
 ```
 
 ---
@@ -287,12 +283,12 @@ Used when we want to apply multiple rules together into one.
 - `or(...ValidationRule[])` Requires at least one rule to be passing to resolve
 
 ```js
-const rule = computed(() => ({
+const rule = {
   name: {
     // We want the value to be an array with at least 1 values in it
     group: and(type.arr, minLength(10))
   }
-}))
+}
 ```
 
 ### `not(rules)`
@@ -300,12 +296,12 @@ const rule = computed(() => ({
 Used in situations where we want to invert a rule results. Can also be used with multiple rules, only resolving when all of them are failing.
 
 ```js
-const rule = computed(() => ({
+const rule = {
   name: {
     // We want the input value to be anything but a string
     notString: not(type.str)
   }
-}))
+}
 ```
 
 ---
@@ -319,7 +315,7 @@ Performs validation if the provided conition is met. Due to implementation limit
   - `ValidationRule` rule
 
 ```js
-const rule = computed(() => ({
+const rule = {
   name: {
     // We want to check min length of value but only if value is an array
     minLength: validateIf(Array.isArray(form.value), minLength(5)),
@@ -327,12 +323,11 @@ const rule = computed(() => ({
     // If value is not a number, required it to match "Hello World"
     sameAs: validateIfNot(typeof form.value === 'number', sameAs('Hello World'))
   }
-}))
+}
 ```
 
 ---
-
-### `defineRule(rule, message): ValidationRule`
+### `$def(rule, message): ValidationRule`
 
 Helper which is used to create and store custom validation rules.
 

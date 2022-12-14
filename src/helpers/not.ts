@@ -5,7 +5,7 @@ import { SKIP_PROTO, validateEntries } from '../shared'
  * @rule Value must fail the check or list of all provided checks
  * @param rules Single or multiple validation rules
  */
-const not = (...rules: ValidationRule[]): ValidationRule => {
+const $not = (...rules: ValidationRule[]): ValidationRule => {
   return {
     _skip: false,
     validate: (value: any) => validateEntries(value, rules, 'none'),
@@ -15,6 +15,6 @@ const not = (...rules: ValidationRule[]): ValidationRule => {
   }
 }
 
-not.skip = SKIP_PROTO()
+$not.skip = SKIP_PROTO()
 
-export { not }
+export { $not }
