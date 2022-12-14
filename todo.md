@@ -1,23 +1,21 @@
 # TODO
 
-- [Types] [] Correctly type all functions
 - [Label] [] Add multiple error messages
 - [Label] [] Update error messages to follow the same rules
-- [Helpers] [] Add a $ prefix to make them visually stand out
 
-
-- [Core] [x] Add tests for core
 - [Core] [] Fix coverage
 
-- [Documentation] Rewrite $def & $defParam documentation
 
-- [Validator] passwordStrength(find a good regex, optional regex)
-
-- [Documentation] Add /string/* methods to Documentation
-- [Documentation] Update documentation to use nested form example
+- [Documentation] [] Review entire documentation
+  - [] Add missing methods
+  - [] Add nested examples
+  - [] Rename all 'rule' to 'rules'
 
 ## Done
 
+- [Types] [x] Correctly type all functions
+- [Helpers] [x] Add a $ prefix to make them visually stand out
+- [Core] [x] Add tests for core
 - [Core] [x] Make it possible to use a simple object for rules
 - [Core] [x] Add tests for core
 - [Validators] [x] Check if there is more detailed regex for validating email address

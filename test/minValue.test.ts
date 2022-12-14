@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest'
-import { minValue } from '../index'
+import { minValue } from '../src/index'
 
 test('[validators] MinValue', () => {
   expect(minValue(10).validate(5)).toBeFalsy()

@@ -1,7 +1,7 @@
-import { isArray, isNil, isString } from 'lodash'
+import { isArray, isNil, isString } from 'lodash-es'
 import { describe, expect, test } from 'vitest'
 import { computed, reactive } from 'vue-demi'
-import { $def, $defParam, useValidation } from '../index'
+import { $def, $defParam, useValidation } from '../src/index'
 
 // Rules without params
 const RULE_required = $def(value => !isNil(value))

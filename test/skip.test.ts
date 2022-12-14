@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest'
-import { minLength } from '../index'
+import { minLength } from '../src/index'
 
 test('[Helpers] skip prototype', () => {
   expect(minLength(1)._skip).toBeFalsy()

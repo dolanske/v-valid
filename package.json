@@ -1,7 +1,7 @@
 {
-  "name": "@dolanske/validate",
-  "version": "0.0.1",
-  "description": "Model based form validation made for vue 3 project. Inspired by vuelidate with personal take on the API and implementation",
+  "name": "@dolanske/v-validate",
+  "version": "0.1.23",
+  "description": "Model based form validation made for vue 3. Inspired by vuelidate with personal take on the API and implementation",
   "author": "dolanske",
   "license": "MIT",
   "repository": {
@@ -14,17 +14,22 @@
     "form",
     "validation"
   ],
-  "main": "index.js",
+  "main": "./dist/v-validate.umd.cjs",
+  "module": "./dist/v-validate.js",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "test": "vitest watch",
-    "coverage": "vitest run --coverage"
+    "coverage": "vitest run --coverage",
+    "build": "vite build"
   },
   "peerDependencies": {
     "vue": "latest"
   },
   "dependencies": {
-    "@types/lodash": "^4.14.184",
-    "lodash": "^4.17.21",
+    "@types/lodash-es": "^4.17.6",
+    "lodash-es": "^4.17.21",
     "vue-demi": "^0.13.11"
   },
   "devDependencies": {

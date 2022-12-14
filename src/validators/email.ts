@@ -1,4 +1,4 @@
-import { isNil } from 'lodash'
+import { isNil } from 'lodash-es'
 import { SKIP_PROTO } from '../shared'
 import { emailRegex } from '../regex'
 import type { ValidationRuleObject } from '../types'

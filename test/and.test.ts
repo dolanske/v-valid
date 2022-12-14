@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest'
 import { computed, reactive } from 'vue-demi'
-import { $and, between, type, useValidation } from '../index'
+import { $and, between, type, useValidation } from '../src/index'
 
 const form = reactive({
   first: 10,

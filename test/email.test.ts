@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { email } from '../index'
+import { email } from '../src/index'
 
 const valid = [
   'email@example.com',

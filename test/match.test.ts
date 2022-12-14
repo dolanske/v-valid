@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest'
-import { match } from '../index'
+import { match } from '../src/index'
 
 test('[validators] Match', () => {
   expect(match(/hello/g).validate('hello world')).toBeTruthy()

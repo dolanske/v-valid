@@ -1,6 +1,6 @@
 import type { ComputedRef } from 'vue-demi'
 import { isRef, reactive, unref, watch } from 'vue-demi'
-import { cloneDeep, get, isPlainObject, set } from 'lodash'
+import { cloneDeep, get, isPlainObject, set } from 'lodash-es'
 import { parsePath } from '../utils'
 import type {
   Error,

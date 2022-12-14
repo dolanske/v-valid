@@ -8,7 +8,7 @@ import {
   isSet,
   isString,
   isSymbol,
-} from 'lodash'
+} from 'lodash-es'
 import { SKIP_PROTO } from '../shared'
 import type { ValidationRuleObject } from '../types'
 

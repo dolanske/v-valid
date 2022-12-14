@@ -1,4 +1,4 @@
-import { isNil } from 'lodash'
+import { isNil } from 'lodash-es'
 import type { Ref } from 'vue-demi'
 import { unref } from 'vue-demi'
 import { SKIP_PROTO } from '../../shared'

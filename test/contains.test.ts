@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest'
-import { contains } from '..'
+import { contains } from '../src'
 
 test('[Validators] Contains', () => {
   expect(contains('Hello').validate('Hello world')).toBeTruthy()

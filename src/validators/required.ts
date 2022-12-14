@@ -1,4 +1,4 @@
-import { isEmpty, isNil } from 'lodash'
+import { isEmpty, isNil } from 'lodash-es'
 import { SKIP_PROTO } from '../shared'
 import type { ValidationRuleObject } from '../types'
 

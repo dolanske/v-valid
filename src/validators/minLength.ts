@@ -1,4 +1,4 @@
-import { isMap, isNil, isObject, isSet } from 'lodash'
+import { isMap, isNil, isObject, isSet } from 'lodash-es'
 import type { Ref } from 'vue-demi'
 import { unref } from 'vue-demi'
 import { SKIP_PROTO } from '../shared'

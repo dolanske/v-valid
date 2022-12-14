@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest'
-import { sameAs } from '../index'
+import { sameAs } from '../src/index'
 
 test('[validators] SameAs', () => {
   // Numbers

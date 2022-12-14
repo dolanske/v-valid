@@ -1,4 +1,4 @@
-import { isDate, isNil, isNumber } from 'lodash'
+import { isDate, isNil, isNumber } from 'lodash-es'
 import type { Ref } from 'vue-demi'
 import { unref } from 'vue-demi'
 import { SKIP_PROTO } from '../shared'
