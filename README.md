@@ -6,76 +6,94 @@ You know what they say, you can not trust a thief or a murderer. You know who yo
 
 1. Make sure you clone this repository or install it wiht npm
 
-   ```cmd
-   npm i -S git+https://github.com/dolanske/validate.git
-   ```
+    ```cmd
+    npm i -S git+https://github.com/dolanske/validate.git
+    ```
 
 2. Set up your component
 
-   ```js
-   import {
-     minLength,
-     required,
-     type,
-     useValidation,
-     validateIf
-   } from '@dolanske/validate'
-   import { computed, reactive } from 'vue'
+    ```js
+    import {
+      minLength,
+      required,
+      type,
+      useValidation,
+      validateIf
+    } from '@dolanske/validate'
+    import { computed, reactive } from 'vue'
 
-   // Create your form
-   const form = reactive({ value: [1, 2, 3] })
+    // Create your form
+    const form = reactive({ value: [1, 2, 3] })
 
-   // Create rules your form must conform to
-   const rules = {
-     // Rule keys must match the keys of your form
-     value: {
-       // Value is rquired
-       required,
-       // Using a helper, we can add conditional validations
-       // Here we check if length of value is larger than 1 but ONLY if the value is an array
-       shouldCheckType: validateIf(
-         () => Array.isArray(form.value),
-         minLength(1)
-       )
-     }
-   }
+    // Create rules your form must conform to
+    const rules = {
+      // Rule keys must match the keys of your form
+      value: {
+        // Value is rquired
+        required,
+        // Using a helper, we can add conditional validations
+        // Here we check if length of value is larger than 1 but ONLY if the value is an array
+        shouldCheckType: validateIf(
+          () => Array.isArray(form.value),
+          minLength(1)
+        )
+      },
+      // You can also nest rules
+      info: {
+        contact: {
+          required,
+          email
+        }
+      }
+    }
 
-   // Create your validation instance
-   const { validate, errors, reset } = useValidation(form, rules)
-   ```
+    // Create your validation instance
+    const { validate, errors, reset } = useValidation(form, rules)
+    ```
 
 3. Trigger form validation whenever and wherever you want
 
-   ```js
-   async function onSubmit(e) {
-     e.preventDefault()
+    ```js
+    async function onSubmit(e) {
+      e.preventDefault()
 
-     validate()
-       // ctx is an object which contains information about validation checks
-       .then((ctx) => {
-         /* Executes if validation passes */
-       })
-       .catch((ctx) => {
-         /* Executes if validation fails */
-       })
-   }
+      validate()
+        // ctx is an object which contains information about validation checks
+        .then((ctx) => {
+          /* Executes if validation passes */
+    
+        })
+        .catch((ctx) => {
+          /* Executes if validation fails */
 
-   // You can also write the same function like this
+          // Extract a rule property for its information
+          const { info } = ctx
 
-   async function onSubmit(e) {
-     e.preventDefault()
+          info.contact.id // 'contact'
+          info.contact.value // 'the_value_that_was_input'
+          info.contact.invalud // 'true'
+          info.contact.errors.email // 'Value must be in a valid email format'
+    
+        })
+    }
 
-     await validate()
+    // You can also write the same function like this
 
-     if (errors) {
-       // Handle errors or reset form
-       // Resetting form clears all errors though, so it is recommended to display
-       // them in some manner and reset them when user begins using the form again
+    async function onSubmit(e) {
+      e.preventDefault()
 
-       reset()
-     }
-   }
-   ```
+      try {
+        await validate()
+      }
+      catch (errors: any) {
+
+        // Handle errors or reset form
+        // Resetting form clears all errors though, so it is recommended to display
+        // them in some manner and reset them when user begins using the form again
+        reset()
+      }
+    }
+    ```
 
 ## API
 

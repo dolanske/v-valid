@@ -29,7 +29,7 @@ const maxLenNoSpace = (max: number | Ref<number>): ValidationRule => {
       if (typeof value !== 'string')
         return 'Value must be a string and '
 
-      return `Value must have maximal lenght of ${max} excluding spaces`
+      return `Value must have maximal lenght of ${unref(max)} excluding spaces`
     },
   }
 }

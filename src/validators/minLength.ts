@@ -26,7 +26,7 @@ const minLength = (min: number | Ref<number>) => {
     },
     /* c8 ignore next 3 */
     label: () => {
-      return `Value must greater or equal to ${unref(min)}`
+      return `Value must be greater or equal to ${unref(min)}`
     },
   } as ValidationRule
 }

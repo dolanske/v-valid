@@ -2,12 +2,10 @@
 
 - [Core] [] Fix coverage
 - [Documentation] [] Review entire documentation
-  - [] Add missing methods
-  - [] Add nested examples
-  - [x] Rename all 'rule' to 'rules'
 
 ## Done
 
+- [Label] [x] unref all values within label
 - [Validators] [x] Add tests for decimal
 - [Label] [x] Update error messages to follow the same rules
 - [Types] [x] Correctly type all functions

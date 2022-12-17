@@ -20,9 +20,9 @@ const startsWith = (str: string | Ref<string>, position?: number) => ({
   },
   label: (value: any) => {
     if (typeof value !== 'string')
-      return `Value must be a string and start with '${str}'`
+      return `Value must be a string and start with '${unref(str)}'`
 
-    return `Value must start with '${str}'`
+    return `Value must start with '${unref(str)}'`
   },
 })
 

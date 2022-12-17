@@ -25,7 +25,7 @@ const maxLength = (max: number | Ref<number>): ValidationRule => {
     },
     /* c8 ignore next 3 */
     label: () => {
-      return `Value must have a maximum length of ${unref(max)}`
+      return `Value must be lesser or equal to ${unref(max)}`
     },
   }
 }

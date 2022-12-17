@@ -1,4 +1,5 @@
 import { isNil } from 'lodash-es'
+import { unref } from 'vue-demi'
 import { SKIP_PROTO } from '../../shared'
 import type { ValidationRule } from '../../types'
 
@@ -21,6 +22,8 @@ const contains = (toInclude: string | string[], exact = false): ValidationRule =
       return toInclude.every((s: string) => value.toLowerCase().includes(s.toLowerCase()))
     },
     label: (value: any) => {
+      toInclude = unref(toInclude)
+
       // toInclude is either a string or an array of strings
       const vals = typeof toInclude === 'string' ? toInclude : toInclude.join(', ')
 
