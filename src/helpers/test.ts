@@ -1,5 +1,3 @@
-// TODO: Figure out naming
-
 import type { ValidationRule } from '../types'
 
 /**
@@ -24,6 +22,3 @@ export const $test = (
 
   return result
 }
-
-// TODO [documentation]
-// Mention that for and, or and not the function must be awaited

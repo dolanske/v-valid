@@ -4,7 +4,7 @@ You know what they say, you can not trust a thief or a murderer. You know who yo
 
 ## Example + Setup
 
-1. Make sure you clone this repository or install it wiht npm
+1. Make sure you clone this repository or install it with npm
 
     ```cmd
     npm i -S git+https://github.com/dolanske/validate.git
@@ -34,7 +34,7 @@ You know what they say, you can not trust a thief or a murderer. You know who yo
     const rules = {
       // Rule keys must match the keys of your form
       value: {
-        // Value is rquired
+        // Value is required
         required,
         // Using a helper, we can add conditional validations
         // Here we check if length of value is larger than 1 but ONLY if the value is an array
@@ -176,7 +176,7 @@ const rules = {
 Input must be a string and excluding spaces must be equal or greater to the provided min value.
 
 - **Parameters**
-  - `Ref<number> | number` min - Minimum allowed stribg length
+  - `Ref<number> | number` min - Minimum allowed string length
 - **Works with**
   - `string`
 
@@ -197,7 +197,7 @@ const rules = {
 Input must be a string and excluding spaces must be equal or lesser to the provided max value.
 
 - **Parameters**
-  - `Ref<number> | number` max - Maximum allowed stribg length
+  - `Ref<number> | number` max - Maximum allowed string length
 - **Works with**
   - `string`
 
@@ -445,7 +445,7 @@ const rules = {
 
 ### `validateIf(condition, rule)`, `validateIfNot(condition, rule)`
 
-Performs validation if the provided conition is met. Due to implementation limits, you can't use a rule as a condition. For that please use the `and` helper.
+Performs validation if the provided condition is met. Due to implementation limits, you can't use a rule as a condition. For that please use the `and` helper.
 
 - **Parameters**
   - `boolean | () => boolean | Ref<boolean> | Promise<boolean>` condition
@@ -484,7 +484,7 @@ const arrAndMinLen = $defParam < { length: number } > (
   (_, { length }) => `Array with at least ${length} length`
 )
 
-// Asynchronous rule, the main usecase here is validating
+// Asynchronous rule, the main use case here is validating
 // login passwords or other API related things
 const checkPassword = $def(
   password =>
@@ -498,7 +498,7 @@ const checkPassword = $def(
 
 ---
 
-### `test(rule, value): Promise<boolean> | boolean`
+### `$test(rule, value): Promise<boolean> | boolean`
 
 Perform a synthetic validation outside of any validation scope.
 
@@ -507,11 +507,10 @@ Perform a synthetic validation outside of any validation scope.
   - `value` any
 
 ```js
-const result = test(minLength(5), [1, 2, 3]) // False
-const result = test(maxLength(5), [1, 2, 3]) // True
-const result = test(type.symbol, Symbol('Symbol')) // True
+const result = $test(minLength(5), [1, 2, 3]) // False
+const result = $test(maxLength(5), [1, 2, 3]) // True
+const result = $test(type.symbol, Symbol('Symbol')) // True
 
-// with `and`, `not` and `or` or any async
-// custom validators we have to acustom for the returned promise
-const result = await test(or(type.str, type.num), 'Hello World') // True
+// With `and`, `not`, `or` and any async custom validators we have to await the returned promise
+const result = await $test(or(type.str, type.num), 'Hello World') // True
 ```
