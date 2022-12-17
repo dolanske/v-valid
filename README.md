@@ -7,7 +7,7 @@ You know what they say, you can not trust a thief or a murderer. You know who yo
 1. Make sure you clone this repository or install it with npm
 
     ```cmd
-    npm i -S git+https://github.com/dolanske/validate.git
+    npm i -S git+https://github.com/dolanske/v-valid.git
     ```
 
 2. Set up your component
