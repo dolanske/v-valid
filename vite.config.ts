@@ -5,8 +5,8 @@ export default defineConfig({
   build: {
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
-      name: 'v-validate',
-      fileName: 'v-validate',
+      name: 'v-valid',
+      fileName: 'v-valid',
     },
     rollupOptions: {
       external: ['vue-demi', '@types/lodash-es'],

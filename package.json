@@ -1,5 +1,5 @@
 {
-  "name": "@dolanske/v-validate",
+  "name": "@dolanske/v-valid",
   "version": "0.1.23",
   "description": "Model based form validation made for vue 3. Inspired by vuelidate with personal take on the API and implementation",
   "author": "dolanske",
@@ -14,8 +14,8 @@
     "form",
     "validation"
   ],
-  "main": "./dist/v-validate.umd.cjs",
-  "module": "./dist/v-validate.js",
+  "main": "./dist/v-valid.umd.cjs",
+  "module": "./dist/v-valid.js",
   "files": [
     "dist"
   ],

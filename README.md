@@ -353,9 +353,9 @@ that you need to prefix it.
 
 ```js
 // This import method
-import { isMap, isStr } from 'v-validate'
+import { isMap, isStr } from 'v-valid'
 // Equals to this one
-import { type } from 'v-validate'
+import { type } from 'v-valid'
 const { str, map } = type
 
 ```
