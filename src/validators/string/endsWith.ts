@@ -20,7 +20,7 @@ const endsWith = (str: string | Ref<string>, position?: number) => ({
   },
   label: (value: any) => {
     if (typeof value !== 'string')
-      return `Value must be a string and end with ${str}`
+      return `Value must be a string and end with '${str}'`
 
     return `Value must end with '${str}'`
   },

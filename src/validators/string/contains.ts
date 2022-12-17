@@ -5,8 +5,9 @@ import type { ValidationRule } from '../../types'
 /**
  * @Rule Checks wether string input contains certain words or characters
  * @param toInclude Word(s) or character(s) to check for
+ * @param exact Should it split sentences into words or check against the entire string
  */
-const contains = (toInclude: string | string[]): ValidationRule => {
+const contains = (toInclude: string | string[], exact = false): ValidationRule => {
   return {
     _skip: false,
     validate: (value) => {
@@ -15,7 +16,7 @@ const contains = (toInclude: string | string[]): ValidationRule => {
 
       // Split searched input into words
       if (typeof toInclude === 'string')
-        toInclude = toInclude.trim().split(/\s+/)
+        toInclude = !exact ? toInclude.trim().split(/\s+/) : [toInclude]
 
       return toInclude.every((s: string) => value.toLowerCase().includes(s.toLowerCase()))
     },

@@ -84,7 +84,7 @@ You know what they say, you can not trust a thief or a murderer. You know who yo
 Main composable which is used to initiate form validation context as well as return validation methods.
 
 - `form` reactive form object
-- `rules` computed object of rules
+- `rules` object or a computedRef object
 - `options`
   - `autoclear` (default: false) resets all errors the first time a form is updated after `validation()` was ran
   - `proactive` (default: false) runs form validation on every form update
@@ -148,6 +148,48 @@ const rules = {
 
 ---
 
+### `minLenNoSpace`
+
+Input must be a string and excluding spaces must be equal or greater to the provided min value.
+
+- **Parameters**
+  - `Ref<number> | number` min - Minimum allowed stribg length
+- **Works with**
+  - `string`
+
+```js
+const rules = {
+  value: {
+    // A B C D E F => false
+    // A B C D E F G => true
+    min: minLenNoSpace(7)
+  }
+}
+```
+
+---
+
+### `maxLenNoSpace`
+
+Input must be a string and excluding spaces must be equal or lesser to the provided max value.
+
+- **Parameters**
+  - `Ref<number> | number` max - Maximum allowed stribg length
+- **Works with**
+  - `string`
+
+```js
+const rules = {
+  value: {
+    // H  e  l  l  0  => true
+    // Bummer => false
+    max: maxLenNoSpace(5)
+  }
+}
+```
+
+---
+
 ### `between(min, max)`
 
 Requires input to be a number or Date within the specified bounds.
@@ -178,6 +220,18 @@ Requires input to be a valid URL.
 ### `email`
 
 Requires input to be a valid email address.
+
+---
+
+### `decimal`
+
+Requires input to be a number and contain decimals.
+
+---
+
+### `hasSpecialChars`
+
+Checks wether an input contains any special characters
 
 ---
 
@@ -217,14 +271,61 @@ const rules = {
 }
 ```
 
----!SECTION
-###
+---
+
+### `contains(items, split)`
+
+Checks wether string input contains certain words or characters. If you write multiple words. It will check against each word individually.
+
+- **Parameters**
+  - `string | string[]` items - Words to check for
+  - `boolean` (default: false) exact - Wether to match against the entire input string or split it by spaces. Default to true
+- **Works With**
+  - `string`
+
+```js
+const rules = {
+  value: {
+    // Input: 'Hello Dear World' => false
+    containsExact: contains('Hello World', true),
+    // Input: 'Hello World' => true
+    containsSome: contains('Hello Dear World')
+  }
+}
+```
+
+---
+
+### `startsWith(str, pos)` & `endsWith(str, pos)`
+
+Checks wether the input value is a string and starts or ends with the provided parameter.
+You can optionally specify the position where the check begins in the input value
+
+- **Parameters**
+  - `string | Ref<string>` String we are matching against
+  - `number` Starting position of the matching
+    - *Note*: When using `endsWith`, the position starts at the end and goes backwards
+- **Works with**
+  - `string`
+
+
+```js
+const rules = {
+  value: {
+    // Input 'Hello World' => true
+    start: startsWith('llo', 2),
+    // Input 'Hello World' => false
+    endsBad: endsWith('Hello')
+  }
+}
+```
 
 ---
 
 ### `type[typeToCheckFor]`
 
 This is a special object rule in which you need to specify the type you want to check against.
+Note, each type check is also available as a standalone import without using the `type` object.
 
 - **Available type checks**
   - `type.str` - requires value to be an instance of `string`
@@ -288,7 +389,7 @@ Used when we want to apply multiple rules together into one.
 ```js
 const rules = {
   name: {
-    // We want the value to be an array with at least 1 values in it
+    // We want the value to be an array with at least 10 items in it
     group: and(type.arr, minLength(10))
   }
 }
@@ -330,6 +431,7 @@ const rules = {
 ```
 
 ---
+
 ### `$def(rule, message): ValidationRule`
 
 Helpers used to create validation rules

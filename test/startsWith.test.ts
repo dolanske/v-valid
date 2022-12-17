@@ -10,6 +10,6 @@ test('Input starts at a value', () => {
   expect(startsWith().validate('World Hello')).toBeFalsy()
   // @ts-expect-error Wrong type
   expect(startsWith(25).validate('World Hello')).toBeFalsy()
-  expect(startsWith('Hello').label(100)).toBe('Value must be a string')
+  expect(startsWith('Hello').label(100)).toBe('Value must be a string and start with \'Hello\'')
   expect(startsWith('Hello').label('World')).toBe('Value must start with \'Hello\'')
 })

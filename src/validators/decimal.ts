@@ -9,11 +9,11 @@ export const decimal: ValidationRuleObject = {
   _skip: false,
   skip: SKIP_PROTO,
   validate: (value: any) => {
-    if (Number.isNaN(value))
+    if (isNaN(value))
       return false
 
     // Only numbers pass now
-    return Number.isInteger(value)
+    return (value - Math.floor(value)) !== 0
   },
   label: () => 'Value must be an integer',
 }
