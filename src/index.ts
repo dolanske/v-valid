@@ -37,12 +37,12 @@ export { startsWith } from './validators/string/startswith'
 export { endsWith } from './validators/string/endsWith'
 export {
   type,
-  str,
-  num,
-  arr,
-  obj,
-  set,
-  map,
-  date,
-  symbol,
+  str as isStr,
+  num as isNum,
+  arr as isArr,
+  obj as isObj,
+  set as isSet,
+  map as isMap,
+  date as isDate,
+  symbol as isSymbol,
 } from './validators/type'

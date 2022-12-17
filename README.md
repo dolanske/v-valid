@@ -23,7 +23,12 @@ You know what they say, you can not trust a thief or a murderer. You know who yo
     import { computed, reactive } from 'vue'
 
     // Create your form
-    const form = reactive({ value: [1, 2, 3] })
+    const form = reactive({
+      value: [1, 2, 3],
+      info: {
+        contact: 'the_value_should_be_an_email'
+      }
+    })
 
     // Create rules your form must conform to
     const rules = {
@@ -70,8 +75,8 @@ You know what they say, you can not trust a thief or a murderer. You know who yo
           const { info } = ctx
 
           info.contact.id // 'contact'
-          info.contact.value // 'the_value_that_was_input'
-          info.contact.invalud // 'true'
+          info.contact.value // 'the_value_should_be_an_email'
+          info.contact.invalid // 'true'
           info.contact.errors.email // 'Value must be in a valid email format'
     
         })
@@ -105,7 +110,7 @@ Main composable which is used to initiate form validation context as well as ret
 - `rules` object or a computedRef object
 - `options`
   - `autoclear` (default: false) resets all errors the first time a form is updated after `validation()` was ran
-  - `proactive` (default: false) runs form validation on every form update
+  - `proactive` (default: false) runs form validation on every input
 
 Returns
 
@@ -343,7 +348,17 @@ const rules = {
 ### `type[typeToCheckFor]`
 
 This is a special object rule in which you need to specify the type you want to check against.
-Note, each type check is also available as a standalone import without using the `type` object.
+Note, each type check is also available as a standalone import without using the `type` object. Only difference is
+that you need to prefix it.
+
+```js
+// This import method
+import { isMap, isStr } from 'v-validate'
+// Equals to this one
+import { type } from 'v-validate'
+const { str, map } = type
+
+```
 
 - **Available type checks**
   - `type.str` - requires value to be an instance of `string`
