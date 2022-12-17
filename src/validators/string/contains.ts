@@ -24,9 +24,9 @@ const contains = (toInclude: string | string[]): ValidationRule => {
       const vals = typeof toInclude === 'string' ? toInclude : toInclude.join(', ')
 
       if (typeof value !== 'string')
-        return `Input must be a string and must contain <${vals}>`
+        return `Value must be a string and contain <${vals}>`
 
-      return `Input must contain <${vals}>`
+      return `Value must contain <${vals}>`
     },
   }
 }

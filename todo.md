@@ -1,18 +1,18 @@
 # TODO
 
-- [Label] [] Add multiple error messages
-- [Label] [] Update error messages to follow the same rules
+
 
 - [Core] [] Fix coverage
-
-
+- [Validators] [] Add tests for decimal
+ 
 - [Documentation] [] Review entire documentation
   - [] Add missing methods
   - [] Add nested examples
-  - [] Rename all 'rule' to 'rules'
+  - [x] Rename all 'rule' to 'rules'
 
 ## Done
 
+- [Label] [x] Update error messages to follow the same rules
 - [Types] [x] Correctly type all functions
 - [Helpers] [x] Add a $ prefix to make them visually stand out
 - [Core] [x] Add tests for core

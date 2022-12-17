@@ -20,7 +20,7 @@ const match = (regex: RegExp | string): ValidationRule => {
     },
     /* c8 ignore next 3 */
     label: () => {
-      return 'Value does not match the provided rule.'
+      return 'Value must match the provided rule.'
     },
   }
 }

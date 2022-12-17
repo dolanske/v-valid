@@ -10,7 +10,7 @@ const $and = (...rules: ValidationRule[]): ValidationRule => {
     _skip: false,
     validate: (value: any) => validateEntries(value, rules, 'every'),
     label() {
-      return 'Value did not pass all the required checks'
+      return 'Value must pass all the required checks'
     },
   }
 }

@@ -27,7 +27,7 @@ const maxValue = (max: number | Date | Ref<number | Date>) => {
     },
     /* c8 ignore next 3 */
     label: () => {
-      return `Maximum allowed value is ${unref(max)}`
+      return `Value must be shorter or equal to ${unref(max)}`
     },
   } as ValidationRule
 }

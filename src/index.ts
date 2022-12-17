@@ -24,7 +24,7 @@ export { maxLength } from './validators/maxLength'
 export { email } from './validators/email'
 export { sameAs } from './validators/sameAs'
 export { match } from './validators/match'
-export { type } from './validators/type'
+
 export { url } from './validators/url'
 export { between } from './validators/between'
 export { minValue } from './validators/minValue'
@@ -35,4 +35,14 @@ export { hasSpecialChars } from './validators/string/hasSpecialChars'
 export { contains } from './validators/string/contains'
 export { startsWith } from './validators/string/startswith'
 export { endsWith } from './validators/string/endsWith'
-
+export {
+  type,
+  str,
+  num,
+  arr,
+  obj,
+  set,
+  map,
+  date,
+  symbol,
+} from './validators/type'

@@ -17,7 +17,7 @@ export const hasSpecialChars: ValidationRuleObject = {
   },
   label: (value) => {
     if (typeof value !== 'string')
-      return 'Input value must be a string and contain no special characters'
+      return 'Value must be a string and contain no special characters'
 
     return 'Value must not contain any special characters'
   },

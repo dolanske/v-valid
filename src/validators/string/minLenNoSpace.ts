@@ -27,7 +27,7 @@ const minLenNoSpace = (min: number | Ref<number>): ValidationRule => {
     },
     /* c8 ignore next 3 */
     label: () => {
-      return `Minimum allowed value excluding empty spaces is ${min}`
+      return `Value must have minimal lenght of ${min} excluding spaces`
     },
   }
 }

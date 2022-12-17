@@ -25,7 +25,7 @@ const sameAs = (
     },
     /* c8 ignore next 3 */
     label: () => {
-      return 'Values do not match'
+      return 'Values must be matching'
     },
   }
 }

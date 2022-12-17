@@ -10,7 +10,7 @@ const $not = (...rules: ValidationRule[]): ValidationRule => {
     _skip: false,
     validate: (value: any) => validateEntries(value, rules, 'none'),
     label() {
-      return 'Value must not pass any of the checks'
+      return 'Value must pass none of the checks'
     },
   }
 }

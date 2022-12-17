@@ -217,6 +217,9 @@ const rules = {
 }
 ```
 
+---!SECTION
+###
+
 ---
 
 ### `type[typeToCheckFor]`
@@ -283,7 +286,7 @@ Used when we want to apply multiple rules together into one.
 - `or(...ValidationRule[])` Requires at least one rule to be passing to resolve
 
 ```js
-const rule = {
+const rules = {
   name: {
     // We want the value to be an array with at least 1 values in it
     group: and(type.arr, minLength(10))
@@ -296,7 +299,7 @@ const rule = {
 Used in situations where we want to invert a rule results. Can also be used with multiple rules, only resolving when all of them are failing.
 
 ```js
-const rule = {
+const rules = {
   name: {
     // We want the input value to be anything but a string
     notString: not(type.str)
@@ -315,7 +318,7 @@ Performs validation if the provided conition is met. Due to implementation limit
   - `ValidationRule` rule
 
 ```js
-const rule = {
+const rules = {
   name: {
     // We want to check min length of value but only if value is an array
     minLength: validateIf(Array.isArray(form.value), minLength(5)),
@@ -329,22 +332,26 @@ const rule = {
 ---
 ### `$def(rule, message): ValidationRule`
 
-Helper which is used to create and store custom validation rules.
+Helpers used to create validation rules
 
 - **Parameters**
-  - `(value: any, ...args: any[]) => boolean | Promise<boolean>` rule
+  - `(value: any, args: Record<string, unknown>) => boolean | Promise<boolean>` rule
   - `string | Label | undefined` label
 
 ```js
+// Define rule without any parameters
+const required = $def(value => value !== undefined && value !== null, 'Value is required')
+
+// Defining rules with parameters
 // Rule which requires value to be an array and be at least n length
-const arrAndMinLen = defineRule(
-  (value, length) => isArray(value) && value.length >= length,
-  (_, length) => `Array with at least ${length} length`
+const arrAndMinLen = $defParam < { length: number } > (
+  (value, { length }) => isArray(value) && value.length >= length,
+  (_, { length }) => `Array with at least ${length} length`
 )
 
 // Asynchronous rule, the main usecase here is validating
 // login passwords or other API related things
-const checkPassword = defineRule(
+const checkPassword = $def(
   password =>
     new Promise((resolve) => {
       const result = await someApiCall(password)

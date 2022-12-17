@@ -10,7 +10,7 @@ const $or = (...rules: ValidationRule[]): ValidationRule => {
     _skip: false,
     validate: (value: any) => validateEntries(value, rules, 'some'),
     label() {
-      return 'Value did not pass any of the required checks'
+      return 'Value must pass some of the checks'
     },
   }
 }
