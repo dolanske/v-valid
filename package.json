@@ -14,8 +14,8 @@
     "form",
     "validation"
   ],
-  "main": "./dist/v-valid.umd.cjs",
-  "module": "./dist/v-valid.js",
+  "main": "./dist/v-valid.umd.js",
+  "module": "./dist/v-valid.mjs",
   "files": [
     "dist"
   ],
