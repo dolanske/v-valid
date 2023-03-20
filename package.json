@@ -14,8 +14,14 @@
     "form",
     "validation"
   ],
-  "main": "./dist/v-valid.umd.js",
+  "exports": {
+    ".": {
+      "import": "./dist/v-valid.mjs"
+    }
+  },
+  "main": "./dist/v-valid.mjs",
   "module": "./dist/v-valid.mjs",
+  "types": "./dist/src/index.d.ts",
   "files": [
     "dist"
   ],
