@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { computed, reactive, ref, watchEffect } from 'vue-demi'
+import { computed, reactive, ref } from 'vue-demi'
 import { type } from '../src/validators/type'
 import { minLength } from '../src/validators/minLength'
 import { maxLength } from '../src/validators/maxLength'
@@ -111,10 +111,6 @@ describe('[Core] Main validation method', () => {
       },
     })
 
-    watchEffect(() => {
-      console.log(errors)
-    })
-
     await run()
       .catch(() => {
         expect(errors.first.invalid).toBeTruthy()
@@ -123,14 +119,16 @@ describe('[Core] Main validation method', () => {
     const _errorKey = 'shouldFail'
     const _errorMessage = 'This is a test error'
 
-    addError('second', {
+    await addError('second', {
       errorKey: _errorKey,
       message: _errorMessage,
     })
 
-    // FIXME
-    // It seems that the returned errors object is not reactive
     expect(errors.second.invalid).toBeTruthy()
     expect(errors.second.errors[_errorKey]).toBe(_errorMessage)
+  })
+
+  test('Submitting multiple times without change', async () => {
+
   })
 })

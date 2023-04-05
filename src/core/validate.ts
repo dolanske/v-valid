@@ -9,9 +9,7 @@ import type {
   ValidationRule,
 } from '../types'
 
-//* ---------------- SECTION ----------------*/
-// Setup and helpers
-
+// Default object
 export const emptyErrorObject: Error = {
   id: null,
   value: null,
@@ -19,6 +17,7 @@ export const emptyErrorObject: Error = {
   errors: {},
 }
 
+// Deep object iterator
 export async function iterateIn(
   obj: Record<string, any>,
   callback: (key: string, value: any, path: string) => Promise<void> | void,
@@ -34,9 +33,15 @@ export async function iterateIn(
   }
 }
 
-//* ---------------- SECTION ----------------*/
-// Main validation composable
-
+/**
+ *
+ * @param form Reactive object which will be validated
+ * @param rules Object which includes rules appended to the keys which match the structure of the `form`
+ *
+ * Optionally, you can pass in an options object
+ * - `proactive`: Boolean - perform validation on every form change
+ * - `autoclear`: Boolean - clear
+ */
 export function useValidation<F extends Record<string, any>, R extends Record<keyof F, any> | ComputedRef<Record<keyof F, any>>>(
   form: F,
   rules: R,
@@ -44,16 +49,31 @@ export function useValidation<F extends Record<string, any>, R extends Record<ke
 ) {
   type Errors = Record<keyof F, Error>
 
-  const root = reactive<{
+  const state = reactive<{
     anyError: boolean
     pending: boolean
     errors: Errors
-  }>({ anyError: false, pending: false, errors: {} as Errors })
+    didValidate: boolean
+  }>({
+    anyError: false,
+    pending: false,
+    errors: {} as Errors,
+    // To improve speed, we do not perform autoclear when validation was
+    // not performed  yet
+    didValidate: false,
+  })
 
-  if (autoclear) { watch(form, reset, { deep: true }) }
+  if (autoclear) {
+    watch(form, () => {
+      if (state.didValidate)
+        reset()
+    }, { deep: true })
+  }
   else if (proactive) {
     watch(form, () => validate(), { deep: true })
 
+    // In case rules object is a REF, we can expect it might update If
+    // it does, perform validation too
     if (isRef(rules))
       watch(rules, () => validate(), { deep: true })
   }
@@ -63,20 +83,28 @@ export function useValidation<F extends Record<string, any>, R extends Record<ke
 
   function _resetErrorObject() {
     iterateIn(form, (_a, _b, path) => {
-      set<any>(root.errors, parsePath(path), cloneDeep(emptyErrorObject))
+      set<any>(state.errors, parsePath(path), cloneDeep(emptyErrorObject))
     })
-    Object.assign(root, { anyError: false, pending: false })
+    Object.assign(state, { anyError: false, pending: false })
   }
 
+  /**
+   * Resets the validation object
+   */
   function reset() {
+    state.didValidate = false
     // Resets the form
     _resetErrorObject()
   }
 
-  async function validate(...validateOnly: string[]) {
+  /**
+   * Performs the form validation by running all user provided rules
+   * against the form data.
+   * @returns Promise which resolves with the validation results
+   */
+  async function validate(...rulesToOnlyValidate: string[]) {
     reset()
-
-    root.pending = true
+    state.pending = true
 
     // eslint-disable-next-line no-async-promise-executor
     return new Promise<Errors>(async (resolve, reject) => {
@@ -84,7 +112,7 @@ export function useValidation<F extends Record<string, any>, R extends Record<ke
         path = parsePath(path)
 
         // Create an errors object following the structure of the form
-        set<any>(root.errors, path, cloneDeep(emptyErrorObject))
+        set<any>(state.errors, path, cloneDeep(emptyErrorObject))
 
         // Get all rules for an object
         const _rules = unref(rules)
@@ -95,7 +123,7 @@ export function useValidation<F extends Record<string, any>, R extends Record<ke
 
         // Iterate over available rules and perform validation
         for (const [ruleKey, ruleData] of Object.entries(pathRules)) {
-          if (validateOnly.length > 0 && !validateOnly.includes(ruleKey))
+          if (rulesToOnlyValidate.length > 0 && !rulesToOnlyValidate.includes(ruleKey))
             continue
 
           const { label, validate, _skip }: ValidationRule = ruleData
@@ -105,40 +133,41 @@ export function useValidation<F extends Record<string, any>, R extends Record<ke
 
           const didPass = await validate(value)
 
-          set<any>(root.errors, `${path}.id`, key)
-          set<any>(root.errors, `${path}.value`, value)
+          set<any>(state.errors, `${path}.id`, key)
+          set<any>(state.errors, `${path}.value`, value)
 
           if (!didPass) {
-            root.anyError = true
+            state.anyError = true
 
-            set<any>(root.errors, `${path}.invalid`, true)
-            set<any>(root.errors, `${path}.errors.${ruleKey}`, label(value))
+            set<any>(state.errors, `${path}.invalid`, true)
+            set<any>(state.errors, `${path}.errors.${ruleKey}`, label(value))
           }
         }
 
         return Promise.resolve()
       })
 
-      root.pending = false
+      state.pending = false
+      state.didValidate = true
 
       // Expose errors object either way
-      if (root.anyError)
-        reject(root.errors)
+      if (state.anyError)
+        reject(state.errors)
       else
-        resolve(root.errors as Errors)
-
-      root.pending = false
+        resolve(state.errors as Errors)
     })
   }
 
+  /**
+   * Appends a new error key and its message to the errors object.
+   * @returns Promise which resolves when new error item is appended
+   */
   function addError(key: keyof F, error: { errorKey: string; message: string }) {
-    // setWith(root.errors, )
-    iterateIn(form, (_key, _, path) => {
+    return iterateIn(form, (_key, _, path) => {
       if (key === _key) {
         const parsedPath = parsePath(path)
-
-        set<any>(root.errors, `${parsedPath}.errors.${error.errorKey}`, error.message)
-        set<any>(root.errors, `${parsedPath}.invalid`, true)
+        set<any>(state.errors, `${parsedPath}.errors.${error.errorKey}`, error.message)
+        set<any>(state.errors, `${parsedPath}.invalid`, true)
       }
     })
   }
@@ -146,9 +175,9 @@ export function useValidation<F extends Record<string, any>, R extends Record<ke
   return {
     reset,
     validate,
-    addError,
     run: validate,
-    errors: root.errors,
-    $: root,
+    addError,
+    errors: state.errors,
+    $: state,
   }
 }
