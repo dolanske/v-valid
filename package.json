@@ -1,6 +1,6 @@
 {
   "name": "@dolanske/v-valid",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Model based form validation made for vue 3. Inspired by vuelidate with personal take on the API and implementation",
   "author": "dolanske",
   "license": "MIT",
