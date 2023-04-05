@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { computed, reactive, ref } from 'vue-demi'
+import { computed, nextTick, reactive, ref } from 'vue-demi'
 import { type } from '../src/validators/type'
 import { minLength } from '../src/validators/minLength'
 import { maxLength } from '../src/validators/maxLength'
@@ -129,6 +129,29 @@ describe('[Core] Main validation method', () => {
   })
 
   test('Submitting multiple times without change', async () => {
+    const { run, errors } = useValidation(reactive({
+      first: 5,
+    }), {
+      first: { minLength: minLength(1) },
+    })
 
+    const snaph = `
+    {
+      "first": {
+        "errors": {
+          "minLength": "Value must be greater or equal to 1",
+        },
+        "id": "first",
+        "invalid": true,
+        "value": 5,
+      },
+    }
+    `
+
+    await run().catch(() => { })
+    expect(errors).toMatchInlineSnapshot(snaph)
+    await nextTick()
+    await run().catch(() => { })
+    expect(errors).toMatchInlineSnapshot(snaph)
   })
 })
