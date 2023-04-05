@@ -1,9 +1,10 @@
 import { describe, expect, test } from 'vitest'
-import { computed, reactive, ref } from 'vue-demi'
+import { computed, reactive, ref, watchEffect } from 'vue-demi'
 import { type } from '../src/validators/type'
 import { minLength } from '../src/validators/minLength'
 import { maxLength } from '../src/validators/maxLength'
 import { useValidation } from '../src/core/validate'
+import { required } from '../src/validators/required'
 
 describe('[Core] Main validation method', () => {
   test('Simple Test', async () => {
@@ -15,10 +16,10 @@ describe('[Core] Main validation method', () => {
       },
     }
 
-    const { validate, root } = useValidation(form, rules)
+    const { validate, $ } = useValidation(form, rules)
     validate()
       .catch((e) => {
-        expect(root.anyError).toBeTruthy()
+        expect($.anyError).toBeTruthy()
         expect(e.identifier.invalid).toBeTruthy()
       })
   })
@@ -44,14 +45,20 @@ describe('[Core] Main validation method', () => {
     }
 
     const {
-      run, root,
+      run, $,
     } = useValidation(form, rules)
 
-    run()
+    await run()
       .catch((e) => {
-        expect(root.anyError).toBeTruthy()
+        expect($.anyError).toBeTruthy()
         expect(e.nested.foo.errors.minLength).toBe('Value must be greater or equal to 6')
       })
+
+    // await run()
+    //   .catch((e) => {
+    //     expect($.anyError).toBeTruthy()
+    //     expect(e.nested.foo.errors.minLength).toBe('Value must be greater or equal to 6')
+    //   })
   })
 
   test('Change rule parameters after defining useValidation', async () => {
@@ -63,14 +70,14 @@ describe('[Core] Main validation method', () => {
       },
     }))
 
-    const { run, root } = useValidation(form, rules)
+    const { run, $ } = useValidation(form, rules)
 
     amount.value = 10
 
     run()
       .catch((e) => {
         expect(e.a.errors.minLength).toBe(`Value must be greater or equal to ${amount.value}`)
-        expect(root.anyError).toBeTruthy()
+        expect($.anyError).toBeTruthy()
       })
   })
 
@@ -89,5 +96,41 @@ describe('[Core] Main validation method', () => {
     catch (errors: any) {
       expect(errors.value.invalid).toBeTruthy()
     }
+  })
+
+  test('Manually add an error', async () => {
+    const { run, errors, addError } = useValidation(reactive({
+      first: 5,
+      second: 10,
+    }), {
+      first: {
+        minLength: minLength(10),
+      },
+      second: {
+        required,
+      },
+    })
+
+    watchEffect(() => {
+      console.log(errors)
+    })
+
+    await run()
+      .catch(() => {
+        expect(errors.first.invalid).toBeTruthy()
+      })
+
+    const _errorKey = 'shouldFail'
+    const _errorMessage = 'This is a test error'
+
+    addError('second', {
+      errorKey: _errorKey,
+      message: _errorMessage,
+    })
+
+    // FIXME
+    // It seems that the returned errors object is not reactive
+    expect(errors.second.invalid).toBeTruthy()
+    expect(errors.second.errors[_errorKey]).toBe(_errorMessage)
   })
 })

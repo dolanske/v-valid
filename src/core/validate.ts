@@ -1,10 +1,9 @@
-import type { ComputedRef } from 'vue-demi'
 import { isRef, reactive, unref, watch } from 'vue-demi'
+import type { ComputedRef } from 'vue-demi'
 import { cloneDeep, get, isPlainObject, set } from 'lodash-es'
 import { parsePath } from '../utils'
 import type {
   Error,
-  Errors,
   Rule,
   ValidationOptions,
   ValidationRule,
@@ -36,20 +35,22 @@ export async function iterateIn(
 }
 
 //* ---------------- SECTION ----------------*/
-// Main validation method
+// Main validation composable
 
-export function useValidation(
-  form: Record<string, any>,
-  rules: ComputedRef<Record<string, any>> | Record<string, any>,
+export function useValidation<F extends Record<string, any>, R extends Record<keyof F, any> | ComputedRef<Record<keyof F, any>>>(
+  form: F,
+  rules: R,
   { proactive = false, autoclear = false }: ValidationOptions = {},
 ) {
+  type Errors = Record<keyof F, Error>
+
   const root = reactive<{
     anyError: boolean
     pending: boolean
     errors: Errors
-  }>({ anyError: false, pending: false, errors: {} })
+  }>({ anyError: false, pending: false, errors: {} as Errors })
 
-  if (autoclear) { watch(form, () => reset(), { deep: true }) }
+  if (autoclear) { watch(form, reset, { deep: true }) }
   else if (proactive) {
     watch(form, () => validate(), { deep: true })
 
@@ -61,8 +62,8 @@ export function useValidation(
   reset()
 
   function _resetErrorObject() {
-    iterateIn(root.errors, (a, b, path) => {
-      set(root.errors, path, cloneDeep(emptyErrorObject))
+    iterateIn(form, (_a, _b, path) => {
+      set<any>(root.errors, parsePath(path), cloneDeep(emptyErrorObject))
     })
     Object.assign(root, { anyError: false, pending: false })
   }
@@ -83,7 +84,7 @@ export function useValidation(
         path = parsePath(path)
 
         // Create an errors object following the structure of the form
-        set(root.errors, path, cloneDeep(emptyErrorObject))
+        set<any>(root.errors, path, cloneDeep(emptyErrorObject))
 
         // Get all rules for an object
         const _rules = unref(rules)
@@ -104,14 +105,14 @@ export function useValidation(
 
           const didPass = await validate(value)
 
-          set(root.errors, `${path}.id`, key)
-          set(root.errors, `${path}.value`, value)
+          set<any>(root.errors, `${path}.id`, key)
+          set<any>(root.errors, `${path}.value`, value)
 
           if (!didPass) {
             root.anyError = true
 
-            set(root.errors, `${path}.invalid`, true)
-            set(root.errors, `${path}.errors.${ruleKey}`, label(value))
+            set<any>(root.errors, `${path}.invalid`, true)
+            set<any>(root.errors, `${path}.errors.${ruleKey}`, label(value))
           }
         }
 
@@ -124,20 +125,30 @@ export function useValidation(
       if (root.anyError)
         reject(root.errors)
       else
-        resolve(root.errors)
+        resolve(root.errors as Errors)
 
       root.pending = false
+    })
+  }
+
+  function addError(key: keyof F, error: { errorKey: string; message: string }) {
+    // setWith(root.errors, )
+    iterateIn(form, (_key, _, path) => {
+      if (key === _key) {
+        const parsedPath = parsePath(path)
+
+        set<any>(root.errors, `${parsedPath}.errors.${error.errorKey}`, error.message)
+        set<any>(root.errors, `${parsedPath}.invalid`, true)
+      }
     })
   }
 
   return {
     reset,
     validate,
-
-    root,
-
-    // Nice names
-    errors: root.errors,
+    addError,
     run: validate,
+    errors: root.errors,
+    $: root,
   }
 }
