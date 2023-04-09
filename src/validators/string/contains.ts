@@ -11,6 +11,7 @@ import type { ValidationRule } from '../../types'
 const contains = (toInclude: string | string[], exact = false): ValidationRule => {
   return {
     _skip: false,
+    id: 'contains',
     validate: (value) => {
       if (isNil(value) || typeof value !== 'string')
         return false

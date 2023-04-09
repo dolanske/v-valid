@@ -13,10 +13,7 @@ export type Label = (value: any, args?: Record<string, unknown>) => string
 
 export interface ValidationRule {
   _skip: boolean
-
   validate: (arg: any) => Promise<boolean> | boolean
-  // These optional destructured parameters serve as a
-  // foundation to better compose error messages
   label: Label
 }
 
