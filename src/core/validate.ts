@@ -42,7 +42,7 @@ export async function iterateIn(
  * - `proactive`: Boolean - perform validation on every form change
  * - `autoclear`: Boolean - clear
  */
-export function useValidation<F extends Record<string, any>, R extends Record<keyof F, any> | ComputedRef<Record<keyof F, any>>>(
+export function useValidation<F extends Record<string, any>, R extends Partial<Record<keyof F, any>> | ComputedRef<Partial<Record<keyof F, any>>>>(
   form: F,
   rules: R,
   { proactive = false, autoclear = false }: ValidationOptions = {},

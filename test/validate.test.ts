@@ -31,6 +31,7 @@ describe('[Core] Main validation method', () => {
         foo: 'Hello',
         bar: [1, 2, 3, 4, 5],
       },
+      doesNotNeedRules: 10,
     })
 
     const rules = {

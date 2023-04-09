@@ -11,7 +11,7 @@ export declare function iterateIn(obj: Record<string, any>, callback: (key: stri
  * - `proactive`: Boolean - perform validation on every form change
  * - `autoclear`: Boolean - clear
  */
-export declare function useValidation<F extends Record<string, any>, R extends Record<keyof F, any> | ComputedRef<Record<keyof F, any>>>(form: F, rules: R, { proactive, autoclear }?: ValidationOptions): {
+export declare function useValidation<F extends Record<string, any>, R extends Partial<Record<keyof F, any>> | ComputedRef<Partial<Record<keyof F, any>>>>(form: F, rules: R, { proactive, autoclear }?: ValidationOptions): {
     reset: () => void;
     validate: (...rulesToOnlyValidate: string[]) => Promise<Record<keyof F, Error>>;
     run: (...rulesToOnlyValidate: string[]) => Promise<Record<keyof F, Error>>;
