@@ -116,12 +116,15 @@ export function useValidation<F extends Record<string, any>, R extends Record<ke
 
         // Get all rules for an object
         const _rules = unref(rules)
+        // Get the specific rules for the current form Key
         const pathRules: Rule = get(_rules, path)
 
         if (!pathRules)
           return
 
-        // Iterate over available rules and perform validation
+        // Iterate over available rules for a key and perform validation
+        // TODO:
+        // Here we could perform a serialization into an array, depending if an array of rules was input or an object
         for (const [ruleKey, ruleData] of Object.entries(pathRules)) {
           if (rulesToOnlyValidate.length > 0 && !rulesToOnlyValidate.includes(ruleKey))
             continue

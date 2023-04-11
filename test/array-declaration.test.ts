@@ -1,6 +1,6 @@
-import { test } from 'vitest'
-import { reactive } from 'vue'
-import { minLenNoSpace, type } from '../src'
+import { expect, test } from 'vitest'
+import { minLenNoSpace, required } from '../src'
+import { extractName } from '../src/utils'
 
 test('Alternative array rule declaration', async () => {
   /**
@@ -14,34 +14,43 @@ test('Alternative array rule declaration', async () => {
    * There are two cases that will require extra attention
    *  1. Using the same validator should append an index at the end of the id within the errors object
    *  2. Every rule will need to receive an ID which is the validator's name eg minLength
+   *  - only required
    *  3. $def and $defParam should have a way of inputting the id, by default it'd be 'customRule'
    */
 
-  const form = reactive({
-    first: 'hello',
-    nested: {
-      second: 'world',
-    },
-  })
+  // Function rules
+  expect(extractName(minLenNoSpace)).toBe('minLenNoSpace')
 
-  // Current syntax
-  const rules = {
-    first: {
-      string: type.str,
-    },
-    nested: {
-      second: {
-        minLenNoSpace: minLenNoSpace(10),
-        num: type.num,
-      },
-    },
-  }
+  // Object rules
+  expect(extractName({ required })).toBe('required')
 
-  // Alternative syntax
-  const rules = {
-    first: [type.str],
-    nested: {
-      second: [minLenNoSpace(10), type.num],
-    },
-  }
+  // const form = reactive({
+  //   first: 'hello',
+  //   nested: {
+  //     second: 'world',
+  //   },
+  // })
+
+  // // Current syntax
+  // const rules = {
+  //   first: {
+  //     string: type.str,
+  //   },
+  //   nested: {
+  //     second: {
+  //       minLenNoSpace: minLenNoSpace(10),
+  //       num: type.num,
+  //     },
+  //   },
+  // }
+
+  // // Alternative syntax
+  // const rules = {
+  //   first: [type.str],
+  //   nested: {
+  //     second: [minLenNoSpace(10), type.num],
+  //   },
+  // }
+
+  // Second alternative syntax
 })
