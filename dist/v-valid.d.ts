@@ -127,15 +127,6 @@ export declare const endsWith: {
     skip: (..._args: any[]) => ValidationRule;
 };
 
-declare interface Error_2 {
-    id: string | null;
-    value: any;
-    invalid: boolean;
-    errors: {
-        [key: string]: string;
-    };
-}
-
 /**
  * @Rule Checks wether an input contains any special characters
  */
@@ -315,20 +306,27 @@ export declare const url: ValidationRuleObject;
  */
 export declare function useValidation<F extends Record<string, any>, R extends Partial<Record<keyof F, any>> | ComputedRef<Partial<Record<keyof F, any>>>>(form: F, rules: R, { proactive, autoclear }?: ValidationOptions): {
     reset: () => void;
-    validate: (...rulesToOnlyValidate: string[]) => Promise<Record<keyof F, Error_2>>;
-    run: (...rulesToOnlyValidate: string[]) => Promise<Record<keyof F, Error_2>>;
+    validate: (...rulesToOnlyValidate: string[]) => Promise<Record<keyof F, ValidationError>>;
+    run: (...rulesToOnlyValidate: string[]) => Promise<Record<keyof F, ValidationError>>;
     addError: (key: keyof F, error: {
         errorKey: string;
         message: string;
     }) => Promise<void>;
-    errors: UnwrapRef<Record<keyof F, Error_2>>;
+    errors: UnwrapRef<Record<keyof F, ValidationError>>;
     $: {
         anyError: boolean;
         pending: boolean;
-        errors: UnwrapRef<Record<keyof F, Error_2>>;
+        errors: UnwrapRef<Record<keyof F, ValidationError>>;
         didValidate: boolean;
     };
 };
+
+declare interface ValidationError {
+    id: string | null;
+    value: any;
+    invalid: boolean;
+    errors: Record<string, string>;
+}
 
 declare interface ValidationOptions {
     proactive?: boolean;
