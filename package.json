@@ -21,7 +21,7 @@
   },
   "main": "./dist/v-valid.js",
   "module": "./dist/v-valid.js",
-  "types": "./dist/index.d.ts",
+  "types": "./dist/v-valid.d.ts",
   "files": [
     "dist"
   ],
