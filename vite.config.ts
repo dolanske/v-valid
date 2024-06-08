@@ -15,7 +15,9 @@ export default defineConfig({
     },
   },
   plugins: [
-    dts(),
+    dts({
+      rollupTypes: true,
+    }),
   ],
   optimizeDeps: {
     exclude: ['vue-demi'],
