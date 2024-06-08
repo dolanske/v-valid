@@ -16,11 +16,11 @@
   ],
   "exports": {
     ".": {
-      "import": "./dist/v-valid.mjs"
+      "import": "./dist/v-valid.js"
     }
   },
-  "main": "./dist/v-valid.mjs",
-  "module": "./dist/v-valid.mjs",
+  "main": "./dist/v-valid.js",
+  "module": "./dist/v-valid.js",
   "types": "./dist/index.d.ts",
   "files": [
     "dist"

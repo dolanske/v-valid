@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { type } from '../src/index'
+import { type } from '../src'
 
 describe('[Validators] Type', () => {
   test('ARRAY type', () => {

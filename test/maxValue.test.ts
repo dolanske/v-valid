@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest'
-import { maxValue } from '../src/index'
+import { maxValue } from '../src'
 
 test('[validators] maxValue', () => {
   expect(maxValue(10).validate(5)).toBeTruthy()

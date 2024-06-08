@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 import { computed, reactive } from 'vue-demi'
-import { $withLabel, minLength, useValidation } from '../src/index'
+import { $withLabel, minLength, useValidation } from '../src'
 
 // Prepare testing form
 const form = reactive({ field: [1, 2] })

@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { url } from '../src/index'
+import { url } from '../src'
 
 const valid = [
   'https://www.google.com',

@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest'
-import { $and, $or, $test, maxLength, minLength, type } from '../src/index'
+import { $and, $or, $test, maxLength, minLength, type } from '../src'
 
 test('[Helpers] test', async () => {
   // Simple value validations

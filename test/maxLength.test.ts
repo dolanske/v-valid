@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest'
-import { maxLength } from '../src/index'
+import { maxLength } from '../src'
 
 test('[validators] maxLength', () => {
   expect(maxLength(1).validate([])).toBeTruthy()

@@ -18,7 +18,7 @@ const minValue = (min: number | Date | Ref<number | Date>): ValidationRule => {
 
       min = unref(min)
 
-      if (isNumber(value))
+      if (isNumber(value) && isNumber(min))
         return value >= min
       if (isDate(value))
         return new Date(value) >= new Date(min)
