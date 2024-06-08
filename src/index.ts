@@ -46,3 +46,8 @@ export {
   date as isDate,
   symbol as isSymbol,
 } from './validators/type'
+
+export type {
+  ValidationError,
+} from './types'
+

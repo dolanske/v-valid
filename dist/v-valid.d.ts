@@ -321,7 +321,7 @@ export declare function useValidation<F extends Record<string, any>, R extends P
     };
 };
 
-declare interface ValidationError {
+export declare interface ValidationError {
     id: string | null;
     value: any;
     invalid: boolean;
