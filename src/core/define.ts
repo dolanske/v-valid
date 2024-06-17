@@ -85,10 +85,6 @@ type PrepareLabel<P> = P extends object
 ? (value: any, params: P) => string
 : (value: any) => string
 
-// function $<T, P>(rule: PrepareRule<T, P>) {
-
-// }
-
 type PrepareReturn<P> = P extends object
   ? ValidationRule
   : ValidationRuleObject
@@ -98,8 +94,14 @@ function $<P = undefined>(rule: PrepareRule<P>, label?: string | PrepareLabel<P>
 
   if (rule.length > 1) {
     // return validator FN
-    return (value, params: P) => {
+    return (value: any, params: P) => {
 
+      return {
+        _skip: false,
+        name: name ?? 'custom-'
+      skip: SKIP_PROTO,
+      validate: (value) => rule(value, params),
+      }
     } satisfies ValidationRule
   } else {
     return  {
@@ -118,9 +120,12 @@ function $<P = undefined>(rule: PrepareRule<P>, label?: string | PrepareLabel<P>
   }
 }
 
-const validator = $<{
+interface MyRule {
   test: number
-}>((value, param) => param.test > value)
+
+} 
+
+const myRule = $<MyRule>((value, param) => param.test > value)
 
 
 
