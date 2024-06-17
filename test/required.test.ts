@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest'
-import { required } from '../src/index'
+import { required } from '../src'
 
 test('[validators] Required', () => {
   // Should fail

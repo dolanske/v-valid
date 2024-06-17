@@ -3,14 +3,14 @@ import type { ComputedRef } from 'vue-demi'
 import { cloneDeep, get, isPlainObject, set } from 'lodash-es'
 import { parsePath } from '../utils'
 import type {
-  Error,
+  ValidationError,
   Rule,
   ValidationOptions,
   ValidationRule,
 } from '../types'
 
 // Default object
-export const emptyErrorObject: Error = {
+export const emptyErrorObject: ValidationError = {
   id: null,
   value: null,
   invalid: false,
@@ -42,12 +42,12 @@ export async function iterateIn(
  * - `proactive`: Boolean - perform validation on every form change
  * - `autoclear`: Boolean - clear
  */
-export function useValidation<F extends Record<string, any>, R extends Record<keyof F, any> | ComputedRef<Record<keyof F, any>>>(
+export function useValidation<F extends Record<string, any>, R extends Partial<Record<keyof F, any>> | ComputedRef<Partial<Record<keyof F, any>>>>(
   form: F,
   rules: R,
   { proactive = false, autoclear = false }: ValidationOptions = {},
 ) {
-  type Errors = Record<keyof F, Error>
+  type Errors = Record<keyof F, ValidationError>
 
   const state = reactive<{
     anyError: boolean

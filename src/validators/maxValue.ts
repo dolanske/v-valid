@@ -18,7 +18,7 @@ const maxValue = (max: number | Date | Ref<number | Date>) => {
 
       max = unref(max)
 
-      if (isNumber(value))
+      if (isNumber(value) && isNumber(max))
         return value <= max
       if (isDate(value))
         return new Date(value) <= new Date(max)

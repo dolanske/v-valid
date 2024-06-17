@@ -1,6 +1,7 @@
 {
   "name": "@dolanske/v-valid",
-  "version": "1.1.1",
+  "type": "module",
+  "version": "1.1.6",
   "description": "Model based form validation made for vue 3. Inspired by vuelidate with personal take on the API and implementation",
   "author": "dolanske",
   "license": "MIT",
@@ -16,12 +17,12 @@
   ],
   "exports": {
     ".": {
-      "import": "./dist/v-valid.mjs"
+      "import": "./dist/v-valid.js"
     }
   },
-  "main": "./dist/v-valid.mjs",
-  "module": "./dist/v-valid.mjs",
-  "types": "./dist/src/index.d.ts",
+  "main": "./dist/v-valid.js",
+  "module": "./dist/v-valid.js",
+  "types": "./dist/v-valid.d.ts",
   "files": [
     "dist"
   ],

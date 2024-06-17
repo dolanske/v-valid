@@ -1,13 +1,11 @@
-export interface Error {
+export interface ValidationError {
   id: string | null
   value: any
   invalid: boolean
-  errors: { [key: string]: string }
+  errors: Record<string, string>
 }
 
-export interface Errors {
-  [key: string]: Error
-}
+export type Errors = Record<string, ValidationError>
 
 export type Label = (value: any, args?: Record<string, unknown>) => string
 
