@@ -1,4 +1,4 @@
-import { describe, expect, test } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { computed, nextTick, reactive, ref } from 'vue-demi'
 import { type } from '../src/validators/type'
 import { minLength } from '../src/validators/minLength'
@@ -7,7 +7,7 @@ import { useValidation } from '../src/core/validate'
 import { required } from '../src/validators/required'
 
 describe('[Core] Main validation method', () => {
-  test('Simple Test', async () => {
+  it('simple Test', async () => {
     const form = reactive({ identifier: 10 })
     const rules = {
       identifier: {
@@ -24,7 +24,7 @@ describe('[Core] Main validation method', () => {
       })
   })
 
-  test('Test Deep Nesting', async () => {
+  it('test Deep Nesting', async () => {
     const form = reactive({
       first: 10,
       nested: {
@@ -46,7 +46,8 @@ describe('[Core] Main validation method', () => {
     }
 
     const {
-      run, $,
+      run,
+      $,
     } = useValidation(form, rules)
 
     await run()
@@ -62,7 +63,7 @@ describe('[Core] Main validation method', () => {
     //   })
   })
 
-  test('Change rule parameters after defining useValidation', async () => {
+  it('change rule parameters after defining useValidation', async () => {
     const form = reactive({ a: 5 })
     const amount = ref(3)
     const rules = computed(() => ({
@@ -82,7 +83,7 @@ describe('[Core] Main validation method', () => {
       })
   })
 
-  test('Try and catch cause', async () => {
+  it('try and catch cause', async () => {
     const { run } = useValidation(reactive({
       value: 5,
     }), {
@@ -99,7 +100,7 @@ describe('[Core] Main validation method', () => {
     }
   })
 
-  test('Manually add an error', async () => {
+  it('manually add an error', async () => {
     const { run, errors, addError } = useValidation(reactive({
       first: 5,
       second: 10,
@@ -129,7 +130,7 @@ describe('[Core] Main validation method', () => {
     expect(errors.second.errors[_errorKey]).toBe(_errorMessage)
   })
 
-  test('Submitting multiple times without change', async () => {
+  it('submitting multiple times without change', async () => {
     const { run, errors } = useValidation(reactive({
       first: 5,
     }), {

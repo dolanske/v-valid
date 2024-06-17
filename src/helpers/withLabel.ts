@@ -13,10 +13,7 @@ import type { Label, ValidationRule } from '../types'
  * @param validator Validation rule
  */
 
-export const $withLabel = (
-  message: string | Label,
-  validator: ValidationRule,
-): ValidationRule => {
+export function $withLabel(message: string | Label, validator: ValidationRule): ValidationRule {
   const { validate, _skip } = validator
 
   if (isNil(validate))

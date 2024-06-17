@@ -3,8 +3,8 @@ import type { ComputedRef } from 'vue-demi'
 import { cloneDeep, get, isPlainObject, set } from 'lodash-es'
 import { parsePath } from '../utils'
 import type {
-  ValidationError,
   Rule,
+  ValidationError,
   ValidationOptions,
   ValidationRule,
 } from '../types'
@@ -165,7 +165,7 @@ export function useValidation<F extends Record<string, any>, R extends Partial<R
    * Appends a new error key and its message to the errors object.
    * @returns Promise which resolves when new error item is appended
    */
-  function addError(key: keyof F, error: { errorKey: string; message: string }) {
+  function addError(key: keyof F, error: { errorKey: string, message: string }) {
     return iterateIn(form, (_key, _, path) => {
       if (key === _key) {
         const parsedPath = parsePath(path)

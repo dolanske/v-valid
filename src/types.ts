@@ -13,6 +13,7 @@ export interface ValidationRule {
   _skip: boolean
   validate: (arg: any) => Promise<boolean> | boolean
   label: Label
+  name: string
 }
 
 export interface ValidationRuleObject extends ValidationRule {

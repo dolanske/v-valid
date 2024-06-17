@@ -1,7 +1,7 @@
-import { expect, test } from 'vitest'
+import { expect, it } from 'vitest'
 import { minLength } from '../src'
 
-test('[validators] MinLength', () => {
+it('[validators] MinLength', () => {
   expect(minLength(1).validate([])).toBeFalsy()
   expect(minLength(1).validate(new Set())).toBeFalsy()
   expect(minLength(1).validate(new Map([]))).toBeFalsy()

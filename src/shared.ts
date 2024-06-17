@@ -16,11 +16,7 @@ export const SKIP_PROTO = function (..._args: any[]): ValidationRule {
  * @internal
  * Validates multiple rules
  */
-export const validateEntries = (
-  value: any,
-  rules: Array<ValidationRule | ValidationRuleObject>,
-  mode: 'every' | 'some' | 'none',
-): Promise<boolean> => {
+export function validateEntries(value: any, rules: Array<ValidationRule | ValidationRuleObject>, mode: 'every' | 'some' | 'none'): Promise<boolean> {
   // eslint-disable-next-line no-async-promise-executor
   return new Promise<boolean>(async (resolve) => {
     const results: boolean[] = []

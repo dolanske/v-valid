@@ -1,9 +1,10 @@
 import { isFunction } from 'lodash-es'
 
-export const delay = <T = any>(ms: number) =>
-  new Promise<T>(resolve => setTimeout(resolve, ms))
+export function delay<T = any>(ms: number) {
+  return new Promise<T>(resolve => setTimeout(resolve, ms))
+}
 
-export const parsePath = (path: string) => {
+export function parsePath(path: string) {
   return path.trim().replace(' ', '.')
 }
 

@@ -1,5 +1,5 @@
 import { isArray, isNil, isString } from 'lodash-es'
-import { describe, expect, test } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { computed, reactive } from 'vue-demi'
 import { $def, $defParam, useValidation } from '../src'
 
@@ -12,8 +12,7 @@ const RULE_string = $def(def => isString(def), value => `Value must be a string.
 const RULE_arrRange = $defParam<{
   min: number
   max: number
-}>((value, { min, max }) => isArray(value) && value.length >= min && value.length <= max,
-  (value, { min, max }) => `Value <${value}> must be an array and between ${min} and ${max} in length.`)
+}>((value, { min, max }) => isArray(value) && value.length >= min && value.length <= max, (value, { min, max }) => `Value <${value}> must be an array and between ${min} and ${max} in length.`)
 
 const RULE_async = $def(
   () =>
@@ -29,7 +28,7 @@ const RULE_equals = $defParam<{ v: string }>((value, { v }) => {
 }, 'idk')
 
 describe('[helpers] $def and $defParams', () => {
-  test('No parameters rule', () => {
+  it('no parameters rule', () => {
     const form = reactive({ value: null })
     const rules = {
       value: {
@@ -47,7 +46,7 @@ describe('[helpers] $def and $defParams', () => {
       })
   })
 
-  test('Rule with custom message', () => {
+  it('rule with custom message', () => {
     const form = reactive({ value: 100 })
     const rules = { value: { RULE_string } }
     const { validate } = useValidation(form, rules)
@@ -59,7 +58,7 @@ describe('[helpers] $def and $defParams', () => {
       })
   })
 
-  test('Rule with custom parameters', () => {
+  it('rule with custom parameters', () => {
     const form = reactive({
       first: [1, 2, 3, 4],
       second: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
@@ -82,7 +81,7 @@ describe('[helpers] $def and $defParams', () => {
       })
   })
 
-  test('Async validation', async () => {
+  it('async validation', async () => {
     const form = reactive({ value: 'nothing' })
     const rules = computed(() => ({
       value: { async: RULE_async },

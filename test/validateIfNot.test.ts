@@ -1,8 +1,8 @@
-import { expect, test } from 'vitest'
+import { expect, it } from 'vitest'
 import { computed, reactive } from 'vue-demi'
 import { $validateIfNot, minLength, type, useValidation } from '../src'
 
-test('[Helpers] validateIfNot', () => {
+it('[Helpers] validateIfNot', () => {
   const form = reactive({
     first: 'Hello world',
     second: [1, 2, 3, 4],

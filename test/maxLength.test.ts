@@ -1,7 +1,7 @@
-import { expect, test } from 'vitest'
+import { expect, it } from 'vitest'
 import { maxLength } from '../src'
 
-test('[validators] maxLength', () => {
+it('[validators] maxLength', () => {
   expect(maxLength(1).validate([])).toBeTruthy()
   expect(maxLength(1).validate(new Set())).toBeTruthy()
   expect(maxLength(1).validate(new Map([]))).toBeTruthy()

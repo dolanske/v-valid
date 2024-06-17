@@ -1,4 +1,4 @@
-import { describe, expect, test } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { email } from '../src'
 
 const valid = [
@@ -40,12 +40,12 @@ const invalid = [
 ]
 
 describe('[Validators] Email', () => {
-  test('Valid emails', () => {
+  it('valid emails', () => {
     for (const str of valid)
       expect(email.validate(str)).toBeTruthy()
   })
 
-  test('Invalid emails', () => {
+  it('invalid emails', () => {
     for (const str of invalid)
       expect(email.validate(str)).toBeFalsy()
   })

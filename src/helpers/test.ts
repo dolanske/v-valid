@@ -11,10 +11,7 @@ import type { ValidationRule } from '../types'
  * @returns Wether the provided value passes the provided check
  */
 
-export const $test = (
-  rule: ValidationRule,
-  value: any,
-): Promise<boolean> | boolean => {
+export function $test(rule: ValidationRule, value: any): Promise<boolean> | boolean {
   const result = rule.validate(value)
 
   if (result instanceof Promise)

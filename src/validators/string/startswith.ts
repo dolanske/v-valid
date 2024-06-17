@@ -8,23 +8,26 @@ import { SKIP_PROTO } from '../../shared'
  * @param position At which character index should the matching begin
  */
 
-const startsWith = (str: string | Ref<string>, position?: number) => ({
-  _skip: false,
-  validate: (value: any) => {
-    str = unref(str)
+function startsWith(str: string | Ref<string>, position?: number) {
+  return {
+    _skip: false,
+    name: 'startsWith',
+    validate: (value: any) => {
+      str = unref(str)
 
-    if (!value || typeof value !== 'string')
-      return false
+      if (!value || typeof value !== 'string')
+        return false
 
-    return value.startsWith(str, position)
-  },
-  label: (value: any) => {
-    if (typeof value !== 'string')
-      return `Value must be a string and start with '${unref(str)}'`
+      return value.startsWith(str, position)
+    },
+    label: (value: any) => {
+      if (typeof value !== 'string')
+        return `Value must be a string and start with '${unref(str)}'`
 
-    return `Value must start with '${unref(str)}'`
-  },
-})
+      return `Value must start with '${unref(str)}'`
+    },
+  }
+}
 
 startsWith.skip = SKIP_PROTO
 

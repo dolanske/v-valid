@@ -1,7 +1,7 @@
-import { expect, test } from 'vitest'
+import { expect, it } from 'vitest'
 import { hasSpecialChars } from '../src/validators/string/hasSpecialChars'
 
-test('[Validator] HasSpecialChars', () => {
+it('[Validator] HasSpecialChars', () => {
   expect(hasSpecialChars.validate('Hello')).toBeTruthy()
   expect(hasSpecialChars.validate('H$**@')).toBeFalsy()
 

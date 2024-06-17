@@ -1,8 +1,8 @@
-import { expect, test } from 'vitest'
+import { expect, it } from 'vitest'
 import { minLenNoSpace, required } from '../src'
 import { extractName } from '../src/utils'
 
-test('Alternative array rule declaration', async () => {
+it('alternative array rule declaration', async () => {
   /**
    * Alternative syntax to declare form rules. While this does not mimic
    * the exact structure the main form has, it can simplify rule

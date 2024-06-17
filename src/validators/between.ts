@@ -10,31 +10,31 @@ import { type } from './type'
  * @param max Maximum value
  */
 
-const between = (
-  min: number | Date | Ref<number | Date>,
-  max: number | Date | Ref<number | Date>,
-) => ({
-  _skip: false,
-  validate: (value: any) => {
-    if (isNil(value))
-      return false
+function between(min: number | Date | Ref<number | Date>, max: number | Date | Ref<number | Date>) {
+  return {
+    _skip: false,
+    name: 'between',
+    validate: (value: any) => {
+      if (isNil(value))
+        return false
 
-    min = unref(min)
-    max = unref(max)
+      min = unref(min)
+      max = unref(max)
 
-    if (type.date.validate(value)) {
-      min = min instanceof Date ? min.getTime() : new Date(min).getTime()
-      max = max instanceof Date ? max.getTime() : new Date(max).getTime()
-      value = value instanceof Date ? value.getTime() : new Date(value).getTime()
-    }
+      if (type.date.validate(value)) {
+        min = min instanceof Date ? min.getTime() : new Date(min).getTime()
+        max = max instanceof Date ? max.getTime() : new Date(max).getTime()
+        value = value instanceof Date ? value.getTime() : new Date(value).getTime()
+      }
 
-    return value >= min && value <= max
-  },
-  label: () => {
+      return value >= min && value <= max
+    },
+    label: () => {
     // Add error that
-    return `Value must be between ${unref(min)} and ${unref(max)}`
-  },
-})
+      return `Value must be between ${unref(min)} and ${unref(max)}`
+    },
+  }
+}
 
 between.skip = SKIP_PROTO
 

@@ -10,8 +10,10 @@ import { noSpaceRegex } from '../../regex'
  * @param min Minimum allowed length
  */
 
-const minLenNoSpace = (min: number | Ref<number>): ValidationRule => {
+function minLenNoSpace(min: number | Ref<number>): ValidationRule {
   return {
+    name: 'minLenNoSpace',
+
     _skip: false,
     validate: (value: string) => {
       if (isNil(value) || typeof value !== 'string')

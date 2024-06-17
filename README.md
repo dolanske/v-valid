@@ -66,7 +66,7 @@ You know what they say, you can not trust a thief or a murderer. You know who yo
         // ctx is an object which contains information about validation checks
         .then((ctx) => {
           /* Executes if validation passes */
-    
+
         })
         .catch((ctx) => {
           /* Executes if validation fails */
@@ -78,7 +78,7 @@ You know what they say, you can not trust a thief or a murderer. You know who yo
           info.contact.value // 'the_value_should_be_an_email'
           info.contact.invalid // 'true'
           info.contact.errors.email // 'Value must be in a valid email format'
-    
+
         })
     }
 
@@ -289,7 +289,7 @@ Requires value to match the provided regular expression check.
 // Checks wether string contains only letters and numbers
 const rules = {
   name: {
-    noSpecialChars: match(/[^a-zA-Z0-9]/)
+    noSpecialChars: match(/[^a-z0-9]/i)
   }
 }
 ```
@@ -331,7 +331,6 @@ You can optionally specify the position where the check begins in the input valu
 - **Works with**
   - `string`
 
-
 ```js
 const rules = {
   value: {
@@ -357,7 +356,6 @@ import { isMap, isStr } from 'v-valid'
 // Equals to this one
 import { type } from 'v-valid'
 const { str, map } = type
-
 ```
 
 - **Available type checks**

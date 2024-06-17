@@ -1,4 +1,4 @@
-import { describe, expect, test } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { url } from '../src'
 
 const valid = [
@@ -18,12 +18,12 @@ const invalid = [
 ]
 
 describe('[validators] Url', () => {
-  test('Valid URLS', () => {
+  it('valid URLS', () => {
     for (const item of valid)
       expect(url.validate(item)).toBeTruthy()
   })
 
-  test('Invalid URLS', () => {
+  it('invalid URLS', () => {
     for (const item of invalid)
       expect(url.validate(item)).toBeFalsy()
   })

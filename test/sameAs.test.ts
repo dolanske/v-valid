@@ -1,7 +1,7 @@
-import { expect, test } from 'vitest'
+import { expect, it } from 'vitest'
 import { sameAs } from '../src'
 
-test('[validators] SameAs', () => {
+it('[validators] SameAs', () => {
   // Numbers
   expect(sameAs(1).validate(1)).toBeTruthy()
   expect(sameAs(1).validate(2)).toBeFalsy()

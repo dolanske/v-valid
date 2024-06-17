@@ -9,6 +9,8 @@ import type { ValidationRuleObject } from '../types'
 
 export const email: ValidationRuleObject = {
   _skip: false,
+  name: 'email',
+
   skip: SKIP_PROTO,
   validate: (value: string) => {
     if (isNil(value))

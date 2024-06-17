@@ -1,7 +1,7 @@
-import { expect, test } from 'vitest'
+import { expect, it } from 'vitest'
 import { decimal } from '../src/validators/decimal'
 
-test('Decimal', () => {
+it('decimal', () => {
   expect(decimal.validate(10)).toBeFalsy()
   expect(decimal.validate('Hello')).toBeFalsy()
   // @ts-expect-error no input

@@ -9,8 +9,10 @@ import type { ValidationRule } from '../types'
  * @param max maximum allowed value
  */
 
-const maxValue = (max: number | Date | Ref<number | Date>) => {
+function maxValue(max: number | Date | Ref<number | Date>) {
   return {
+    name: 'maxValue',
+
     _skip: false,
     validate: (value: number | Date) => {
       if (isNil(value))

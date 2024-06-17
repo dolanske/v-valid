@@ -1,4 +1,4 @@
-import { describe, expect, test } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { computed, reactive } from 'vue-demi'
 import { useValidation } from '../src/core/validate'
 import { between } from '../src/validators/between'
@@ -10,7 +10,7 @@ const form2 = reactive({
 })
 
 describe('[Validators] between', () => {
-  test('Using numbers', () => {
+  it('using numbers', () => {
     const rules = computed(() => ({
       num: {
         range: between(5, 15),
@@ -19,8 +19,8 @@ describe('[Validators] between', () => {
         range: between(0, 15),
       },
       worst: {
-        range: between(0, 10)
-      }
+        range: between(0, 10),
+      },
     }))
 
     const { validate } = useValidation(form, rules)
@@ -32,7 +32,7 @@ describe('[Validators] between', () => {
     })
   })
 
-  test('Using Date', () => {
+  it('using Date', () => {
     const rules = computed(() => ({
       date1: {
         between: between(new Date('10/05/2020'), new Date('10/15/2020')),

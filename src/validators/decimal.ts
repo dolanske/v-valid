@@ -7,6 +7,8 @@ import { SKIP_PROTO } from '../shared'
 
 export const decimal: ValidationRuleObject = {
   _skip: false,
+  name: 'decimal',
+
   skip: SKIP_PROTO,
   validate: (value: any) => {
     if (isNaN(value))

@@ -7,10 +7,12 @@ import type { ValidationRule } from '../types'
  * @param regex Regex validation rule
  */
 
-const match = (regex: RegExp | string): ValidationRule => {
+function match(regex: RegExp | string): ValidationRule {
   const r = typeof regex === 'string' ? new RegExp(regex) : regex
 
   return {
+    name: 'match',
+
     _skip: false,
     validate: (value: string) => {
       if (isNil(value))
