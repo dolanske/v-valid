@@ -81,7 +81,7 @@ export function useValidation<F extends Record<string, any>, R extends Partial<R
   // Initial assignment
   reset()
 
-  function _resetErrorObject() {
+  function resetErrorObject() {
     iterateIn(form, (_a, _b, path) => {
       set<any>(state.errors, parsePath(path), cloneDeep(emptyErrorObject))
     })
@@ -94,7 +94,7 @@ export function useValidation<F extends Record<string, any>, R extends Partial<R
   function reset() {
     state.didValidate = false
     // Resets the form
-    _resetErrorObject()
+    resetErrorObject()
   }
 
   /**
