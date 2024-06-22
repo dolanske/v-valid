@@ -8,21 +8,21 @@ import { useValidation } from './validate'
 type Accepted = ValidationRule | ValidationRuleObject
 type AcceptedRule = Accepted[] | Record<string, Accepted>
 
-// type DeepReplace<T, M> = {
-//   [P in keyof T]:
-//   T[P] extends object
-//     ? DeepReplace<T[P], M>
-//     : AcceptedRule
-// }
-
 // TODO:
 // Deep autocomplete when creating rules
 
-type DeepPartial<T> = T extends keyof T ? {
-  [P in keyof T]: DeepPartial<T[P]>
-} : { [P in keyof T]: AcceptedRule }
+// I DONT KNOW???
+// If R[P]._skip ?
 
-export function defineRules<F>(form: F, rules: DeepPartial<F>) {
+type DeepPartial<F, R> = F extends AcceptedRule
+  ? { [P in keyof F]: Record<string, Accepted> }
+  : { [P in keyof R]: DeepPartial<R[P], R> }
+
+// type DeepPartial<F, R> = F extends keyof R ? {
+//   [P in keyof R]: DeepPartial<R[F], R>
+// } : { [P in keyof R]: Record<any, Accepted> }
+
+export function defineRules<F, R>(form: F, rules: DeepPartial<F, R>) {
   const formattedRules = !isArray(rules)
     ? rules
     : rules.reduce((group, item, index) => {
@@ -43,7 +43,9 @@ const form = reactive({
   name: '',
   age: 0,
   properties: {
-    gender: '',
+    nested: {
+      gender: 0,
+    },
   },
 })
 
@@ -55,12 +57,14 @@ const form = reactive({
 
 const rules = defineRules(form, {
   properties: {
-    gender: {
-      max: maxLength(10),
+    nested: {
+      gender: {
+        len: maxLength(5),
+      },
     },
   },
   name: {
-    max: maxLength(10),
+    test: maxLength(5),
   },
 })
 
