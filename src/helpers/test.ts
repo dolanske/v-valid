@@ -12,10 +12,5 @@ import type { ValidationRule } from '../types'
  */
 
 export function $test(rule: ValidationRule, value: any): Promise<boolean> | boolean {
-  const result = rule.validate(value)
-
-  if (result instanceof Promise)
-    return result
-
-  return result
+  return rule.validate(value)
 }

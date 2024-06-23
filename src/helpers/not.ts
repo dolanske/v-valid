@@ -7,6 +7,7 @@ import { SKIP_PROTO, validateEntries } from '../shared'
  */
 function $not(...rules: ValidationRule[]): ValidationRule {
   return {
+    name: 'not-validator',
     __skip: false,
     validate: (value: any) => validateEntries(value, rules, 'none'),
     label() {

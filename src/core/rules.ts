@@ -1,9 +1,9 @@
 import { isArray, set } from 'lodash-es'
-import type { ReplacePrimitives, ValidationRule, ValidationRuleObject } from '../types'
+import type { ReplacePrimitivesOptional, ValidationRule, ValidationRuleObject } from '../types'
 import { iterateInSync } from '../utils'
 
 type Rule = ValidationRule | ValidationRuleObject
-type DefineRuleType<T> = ReplacePrimitives<T, Record<string, Rule> | Array<Rule>>
+type DefineRuleType<T> = ReplacePrimitivesOptional<T, Record<string, Rule> | Array<Rule>>
 
 /**
  * Type safe helper to generating rules from form objects. Also allows array rule definition
@@ -26,17 +26,6 @@ export function defineRules<F>(rules: DefineRuleType<F>): DefineRuleType<F> {
       return group
     }, {} as DefineRuleType<F>))
   })
-  return rules
 
-  // return isArray(rules)
-  //   ? rules.reduce((group, item, index) => {
-  //     if (item.name in group) {
-  //       Reflect.set(group, item.name + index, item)
-  //     }
-  //     else {
-  //       Reflect.set(group, item.name, item)
-  //     }
-  //     return group
-  //   }, {} as DefineRuleType<F>)
-  //   : rules
+  return rules
 }

@@ -14,12 +14,13 @@ import type { Label, ValidationRule } from '../types'
  */
 
 export function $withLabel(message: string | Label, validator: ValidationRule): ValidationRule {
-  const { validate, __skip } = validator
+  const { validate, __skip, name } = validator
 
   if (isNil(validate))
     throw new Error('[withLabel] Missing validator function')
 
   return {
+    name,
     __skip,
     validate,
     label: (args) => {

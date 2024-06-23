@@ -1,3 +1,10 @@
+import { reactive } from 'vue'
+import { defineRules } from './core/rules'
+import { required } from './validators/required'
+import { minLength } from './validators/minLength'
+import { maxLength } from './validators/maxLength'
+import { useValidation } from './core/validate'
+
 /**
  * Core
  */

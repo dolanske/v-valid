@@ -77,7 +77,7 @@ describe('[helpers] $def and $defParams', () => {
         expect(e.third.errors.equals).toBe('idk')
       })
       .finally(() => {
-        expect(errors.second.invalid).toBeFalsy()
+        expect(errors.value.second.invalid).toBeFalsy()
       })
   })
 

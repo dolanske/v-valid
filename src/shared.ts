@@ -1,8 +1,9 @@
 import type { ValidationRule, ValidationRuleObject } from './types'
 
 /**
- * @internal
  * Sets validation skip to true
+ *
+ * @internal
  */
 export const SKIP_PROTO = function (..._args: any[]): ValidationRule {
   return {
@@ -14,8 +15,9 @@ export const SKIP_PROTO = function (..._args: any[]): ValidationRule {
 }
 
 /**
- * @internal
  * Validates multiple rules
+ *
+ * @internal
  */
 export function validateEntries(value: any, rules: Array<ValidationRule | ValidationRuleObject>, mode: 'every' | 'some' | 'none'): Promise<boolean> {
   // eslint-disable-next-line no-async-promise-executor

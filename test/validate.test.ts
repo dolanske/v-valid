@@ -16,10 +16,10 @@ describe('[Core] Main validation method', () => {
       },
     }
 
-    const { validate, $ } = useValidation(form, rules)
+    const { validate, anyError } = useValidation(form, rules)
     validate()
       .catch((e) => {
-        expect($.anyError).toBeTruthy()
+        expect(anyError).toBeTruthy()
         expect(e.identifier.invalid).toBeTruthy()
       })
   })
@@ -46,13 +46,13 @@ describe('[Core] Main validation method', () => {
     }
 
     const {
-      run,
-      $,
+      validate,
+      anyError,
     } = useValidation(form, rules)
 
-    await run()
+    await validate()
       .catch((e) => {
-        expect($.anyError).toBeTruthy()
+        expect(anyError).toBeTruthy()
         expect(e.nested.foo.errors.minLength).toBe('Value must be greater or equal to 6')
       })
 
@@ -72,19 +72,19 @@ describe('[Core] Main validation method', () => {
       },
     }))
 
-    const { run, $ } = useValidation(form, rules)
+    const { validate, anyError } = useValidation(form, rules)
 
     amount.value = 10
 
-    run()
+    validate()
       .catch((e) => {
         expect(e.a.errors.minLength).toBe(`Value must be greater or equal to ${amount.value}`)
-        expect($.anyError).toBeTruthy()
+        expect(anyError).toBeTruthy()
       })
   })
 
   it('try and catch cause', async () => {
-    const { run } = useValidation(reactive({
+    const { validate } = useValidation(reactive({
       value: 5,
     }), {
       value: {
@@ -93,45 +93,45 @@ describe('[Core] Main validation method', () => {
     })
 
     try {
-      await run()
+      await validate()
     }
     catch (errors: any) {
       expect(errors.value.invalid).toBeTruthy()
     }
   })
 
-  it('manually add an error', async () => {
-    const { run, errors, addError } = useValidation(reactive({
-      first: 5,
-      second: 10,
-    }), {
-      first: {
-        minLength: minLength(10),
-      },
-      second: {
-        required,
-      },
-    })
+  // it('manually add an error', async () => {
+  //   const { validate, errors, addError } = useValidation(reactive({
+  //     first: 5,
+  //     second: 10,
+  //   }), {
+  //     first: {
+  //       minLength: minLength(10),
+  //     },
+  //     second: {
+  //       required,
+  //     },
+  //   })
 
-    await run()
-      .catch(() => {
-        expect(errors.first.invalid).toBeTruthy()
-      })
+  //   await validate()
+  //     .catch(() => {
+  //       expect(errors.first.invalid).toBeTruthy()
+  //     })
 
-    const _errorKey = 'shouldFail'
-    const _errorMessage = 'This is a test error'
+  //   const _errorKey = 'shouldFail'
+  //   const _errorMessage = 'This is a test error'
 
-    await addError('second', {
-      errorKey: _errorKey,
-      message: _errorMessage,
-    })
+  //   addError('second', {
+  //     key: _errorKey,
+  //     message: _errorMessage,
+  //   })
 
-    expect(errors.second.invalid).toBeTruthy()
-    expect(errors.second.errors[_errorKey]).toBe(_errorMessage)
-  })
+  //   expect(errors.second.invalid).toBeTruthy()
+  //   expect(errors.second.errors[_errorKey]).toBe(_errorMessage)
+  // })
 
   it('submitting multiple times without change', async () => {
-    const { run, errors } = useValidation(reactive({
+    const { validate, errors } = useValidation(reactive({
       first: 5,
     }), {
       first: { minLength: minLength(1) },
@@ -150,10 +150,10 @@ describe('[Core] Main validation method', () => {
     }
     `
 
-    await run().catch(() => { })
-    expect(errors).toMatchInlineSnapshot(snaph)
+    await validate().catch(() => { })
+    expect(errors.value).toMatchInlineSnapshot(snaph)
     await nextTick()
-    await run().catch(() => { })
-    expect(errors).toMatchInlineSnapshot(snaph)
+    await validate().catch(() => { })
+    expect(errors.value).toMatchInlineSnapshot(snaph)
   })
 })

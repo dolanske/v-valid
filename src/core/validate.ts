@@ -1,8 +1,10 @@
-import { isRef, reactive, unref, watch } from 'vue-demi'
+import { isRef, reactive, ref, toRef, unref, watch } from 'vue-demi'
 import type { ComputedRef } from 'vue-demi'
 import { cloneDeep, get, isPlainObject, set } from 'lodash-es'
 import { iterateIn, parsePath } from '../utils'
 import type {
+  DeepKeys,
+  ReplacePrimitives,
   Rule,
   ValidationError,
   ValidationOptions,
@@ -18,7 +20,7 @@ export const emptyErrorObject: ValidationError = {
 }
 
 // TODO
-// Errors autocomplete must be deep to mimic form
+// Type errors object based on the form type
 
 /**
  *
@@ -27,26 +29,23 @@ export const emptyErrorObject: ValidationError = {
  *
  * Optionally, you can pass in an options object
  * - `proactive`: Boolean - perform validation on every form change
- * - `autoclear`: Boolean - clear
+ * - `autoclear`: Boolean - reset changes on first input after validation
  */
 export function useValidation<F extends Record<string, any>, R extends Partial<Record<keyof F, any>> | ComputedRef<Partial<Record<keyof F, any>>>>(
   form: F,
   rules: R,
   { proactive = false, autoclear = false }: ValidationOptions = {},
 ) {
-  type Errors = Record<keyof F, ValidationError>
+  type Errors = ReplacePrimitives<F, ValidationError>
 
-  const state = reactive<{
-    anyError: boolean
-    pending: boolean
-    errors: Errors
-    didValidate: boolean
-  }>({
-    anyError: false,
-    pending: false,
-    errors: {} as Errors,
+  const anyError = ref(false)
+  const pending = ref(false)
+  const errors = ref({} as Errors)
+
+  // Internal state not meant to be available to the end user
+  const state = reactive({
     // To improve speed, we do not perform autoclear when validation was
-    // not performed  yet
+    // not performed yet
     didValidate: false,
   })
 
@@ -70,7 +69,7 @@ export function useValidation<F extends Record<string, any>, R extends Partial<R
 
   function resetErrorObject() {
     iterateIn(form, (_a, _b, path) => {
-      set<any>(state.errors, parsePath(path), cloneDeep(emptyErrorObject))
+      set(errors.value, parsePath(path), cloneDeep(emptyErrorObject))
     })
     Object.assign(state, { anyError: false, pending: false })
   }
@@ -91,7 +90,7 @@ export function useValidation<F extends Record<string, any>, R extends Partial<R
    */
   async function validate(...rulesToOnlyValidate: string[]) {
     reset()
-    state.pending = true
+    pending.value = true
 
     // eslint-disable-next-line no-async-promise-executor
     return new Promise<Errors>(async (resolve, reject) => {
@@ -99,7 +98,7 @@ export function useValidation<F extends Record<string, any>, R extends Partial<R
         path = parsePath(path)
 
         // Create an errors object following the structure of the form
-        set<any>(state.errors, path, cloneDeep(emptyErrorObject))
+        set<any>(errors.value, path, cloneDeep(emptyErrorObject))
 
         // Get all rules for an object
         const _rules = unref(rules)
@@ -121,53 +120,47 @@ export function useValidation<F extends Record<string, any>, R extends Partial<R
           if (__skip)
             continue
 
-          const didPass = await validate(value)
+          const passed = await validate(value)
 
-          set<any>(state.errors, `${path}.id`, key)
-          set<any>(state.errors, `${path}.value`, value)
+          set<any>(errors.value, `${path}.id`, key)
+          set<any>(errors.value, `${path}.value`, value)
 
-          if (!didPass) {
-            state.anyError = true
+          if (!passed) {
+            anyError.value = true
 
-            set<any>(state.errors, `${path}.invalid`, true)
-            set<any>(state.errors, `${path}.errors.${ruleKey}`, label(value))
+            set<any>(errors.value, `${path}.invalid`, true)
+            set<any>(errors.value, `${path}.errors.${ruleKey}`, label(value))
           }
         }
 
         return Promise.resolve()
       })
 
-      state.pending = false
+      pending.value = false
       state.didValidate = true
 
       // Expose errors object either way
-      if (state.anyError)
-        reject(state.errors)
+      if (anyError.value)
+        reject(errors.value)
       else
-        resolve(state.errors as Errors)
+        resolve(errors.value as Errors)
     })
   }
 
   /**
    * Appends a new error key and its message to the errors object.
-   * @returns Promise which resolves when new error item is appended
    */
-  function addError(key: keyof F, error: { errorKey: string, message: string }) {
-    return iterateIn(form, (_key, _, path) => {
-      if (key === _key) {
-        const parsedPath = parsePath(path)
-        set<any>(state.errors, `${parsedPath}.errors.${error.errorKey}`, error.message)
-        set<any>(state.errors, `${parsedPath}.invalid`, true)
-      }
-    })
+  function addError(path: DeepKeys<F>, error: { key: string, message: string }) {
+    set<any>(errors.value, `${path}.errors.${error.key}`, error.message)
+    set<any>(errors.value, `${path}.invalid`, true)
   }
 
   return {
     reset,
     validate,
-    run: validate,
     addError,
-    errors: state.errors,
-    $: state,
+    errors,
+    anyError,
+    pending,
   }
 }
