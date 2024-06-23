@@ -8,7 +8,7 @@ import type { ValidationRuleObject } from '../../types'
  */
 
 export const hasSpecialChars: ValidationRuleObject = {
-  _skip: false,
+  __skip: false,
   name: 'hasSpecialChars',
 
   skip: SKIP_PROTO,

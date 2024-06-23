@@ -7,7 +7,7 @@ import { SKIP_PROTO, validateEntries } from '../shared'
  */
 function $and(...rules: ValidationRule[]): ValidationRule {
   return {
-    _skip: false,
+    __skip: false,
     validate: (value: any) => validateEntries(value, rules, 'every'),
     label() {
       return 'Value must pass all the required checks'

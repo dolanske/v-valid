@@ -12,7 +12,7 @@ import { noSpaceRegex } from '../../regex'
 
 function maxLenNoSpace(max: number | Ref<number>): ValidationRule {
   return {
-    _skip: false,
+    __skip: false,
     name: 'maxLenNoSpace',
 
     validate: (value: string) => {

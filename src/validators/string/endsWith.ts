@@ -10,7 +10,7 @@ import { SKIP_PROTO } from '../../shared'
 
 function endsWith(str: string | Ref<string>, position?: number) {
   return {
-    _skip: false,
+    __skip: false,
     name: 'endsWith',
 
     validate: (value: any) => {

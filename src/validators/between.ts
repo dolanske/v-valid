@@ -12,7 +12,7 @@ import { type } from './type'
 
 function between(min: number | Date | Ref<number | Date>, max: number | Date | Ref<number | Date>) {
   return {
-    _skip: false,
+    __skip: false,
     name: 'between',
     validate: (value: any) => {
       if (isNil(value))

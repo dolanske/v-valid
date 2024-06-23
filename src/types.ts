@@ -10,7 +10,7 @@ export type Errors = Record<string, ValidationError>
 export type Label = (value: any, args?: Record<string, unknown>) => string
 
 export interface ValidationRule {
-  _skip: boolean
+  __skip: boolean
   validate: (arg: any) => Promise<boolean> | boolean
   label: Label
   name: string
@@ -29,3 +29,7 @@ export interface ValidationOptions {
   proactive?: boolean
   autoclear?: boolean
 }
+
+export type ReplacePrimitives<T, ReplaceWith> = T extends Record<any, any>
+  ? { [K in keyof T]?: ReplacePrimitives<T[K], ReplaceWith> }
+  : ReplaceWith

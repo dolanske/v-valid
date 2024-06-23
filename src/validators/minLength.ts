@@ -11,7 +11,7 @@ import type { ValidationRule } from '../types'
 function minLength(min: number | Ref<number>) {
   return {
     name: 'minLength',
-    _skip: false,
+    __skip: false,
     validate: (value: string | Set<any> | Map<any, any> | any[] | object) => {
       if (isNil(value))
         return false

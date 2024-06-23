@@ -13,7 +13,7 @@ function match(regex: RegExp | string): ValidationRule {
   return {
     name: 'match',
 
-    _skip: false,
+    __skip: false,
     validate: (value: string) => {
       if (isNil(value))
         return false

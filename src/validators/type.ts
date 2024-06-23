@@ -28,7 +28,7 @@ interface Type {
  * @param value Input value
  */
 export const str: Type['str'] = {
-  _skip: false,
+  __skip: false,
   name: 'str',
   skip: SKIP_PROTO,
   validate: (value: any) => {
@@ -45,7 +45,7 @@ export const str: Type['str'] = {
  */
 export const num: Type['num'] = {
   name: 'num',
-  _skip: false,
+  __skip: false,
   skip: SKIP_PROTO,
   validate: (value: any) => {
     if (isNil(value))
@@ -62,7 +62,7 @@ export const num: Type['num'] = {
 
 export const arr: Type['arr'] = {
   name: 'arr',
-  _skip: false,
+  __skip: false,
   skip: SKIP_PROTO,
   validate: (value: any) => {
     if (isNil(value))
@@ -79,7 +79,7 @@ export const arr: Type['arr'] = {
 
 export const obj: Type['obj'] = {
   name: 'obj',
-  _skip: false,
+  __skip: false,
   skip: SKIP_PROTO,
   validate: (value: any) => {
     if (isNil(value) || isArray(value) || isSet(value) || isMap(value))
@@ -96,7 +96,7 @@ export const obj: Type['obj'] = {
 
 export const set: Type['set'] = {
   name: 'set',
-  _skip: false,
+  __skip: false,
   skip: SKIP_PROTO,
   validate: (value: any) => {
     if (isNil(value))
@@ -113,7 +113,7 @@ export const set: Type['set'] = {
 
 export const map: Type['map'] = {
   name: 'map',
-  _skip: false,
+  __skip: false,
   skip: SKIP_PROTO,
   validate: (value: any) => {
     if (isNil(value))
@@ -130,7 +130,7 @@ export const map: Type['map'] = {
 
 export const date: Type['date'] = {
   name: 'date',
-  _skip: false,
+  __skip: false,
   skip: SKIP_PROTO,
   validate: (value: any) => {
     // eslint-disable-next-line eqeqeq
@@ -155,7 +155,7 @@ export const date: Type['date'] = {
 
 export const symbol: Type['symbol'] = {
   name: 'symbol',
-  _skip: false,
+  __skip: false,
   skip: SKIP_PROTO,
   validate: (value: any) => {
     if (isNil(value))

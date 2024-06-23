@@ -25,7 +25,7 @@ function $def(rule: (value: any) => boolean | Promise<boolean>, label?: DefLabel
   return {
     skip: SKIP_PROTO,
     name: name ?? 'custom-object-rule',
-    _skip: false,
+    __skip: false,
     validate: value => rule(value),
     label: (value) => {
       if (isNil(label))
@@ -50,7 +50,7 @@ function $defParam<P = RuleParams>(rule: (value: any, params: P) => boolean | Pr
   const validator = (params: P): ValidationRule => ({
     // the value from validate is the actual value we are testing against
     // injected during validation
-    _skip: false,
+    __skip: false,
     name: name ?? 'custom-param-rule',
     validate: value => rule(value, params),
     label: (value) => {
@@ -75,63 +75,63 @@ export {
 }
 
 ////////////////
-type ValidationReturn = boolean | Promise<boolean>
+// type ValidationReturn = boolean | Promise<boolean>
 
-type PrepareRule<P> = P extends (value: any) => ValidationReturn
-  ? (value: any) => ValidationReturn
-  : (value: any, params: P) => ValidationReturn
+// type PrepareRule<P> = P extends (value: any) => ValidationReturn
+//   ? (value: any) => ValidationReturn
+//   : (value: any, params: P) => ValidationReturn
 
-type PrepareLabel<P> = P extends (value: any) => ValidationReturn
-  ? (value: any) => string
-  : (value: any, params: P) => string
+// type PrepareLabel<P> = P extends (value: any) => ValidationReturn
+//   ? (value: any) => string
+//   : (value: any, params: P) => string
 
-type PrepareReturn<P> = P extends (value: any) => ValidationReturn
-  ? ValidationRuleObject
-  : ValidationRule
+// type PrepareReturn<P> = P extends (value: any) => ValidationReturn
+//   ? ValidationRuleObject
+//   : ValidationRule
 
-function $<P = undefined>(rule: PrepareRule<P>, label?: string | PrepareLabel<P>, name?: string): PrepareReturn<P> {
-  if (rule.length > 1) {
-    // return validator FN
-    return (params: P) => {
-      return {
-        _skip: false,
-        name: name ?? 'custom-with-params',
-        skip: SKIP_PROTO,
-        validate: (value: any) => rule(value, params),
-        label: (value) => {
-          if (isNil(label))
-            return DEFAULT_LABEL
-          if (typeof label === 'string')
-            return label
-          return label(value, params)
-        },
-      } as ValidationRule
-    }
-  }
-  else {
-    return {
-      _skip: false,
-      name: name ?? 'custom-object',
-      skip: SKIP_PROTO,
-      validate: rule,
-      label: (value) => {
-        if (isNil(label))
-          return DEFAULT_LABEL
-        if (typeof label === 'string')
-          return label
-        return label(value)
-      },
-    } as ValidationRuleObject
-  }
-}
+// function $<P = undefined>(rule: PrepareRule<P>, label?: string | PrepareLabel<P>, name?: string): PrepareReturn<P> {
+//   if (rule.length > 1) {
+//     // return validator FN
+//     return (params: P) => {
+//       return {
+//         __skip: false,
+//         name: name ?? 'custom-with-params',
+//         skip: SKIP_PROTO,
+//         validate: (value: any) => rule(value, params),
+//         label: (value) => {
+//           if (isNil(label))
+//             return DEFAULT_LABEL
+//           if (typeof label === 'string')
+//             return label
+//           return label(value, params)
+//         },
+//       } as ValidationRule
+//     }
+//   }
+//   else {
+//     return {
+//       __skip: false,
+//       name: name ?? 'custom-object',
+//       skip: SKIP_PROTO,
+//       validate: rule,
+//       label: (value) => {
+//         if (isNil(label))
+//           return DEFAULT_LABEL
+//         if (typeof label === 'string')
+//           return label
+//         return label(value)
+//       },
+//     } as ValidationRuleObject
+//   }
+// }
 
-interface MyRule {
-  test: number
+// interface MyRule {
+//   test: number
 
-}
+// }
 
-const myRule = $<MyRule>((value, param) => param.test > value)
-const myRuleVaidator = myRule(10)
+// const myRule = $<MyRule>((value, param) => param.test > value)
+// const myRuleVaidator = myRule(10)
 
 // const validatr3 = $({
 //   name: 'test',

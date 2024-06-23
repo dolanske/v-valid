@@ -7,7 +7,7 @@ import { SKIP_PROTO, validateEntries } from '../shared'
  */
 function $not(...rules: ValidationRule[]): ValidationRule {
   return {
-    _skip: false,
+    __skip: false,
     validate: (value: any) => validateEntries(value, rules, 'none'),
     label() {
       return 'Value must pass none of the checks'

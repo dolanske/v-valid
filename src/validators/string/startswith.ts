@@ -10,7 +10,7 @@ import { SKIP_PROTO } from '../../shared'
 
 function startsWith(str: string | Ref<string>, position?: number) {
   return {
-    _skip: false,
+    __skip: false,
     name: 'startsWith',
     validate: (value: any) => {
       str = unref(str)

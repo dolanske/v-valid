@@ -12,7 +12,7 @@ import type { ValidationRule } from '../types'
 function minValue(min: number | Date | Ref<number | Date>): ValidationRule {
   return {
     name: 'minValue',
-    _skip: false,
+    __skip: false,
     validate: (value: number | Date) => {
       if (isNil(value))
         return false

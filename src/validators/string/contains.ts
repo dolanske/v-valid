@@ -10,7 +10,7 @@ import type { ValidationRule } from '../../types'
  */
 function contains(toInclude: string | string[], exact = false): ValidationRule {
   return {
-    _skip: false,
+    __skip: false,
     name: 'contains',
     validate: (value) => {
       if (isNil(value) || typeof value !== 'string')

@@ -1,7 +1,7 @@
 import { isRef, reactive, unref, watch } from 'vue-demi'
 import type { ComputedRef } from 'vue-demi'
 import { cloneDeep, get, isPlainObject, set } from 'lodash-es'
-import { parsePath } from '../utils'
+import { iterateIn, parsePath } from '../utils'
 import type {
   Rule,
   ValidationError,
@@ -17,21 +17,8 @@ export const emptyErrorObject: ValidationError = {
   errors: {},
 }
 
-// Deep object iterator
-export async function iterateIn(
-  obj: Record<string, any>,
-  callback: (key: string, value: any, path: string) => Promise<void> | void,
-  path = '',
-): Promise<void> {
-  for (const key in obj) {
-    const newPath = `${path} ${key}`
-
-    if (isPlainObject(obj[key]))
-      iterateIn(obj[key], callback, newPath)
-    else
-      await callback(key, obj[key], newPath)
-  }
-}
+// TODO
+// Errors autocomplete must be deep to mimic form
 
 /**
  *
@@ -129,9 +116,9 @@ export function useValidation<F extends Record<string, any>, R extends Partial<R
           if (rulesToOnlyValidate.length > 0 && !rulesToOnlyValidate.includes(ruleKey))
             continue
 
-          const { label, validate, _skip }: ValidationRule = ruleData
+          const { label, validate, __skip }: ValidationRule = ruleData
 
-          if (_skip)
+          if (__skip)
             continue
 
           const didPass = await validate(value)

@@ -14,7 +14,7 @@ function minLenNoSpace(min: number | Ref<number>): ValidationRule {
   return {
     name: 'minLenNoSpace',
 
-    _skip: false,
+    __skip: false,
     validate: (value: string) => {
       if (isNil(value) || typeof value !== 'string')
         return false

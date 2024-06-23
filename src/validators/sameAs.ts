@@ -12,7 +12,7 @@ import type { ValidationRule } from '../types'
 function sameAs(compared: any | Ref<any>, lenient = false): ValidationRule {
   return {
     name: 'sameAs',
-    _skip: false,
+    __skip: false,
     validate: (value: any) => {
       compared = unref(compared)
 

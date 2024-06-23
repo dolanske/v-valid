@@ -8,7 +8,7 @@ import type { ValidationRuleObject } from '../types'
  */
 
 export const required: ValidationRuleObject = {
-  _skip: false,
+  __skip: false,
   name: 'required',
   skip: SKIP_PROTO,
   validate: (value: any) => {

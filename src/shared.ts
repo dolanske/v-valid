@@ -7,7 +7,7 @@ import type { ValidationRule, ValidationRuleObject } from './types'
 export const SKIP_PROTO = function (..._args: any[]): ValidationRule {
   return {
     name: 'skipped-rule',
-    _skip: true,
+    __skip: true,
     validate: () => true,
     label: () => 'test',
   }

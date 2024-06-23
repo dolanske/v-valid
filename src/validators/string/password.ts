@@ -41,7 +41,7 @@ function checkPassword(value: string | number) {
 function password(): ValidationRule {
   return {
     name: 'password',
-    _skip: false,
+    __skip: false,
     validate: (value: any) => {
       return !value
     },

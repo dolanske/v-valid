@@ -13,7 +13,7 @@ function maxValue(max: number | Date | Ref<number | Date>) {
   return {
     name: 'maxValue',
 
-    _skip: false,
+    __skip: false,
     validate: (value: number | Date) => {
       if (isNil(value))
         return false

@@ -7,7 +7,7 @@ import type { ValidationRuleObject } from '../types'
  */
 
 export const url: ValidationRuleObject = {
-  _skip: false,
+  __skip: false,
   name: 'url',
   skip: SKIP_PROTO,
   validate: (value: any) => {
