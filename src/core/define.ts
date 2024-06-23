@@ -21,7 +21,7 @@ type DefLabel = string | ((value: any) => string)
  * This rule is 'as is' and does not take in any parameters nor can it be called.
  */
 
-function $def(rule: (value: any) => boolean | Promise<boolean>, label?: DefLabel, name?: string): ValidationRuleObject {
+function createRule(rule: (value: any) => boolean | Promise<boolean>, label?: DefLabel, name?: string): ValidationRuleObject {
   return {
     skip: SKIP_PROTO,
     name: name ?? 'custom-object-rule',
@@ -46,7 +46,7 @@ function $def(rule: (value: any) => boolean | Promise<boolean>, label?: DefLabel
 type DefParamLabel<P = undefined> = string | ((value: any, params: P) => string)
 type RuleParams = Record<string, any>
 
-function $defParam<P = RuleParams>(rule: (value: any, params: P) => boolean | Promise<boolean>, label?: DefParamLabel<P>, name?: string) {
+function createRuleArg<P = RuleParams>(rule: (value: any, params: P) => boolean | Promise<boolean>, label?: DefParamLabel<P>, name?: string) {
   const validator = (params: P): ValidationRule => ({
     // the value from validate is the actual value we are testing against
     // injected during validation
@@ -70,77 +70,6 @@ function $defParam<P = RuleParams>(rule: (value: any, params: P) => boolean | Pr
 }
 
 export {
-  $def,
-  $defParam,
+  createRule,
+  createRuleArg,
 }
-
-////////////////
-// type ValidationReturn = boolean | Promise<boolean>
-
-// type PrepareRule<P> = P extends (value: any) => ValidationReturn
-//   ? (value: any) => ValidationReturn
-//   : (value: any, params: P) => ValidationReturn
-
-// type PrepareLabel<P> = P extends (value: any) => ValidationReturn
-//   ? (value: any) => string
-//   : (value: any, params: P) => string
-
-// type PrepareReturn<P> = P extends (value: any) => ValidationReturn
-//   ? ValidationRuleObject
-//   : ValidationRule
-
-// function $<P = undefined>(rule: PrepareRule<P>, label?: string | PrepareLabel<P>, name?: string): PrepareReturn<P> {
-//   if (rule.length > 1) {
-//     // return validator FN
-//     return (params: P) => {
-//       return {
-//         __skip: false,
-//         name: name ?? 'custom-with-params',
-//         skip: SKIP_PROTO,
-//         validate: (value: any) => rule(value, params),
-//         label: (value) => {
-//           if (isNil(label))
-//             return DEFAULT_LABEL
-//           if (typeof label === 'string')
-//             return label
-//           return label(value, params)
-//         },
-//       } as ValidationRule
-//     }
-//   }
-//   else {
-//     return {
-//       __skip: false,
-//       name: name ?? 'custom-object',
-//       skip: SKIP_PROTO,
-//       validate: rule,
-//       label: (value) => {
-//         if (isNil(label))
-//           return DEFAULT_LABEL
-//         if (typeof label === 'string')
-//           return label
-//         return label(value)
-//       },
-//     } as ValidationRuleObject
-//   }
-// }
-
-// interface MyRule {
-//   test: number
-
-// }
-
-// const myRule = $<MyRule>((value, param) => param.test > value)
-// const myRuleVaidator = myRule(10)
-
-// const validatr3 = $({
-//   name: 'test',
-//   validator: (value, param) => value >= param,
-//   label: "Idk bro"
-// })
-
-// // Returns object validator = has no params
-// const validator = $((value) => !!value)
-
-// // Returns function, which is going to require 1 param (minLen: number)
-// const validator2 = $((value, minLen) => value >= minLen)

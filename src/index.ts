@@ -9,7 +9,7 @@ import { useValidation } from './core/validate'
  * Core
  */
 export { useValidation } from './core/validate'
-export { $def, $defParam } from './core/define'
+export { createRule, createRuleArg } from './core/define'
 
 /**
  * Helpers

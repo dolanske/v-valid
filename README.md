@@ -463,7 +463,7 @@ const rules = {
 
 ---
 
-### `$def(rule, message): ValidationRule`
+### `createRule(rule, message): ValidationRule`
 
 Helpers used to create validation rules
 
@@ -473,18 +473,18 @@ Helpers used to create validation rules
 
 ```js
 // Define rule without any parameters
-const required = $def(value => value !== undefined && value !== null, 'Value is required')
+const required = createRule(value => value !== undefined && value !== null, 'Value is required')
 
 // Defining rules with parameters
 // Rule which requires value to be an array and be at least n length
-const arrAndMinLen = $defParam < { length: number } > (
+const arrAndMinLen = createRuleArg < { length: number } > (
   (value, { length }) => isArray(value) && value.length >= length,
   (_, { length }) => `Array with at least ${length} length`
 )
 
 // Asynchronous rule, the main use case here is validating
 // login passwords or other API related things
-const checkPassword = $def(
+const checkPassword = createRule(
   password =>
     new Promise((resolve) => {
       const result = await someApiCall(password)

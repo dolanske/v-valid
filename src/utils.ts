@@ -8,16 +8,6 @@ export function parsePath(path: string) {
   return path.trim().replace(' ', '.')
 }
 
-export function extractName(param: unknown) {
-  if (!param)
-    return null
-
-  if (isFunction(param))
-    return param.name
-
-  return Object.keys(param)[0]
-}
-
 export async function iterateIn(
   obj: Record<string, any>,
   callback: (key: string, value: any, path: string) => Promise<void> | void,
