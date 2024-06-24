@@ -86,11 +86,11 @@ You know what they say, you can not trust a thief or a murderer. You know who yo
 
 ### `useValidation(form, rules, options)`
 
-Main composable which is used to initiate form validation context as well as return validation methods.
+Main composable which is used to initiate form validation context. It accepts 2 required and 1 optional param
 
 - `form` reactive form object
 - `rules` object containing the ruleset
-- `options`
+- `options` (optional)
   - `autoclear` (default: false) resets all errors the first time a form is updated after `validate()` was ran
   - `proactive` (default: false) runs form validation on every input
 
