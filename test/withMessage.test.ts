@@ -1,4 +1,4 @@
-import { describe, expect, test } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { computed, reactive } from 'vue-demi'
 import { $withLabel, minLength, useValidation } from '../src'
 
@@ -6,7 +6,7 @@ import { $withLabel, minLength, useValidation } from '../src'
 const form = reactive({ field: [1, 2] })
 
 describe('[helpers] withLabel', () => {
-  test('Test custom message as a callback', () => {
+  it('test custom message as a callback', () => {
     // Prepare rules
     const rules = computed(() => ({
       field: {
@@ -31,7 +31,7 @@ describe('[helpers] withLabel', () => {
     })
   })
 
-  test('Simple custom message as a string', () => {
+  it('simple custom message as a string', () => {
     const rules = computed(() => ({
       field: { minLength: $withLabel('Hello world', minLength(3)) },
     }))

@@ -9,12 +9,10 @@ import type { ValidationRule } from '../types'
  * @param lenient Wether to compare values as == or === (default ===)
  */
 
-const sameAs = (
-  compared: any | Ref<any>,
-  lenient = false,
-): ValidationRule => {
+function sameAs(compared: any | Ref<any>, lenient = false): ValidationRule {
   return {
-    _skip: false,
+    name: 'sameAs',
+    __skip: false,
     validate: (value: any) => {
       compared = unref(compared)
 

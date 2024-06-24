@@ -8,23 +8,27 @@ import { SKIP_PROTO } from '../../shared'
  * @param position At which character index from the end  should the matching begin
  */
 
-const endsWith = (str: string | Ref<string>, position?: number) => ({
-  _skip: false,
-  validate: (value: any) => {
-    str = unref(str)
+function endsWith(str: string | Ref<string>, position?: number) {
+  return {
+    __skip: false,
+    name: 'endsWith',
 
-    if (!value || typeof value !== 'string')
-      return false
+    validate: (value: any) => {
+      str = unref(str)
 
-    return value.endsWith(str, position)
-  },
-  label: (value: any) => {
-    if (typeof value !== 'string')
-      return `Value must be a string and end with '${unref(str)}'`
+      if (!value || typeof value !== 'string')
+        return false
 
-    return `Value must end with '${unref(str)}'`
-  },
-})
+      return value.endsWith(str, position)
+    },
+    label: (value: any) => {
+      if (typeof value !== 'string')
+        return `Value must be a string and end with '${unref(str)}'`
+
+      return `Value must end with '${unref(str)}'`
+    },
+  }
+}
 
 endsWith.skip = SKIP_PROTO
 

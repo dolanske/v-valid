@@ -1,7 +1,7 @@
-import { expect, test } from 'vitest'
+import { expect, it } from 'vitest'
 import { maxValue } from '../src'
 
-test('[validators] maxValue', () => {
+it('[validators] maxValue', () => {
   expect(maxValue(10).validate(5)).toBeTruthy()
   expect(maxValue(new Date('10/10/2010')).validate(new Date('05/05/2010'))).toBeTruthy()
 

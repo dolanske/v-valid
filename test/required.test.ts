@@ -1,7 +1,7 @@
-import { expect, test } from 'vitest'
+import { expect, it } from 'vitest'
 import { required } from '../src'
 
-test('[validators] Required', () => {
+it('[validators] Required', () => {
   // Should fail
   expect(required.validate('')).toBeFalsy()
   expect(required.validate({})).toBeFalsy()

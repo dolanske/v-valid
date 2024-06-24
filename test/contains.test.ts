@@ -1,7 +1,7 @@
-import { expect, test } from 'vitest'
+import { expect, it } from 'vitest'
 import { contains } from '../src'
 
-test('[Validators] Contains', () => {
+it('[Validators] Contains', () => {
   expect(contains('Hello').validate('Hello world')).toBeTruthy()
   expect(contains('Hell').validate('Hello world')).toBeTruthy()
   expect(contains('rld').validate('Hello world')).toBeTruthy()

@@ -1,7 +1,7 @@
-import { expect, test } from 'vitest'
+import { expect, it } from 'vitest'
 import { endsWith } from '../src/validators/string/endsWith'
 
-test('Input starts at a value', () => {
+it('input starts at a value', () => {
   expect(endsWith('World').validate('Hello World')).toBeTruthy()
   expect(endsWith('Hello', 5).validate('Hello World')).toBeTruthy()
 

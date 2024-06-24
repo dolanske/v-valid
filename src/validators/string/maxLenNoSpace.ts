@@ -10,9 +10,11 @@ import { noSpaceRegex } from '../../regex'
  * @param max Maximum allowed length
  */
 
-const maxLenNoSpace = (max: number | Ref<number>): ValidationRule => {
+function maxLenNoSpace(max: number | Ref<number>): ValidationRule {
   return {
-    _skip: false,
+    __skip: false,
+    name: 'maxLenNoSpace',
+
     validate: (value: string) => {
       if (isNil(value) || typeof value !== 'string')
         return false

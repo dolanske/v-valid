@@ -9,9 +9,10 @@ import type { ValidationRule } from '../types'
  * @param min Minimum allowed value
  */
 
-const minValue = (min: number | Date | Ref<number | Date>): ValidationRule => {
+function minValue(min: number | Date | Ref<number | Date>): ValidationRule {
   return {
-    _skip: false,
+    name: 'minValue',
+    __skip: false,
     validate: (value: number | Date) => {
       if (isNil(value))
         return false

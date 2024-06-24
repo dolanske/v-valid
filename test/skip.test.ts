@@ -1,7 +1,7 @@
-import { expect, test } from 'vitest'
+import { expect, it } from 'vitest'
 import { minLength } from '../src'
 
-test('[Helpers] skip prototype', () => {
-  expect(minLength(1)._skip).toBeFalsy()
-  expect(minLength.skip(1)._skip).toBeTruthy()
+it('[Helpers] skip prototype', () => {
+  expect(minLength(1).__skip).toBeFalsy()
+  expect(minLength.skip(1).__skip).toBeTruthy()
 })

@@ -9,9 +9,10 @@ import type { ValidationRule } from '../types'
  * @param max Maximum allowed length the input must satisfy
  */
 
-const maxLength = (max: number | Ref<number>): ValidationRule => {
+function maxLength(max: number | Ref<number>): ValidationRule {
   return {
-    _skip: false,
+    name: 'maxLength',
+    __skip: false,
     validate: (value: string | Set<any> | Map<any, any> | any[] | object) => {
       if (isNil(value))
         return false

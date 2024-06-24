@@ -8,9 +8,10 @@ import type { ValidationRule } from '../types'
  * @Rule Input must be equal or greater than the provided amount
  * @param min Minimum allowed length the input must satisfy
  */
-const minLength = (min: number | Ref<number>) => {
+function minLength(min: number | Ref<number>) {
   return {
-    _skip: false,
+    name: 'minLength',
+    __skip: false,
     validate: (value: string | Set<any> | Map<any, any> | any[] | object) => {
       if (isNil(value))
         return false

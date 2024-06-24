@@ -13,17 +13,15 @@ import type { Label, ValidationRule } from '../types'
  * @param validator Validation rule
  */
 
-export const $withLabel = (
-  message: string | Label,
-  validator: ValidationRule,
-): ValidationRule => {
-  const { validate, _skip } = validator
+export function $withLabel(message: string | Label, validator: ValidationRule): ValidationRule {
+  const { validate, __skip, name } = validator
 
   if (isNil(validate))
     throw new Error('[withLabel] Missing validator function')
 
   return {
-    _skip,
+    name,
+    __skip,
     validate,
     label: (args) => {
       if (typeof message === 'string')

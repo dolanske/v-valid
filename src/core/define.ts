@@ -21,10 +21,11 @@ type DefLabel = string | ((value: any) => string)
  * This rule is 'as is' and does not take in any parameters nor can it be called.
  */
 
-function $def(rule: (value: any) => boolean | Promise<boolean>, label?: DefLabel): ValidationRuleObject {
+function createRule(rule: (value: any) => boolean | Promise<boolean>, label?: DefLabel, name?: string): ValidationRuleObject {
   return {
     skip: SKIP_PROTO,
-    _skip: false,
+    name: name ?? 'custom-object-rule',
+    __skip: false,
     validate: value => rule(value),
     label: (value) => {
       if (isNil(label))
@@ -45,11 +46,12 @@ function $def(rule: (value: any) => boolean | Promise<boolean>, label?: DefLabel
 type DefParamLabel<P = undefined> = string | ((value: any, params: P) => string)
 type RuleParams = Record<string, any>
 
-function $defParam<P = RuleParams>(rule: (value: any, params: P) => boolean | Promise<boolean>, label?: DefParamLabel<P>) {
+function createRuleArg<P = RuleParams>(rule: (value: any, params: P) => boolean | Promise<boolean>, label?: DefParamLabel<P>, name?: string) {
   const validator = (params: P): ValidationRule => ({
     // the value from validate is the actual value we are testing against
     // injected during validation
-    _skip: false,
+    __skip: false,
+    name: name ?? 'custom-param-rule',
     validate: value => rule(value, params),
     label: (value) => {
       if (isNil(label))
@@ -68,7 +70,6 @@ function $defParam<P = RuleParams>(rule: (value: any, params: P) => boolean | Pr
 }
 
 export {
-  $def,
-  $defParam,
+  createRule,
+  createRuleArg,
 }
-

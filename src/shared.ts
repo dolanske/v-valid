@@ -1,26 +1,25 @@
 import type { ValidationRule, ValidationRuleObject } from './types'
 
 /**
- * @internal
  * Sets validation skip to true
+ *
+ * @internal
  */
 export const SKIP_PROTO = function (..._args: any[]): ValidationRule {
   return {
-    _skip: true,
+    name: 'skipped-rule',
+    __skip: true,
     validate: () => true,
     label: () => 'test',
   }
 }
 
 /**
- * @internal
  * Validates multiple rules
+ *
+ * @internal
  */
-export const validateEntries = (
-  value: any,
-  rules: Array<ValidationRule | ValidationRuleObject>,
-  mode: 'every' | 'some' | 'none',
-): Promise<boolean> => {
+export function validateEntries(value: any, rules: Array<ValidationRule | ValidationRuleObject>, mode: 'every' | 'some' | 'none'): Promise<boolean> {
   // eslint-disable-next-line no-async-promise-executor
   return new Promise<boolean>(async (resolve) => {
     const results: boolean[] = []

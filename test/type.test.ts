@@ -1,8 +1,8 @@
-import { describe, expect, test } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { type } from '../src'
 
 describe('[Validators] Type', () => {
-  test('ARRAY type', () => {
+  it('aRRAY type', () => {
     expect(type.str.validate('Hello')).toBeTruthy()
     expect(type.str.validate(String('Hello world'))).toBeTruthy()
 
@@ -10,7 +10,7 @@ describe('[Validators] Type', () => {
     expect(type.str.validate(1 + 2)).toBeFalsy()
   })
 
-  test('NUMBER type', () => {
+  it('nUMBER type', () => {
     expect(type.num.validate(10)).toBeTruthy()
     expect(type.num.validate(Number(10))).toBeTruthy()
 
@@ -18,7 +18,7 @@ describe('[Validators] Type', () => {
     expect(type.num.validate(`${1}10`)).toBeFalsy()
   })
 
-  test('ARRAY type', () => {
+  it('aRRAY type', () => {
     expect(type.arr.validate([])).toBeTruthy()
     expect(type.arr.validate([])).toBeTruthy()
 
@@ -27,7 +27,7 @@ describe('[Validators] Type', () => {
     expect(type.arr.validate(new Map())).toBeFalsy()
   })
 
-  test('OBJECT type', () => {
+  it('oBJECT type', () => {
     expect(type.obj.validate({})).toBeTruthy()
     expect(type.obj.validate({ test: true })).toBeTruthy()
     expect(type.obj.validate({ test: 'true' })).toBeTruthy()
@@ -37,7 +37,7 @@ describe('[Validators] Type', () => {
     expect(type.obj.validate(new Map())).toBeFalsy()
   })
 
-  test('SET type', () => {
+  it('sET type', () => {
     expect(type.set.validate(new Set(['one']))).toBeTruthy()
     expect(type.set.validate(new Set([() => {}]))).toBeTruthy()
 
@@ -46,7 +46,7 @@ describe('[Validators] Type', () => {
     expect(type.set.validate(new Map())).toBeFalsy()
   })
 
-  test('MAP type', () => {
+  it('mAP type', () => {
     expect(type.map.validate(new Map([['one', 1], ['two', 2]]))).toBeTruthy()
     expect(type.map.validate(new Map())).toBeTruthy()
 
@@ -55,7 +55,7 @@ describe('[Validators] Type', () => {
     expect(type.map.validate(new Set())).toBeFalsy()
   })
 
-  test('DATE type', () => {
+  it('dATE type', () => {
     expect(type.date.validate(new Date())).toBeTruthy()
     expect(type.date.validate(new Date().toString())).toBeTruthy()
     expect(type.date.validate(Date.now())).toBeTruthy()

@@ -1,4 +1,4 @@
-import { expect, test } from 'vitest'
+import { expect, it } from 'vitest'
 import { computed, reactive } from 'vue-demi'
 import { $or, between, type, useValidation } from '../src'
 
@@ -12,7 +12,7 @@ const check = {
   all: $or(type.num, between(2, 100)),
 }
 
-test('[Helpers] or', () => {
+it('[Helpers] or', () => {
   const rules = computed(() => ({
     first: { ...check },
     second: { ...check },

@@ -8,9 +8,10 @@ import type { ValidationRule } from '../../types'
  * @param toInclude Word(s) or character(s) to check for
  * @param exact Should it split sentences into words or check against the entire string
  */
-const contains = (toInclude: string | string[], exact = false): ValidationRule => {
+function contains(toInclude: string | string[], exact = false): ValidationRule {
   return {
-    _skip: false,
+    __skip: false,
+    name: 'contains',
     validate: (value) => {
       if (isNil(value) || typeof value !== 'string')
         return false

@@ -1,4 +1,4 @@
-import { expect, test } from 'vitest'
+import { expect, it } from 'vitest'
 import { computed, reactive } from 'vue-demi'
 import { isArray } from 'lodash-es'
 import { $validateIf, maxLength, minLength, useValidation } from '../src'
@@ -6,7 +6,7 @@ import { $validateIf, maxLength, minLength, useValidation } from '../src'
 // Prepare testing form
 const form = reactive({ field: [1, 2] })
 
-test('[Helpers] validateIf', () => {
+it('[Helpers] validateIf', () => {
   const rules = computed(() => ({
     field: {
       // If condition is met (in this example it is); the condition should

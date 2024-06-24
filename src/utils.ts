@@ -1,6 +1,39 @@
-export const delay = <T = any>(ms: number) =>
-  new Promise<T>(resolve => setTimeout(resolve, ms))
+import { isFunction, isPlainObject } from 'lodash-es'
 
-export const parsePath = (path: string) => {
+export function delay<T = any>(ms: number) {
+  return new Promise<T>(resolve => setTimeout(resolve, ms))
+}
+
+export function parsePath(path: string) {
   return path.trim().replace(' ', '.')
+}
+
+export async function iterateIn(
+  obj: Record<string, any>,
+  callback: (key: string, value: any, path: string) => Promise<void> | void,
+  path = '',
+): Promise<void> {
+  for (const key in obj) {
+    const newPath = `${path} ${key}`.trim()
+
+    if (isPlainObject(obj[key]))
+      iterateIn(obj[key], callback, newPath)
+    else
+      await callback(key, obj[key], newPath)
+  }
+}
+
+export function iterateInSync(
+  obj: Record<string, any>,
+  callback: (key: string, value: any, path: string) => void,
+  path = '',
+) {
+  for (const key in obj) {
+    const newPath = `${path} ${key}`.trim()
+
+    if (isPlainObject(obj[key]))
+      iterateIn(obj[key], callback, newPath)
+    else
+      callback(key, obj[key], newPath)
+  }
 }

@@ -10,7 +10,7 @@ import type { ValidationRule } from '../../types'
 //   "Very Strong"
 // }
 
-const checkPassword = (value: string | number) => {
+function checkPassword(value: string | number) {
   value = String(value)
   let variations = 0
 
@@ -38,9 +38,10 @@ const checkPassword = (value: string | number) => {
   return size
 }
 
-const password = (): ValidationRule => {
+function password(): ValidationRule {
   return {
-    _skip: false,
+    name: 'password',
+    __skip: false,
     validate: (value: any) => {
       return !value
     },

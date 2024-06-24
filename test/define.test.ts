@@ -1,21 +1,20 @@
 import { isArray, isNil, isString } from 'lodash-es'
-import { describe, expect, test } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { computed, reactive } from 'vue-demi'
-import { $def, $defParam, useValidation } from '../src'
+import { createRule, createRuleArg, useValidation } from '../src'
 
 // Rules without params
-const RULE_required = $def(value => !isNil(value))
-const RULE_requiredMessage = $def(value => !isNil(value), 'huh?')
-const RULE_string = $def(def => isString(def), value => `Value must be a string. Value is <${typeof value}>`)
+const RULE_required = createRule(value => !isNil(value))
+const RULE_requiredMessage = createRule(value => !isNil(value), 'huh?')
+const RULE_string = createRule(def => isString(def), value => `Value must be a string. Value is <${typeof value}>`)
 
 // Rules with params
-const RULE_arrRange = $defParam<{
+const RULE_arrRange = createRuleArg<{
   min: number
   max: number
-}>((value, { min, max }) => isArray(value) && value.length >= min && value.length <= max,
-  (value, { min, max }) => `Value <${value}> must be an array and between ${min} and ${max} in length.`)
+}>((value, { min, max }) => isArray(value) && value.length >= min && value.length <= max, (value, { min, max }) => `Value <${value}> must be an array and between ${min} and ${max} in length.`)
 
-const RULE_async = $def(
+const RULE_async = createRule(
   () =>
     new Promise((resolve) => {
       setTimeout(() => {
@@ -24,12 +23,12 @@ const RULE_async = $def(
     }),
 )
 
-const RULE_equals = $defParam<{ v: string }>((value, { v }) => {
+const RULE_equals = createRuleArg<{ v: string }>((value, { v }) => {
   return value === v
 }, 'idk')
 
-describe('[helpers] $def and $defParams', () => {
-  test('No parameters rule', () => {
+describe('[helpers] createRule and createRuleArgs', () => {
+  it('no parameters rule', () => {
     const form = reactive({ value: null })
     const rules = {
       value: {
@@ -47,7 +46,7 @@ describe('[helpers] $def and $defParams', () => {
       })
   })
 
-  test('Rule with custom message', () => {
+  it('rule with custom message', () => {
     const form = reactive({ value: 100 })
     const rules = { value: { RULE_string } }
     const { validate } = useValidation(form, rules)
@@ -59,7 +58,7 @@ describe('[helpers] $def and $defParams', () => {
       })
   })
 
-  test('Rule with custom parameters', () => {
+  it('rule with custom parameters', () => {
     const form = reactive({
       first: [1, 2, 3, 4],
       second: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
@@ -78,11 +77,11 @@ describe('[helpers] $def and $defParams', () => {
         expect(e.third.errors.equals).toBe('idk')
       })
       .finally(() => {
-        expect(errors.second.invalid).toBeFalsy()
+        expect(errors.value.second.invalid).toBeFalsy()
       })
   })
 
-  test('Async validation', async () => {
+  it('async validation', async () => {
     const form = reactive({ value: 'nothing' })
     const rules = computed(() => ({
       value: { async: RULE_async },
