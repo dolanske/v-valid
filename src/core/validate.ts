@@ -83,6 +83,9 @@ export function useValidation<F extends Record<string, any>, R extends Partial<R
     resetErrorObject()
   }
 
+  // TODO
+  // Fully type rulesToOnlyValidate to only include actual available keys
+
   /**
    * Performs the form validation by running all user provided rules
    * against the form data.

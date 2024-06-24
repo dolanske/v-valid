@@ -12,13 +12,14 @@ You know what they say, you can not trust a thief or a murderer. You know who yo
 
 2. Set up your component
 
-    ```js
+    ```ts
     import {
+      defineRules,
       minLength,
       required,
       type,
       useValidation,
-      validateIf
+      validateIf,
     } from '@dolanske/validate'
     import { computed, reactive } from 'vue'
 
@@ -30,73 +31,54 @@ You know what they say, you can not trust a thief or a murderer. You know who yo
       }
     })
 
-    // Create rules your form must conform to
-    const rules = {
+    // Create rules. Use the form object as a type helper
+    const rules = defineRules<typeof form>({
       // Rule keys must match the keys of your form
       value: {
         // Value is required
         required,
         // Using a helper, we can add conditional validations
-        // Here we check if length of value is larger than 1 but ONLY if the value is an array
+        // Here we check if length of value is larger than 1 but ONLY if the
+        // value is an array
         shouldCheckType: validateIf(
           () => Array.isArray(form.value),
           minLength(1)
         )
       },
-      // You can also nest rules
+      // You can also nest rules and define them using an array, if you don't
+      // need custom name.
       info: {
-        contact: {
-          required,
-          email
-        }
+        contact: [required, email, contains(['@', '.com'])]
       }
-    }
+    })
 
     // Create your validation instance
-    const { validate, errors, reset } = useValidation(form, rules)
+    const {
+     validate,
+     errors,
+     reset,
+    } = useValidation(form, rules)
     ```
 
 3. Trigger form validation whenever and wherever you want
 
-    ```js
-    async function onSubmit(e) {
-      e.preventDefault()
-
+    ```ts
+    async function onSubmit() {
       validate()
-        // ctx is an object which contains information about validation checks
+        // The ctx variable is the same for both failed and passed validation
         .then((ctx) => {
-          /* Executes if validation passes */
-
+          /* Validation passed */
         })
         .catch((ctx) => {
-          /* Executes if validation fails */
+          /* Validation failed */
 
           // Extract a rule property for its information
           const { info } = ctx
-
           info.contact.id // 'contact'
-          info.contact.value // 'the_value_should_be_an_email'
+          info.contact.value // whatever user inputted
           info.contact.invalid // 'true'
           info.contact.errors.email // 'Value must be in a valid email format'
-
         })
-    }
-
-    // You can also write the same function like this
-
-    async function onSubmit(e) {
-      e.preventDefault()
-
-      try {
-        await validate()
-      }
-      catch (errors: any) {
-
-        // Handle errors or reset form
-        // Resetting form clears all errors though, so it is recommended to display
-        // them in some manner and reset them when user begins using the form again
-        reset()
-      }
     }
     ```
 
@@ -107,17 +89,39 @@ You know what they say, you can not trust a thief or a murderer. You know who yo
 Main composable which is used to initiate form validation context as well as return validation methods.
 
 - `form` reactive form object
-- `rules` object or a computedRef object
+- `rules` object containing the ruleset
 - `options`
-  - `autoclear` (default: false) resets all errors the first time a form is updated after `validation()` was ran
+  - `autoclear` (default: false) resets all errors the first time a form is updated after `validate()` was ran
   - `proactive` (default: false) runs form validation on every input
 
-Returns
+### Composable returns
 
-- `validate(): Promise<State>` performs a form validation and resolves with the current State of the form
-- `reset(): void` clears all errors after form validation
-- `errors` an object which contains all form fields and their status
-- `state` an object which includes state of the entire form
+##### `validate(...ruleIdsToValidateOnly: string[])`
+
+Performs the form validation and resolves with a `Promise<Context>`. The same context object as descibed in point 3. in the example
+
+Optionally, you can input an array of keys, which are present in the form object. Only those keys will then be validated and the rest of the form will be ignored.
+
+##### `reset()`
+
+Will reset the current state of the validation state.
+
+##### `addError(path: string, error: { key: string, message: string })`
+
+Appends a new error to the error object at the provided path. This is meant for complex usage or for library/plugin authors
+
+```ts
+addError("info.contact", {
+  key: 'required',
+  message: "In fact, the contact info is required.
+})
+```
+
+#### Validation state
+
+- `errors: Ref<Context>` - Validation form state, might not contain much before the first validation has been ran
+- `anyError: Ref<boolean>` - Wether any error at all was found
+- `pending: Ref<boolean>` - Wether the form is currently being validated. This can be useful if you have one or more async rules
 
 ---
 
@@ -473,11 +477,14 @@ Helpers used to create validation rules
 
 ```js
 // Define rule without any parameters
-const required = createRule(value => value !== undefined && value !== null, 'Value is required')
+const required = createRule(
+  value => value !== undefined && value !== null,
+  'Value is required'
+)
 
-// Defining rules with parameters
-// Rule which requires value to be an array and be at least n length
-const arrAndMinLen = createRuleArg < { length: number } > (
+// Defining rules with parameters. Returns a function which must be called when
+// rule is being used
+const arrAndMinLen = createRuleArg<{ length: number }> (
   (value, { length }) => isArray(value) && value.length >= length,
   (_, { length }) => `Array with at least ${length} length`
 )
@@ -485,9 +492,9 @@ const arrAndMinLen = createRuleArg < { length: number } > (
 // Asynchronous rule, the main use case here is validating
 // login passwords or other API related things
 const checkPassword = createRule(
-  password =>
+  (password) =>
     new Promise((resolve) => {
-      const result = await someApiCall(password)
+      const result = awiat someApiCall(password)
       resolve(result)
     }),
   'Incorrect password. Please try again.'
