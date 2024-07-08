@@ -112,8 +112,8 @@ Appends a new error to the error object at the provided path. This is meant for 
 
 ```ts
 addError("info.contact", {
-  key: 'required',
-  message: "In fact, the contact info is required.
+  key: "required",
+  message: "In fact, the contact info is required."
 })
 ```
 
