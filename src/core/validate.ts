@@ -1,6 +1,6 @@
 import { isRef, reactive, ref, toRef, unref, watch } from 'vue-demi'
 import type { ComputedRef } from 'vue-demi'
-import { cloneDeep, get, isPlainObject, set } from 'lodash-es'
+import { get, set } from 'lodash-es'
 import { iterateIn, parsePath } from '../utils'
 import type {
   DeepKeys,
@@ -12,15 +12,27 @@ import type {
 } from '../types'
 
 // Default object
-export const emptyErrorObject: ValidationError = {
-  id: null,
+// export const emptyErrorObject: ValidationError = {
+//   id: null,
+//   value: null,
+//   invalid: false,
+//   errors: {},
+// }
+
+function createErrorObject() {
+  return {  id: null,
   value: null,
   invalid: false,
   errors: {},
+  }
 }
 
 // TODO
 // Type errors object based on the form type
+
+
+// TODO
+// remove dependance on lodash-es
 
 /**
  *
@@ -68,10 +80,12 @@ export function useValidation<F extends Record<string, any>, R extends Partial<R
   reset()
 
   function resetErrorObject() {
+    anyError.value = false
+    pending.value = false
+
     iterateIn(form, (_a, _b, path) => {
-      set(errors.value, parsePath(path), cloneDeep(emptyErrorObject))
+      set(errors.value, parsePath(path), createErrorObject())
     })
-    Object.assign(state, { anyError: false, pending: false })
   }
 
   /**
@@ -101,7 +115,7 @@ export function useValidation<F extends Record<string, any>, R extends Partial<R
         path = parsePath(path)
 
         // Create an errors object following the structure of the form
-        set<any>(errors.value, path, cloneDeep(emptyErrorObject))
+        set<any>(errors.value, path, createErrorObject())
 
         // Get all rules for an object
         const _rules = unref(rules)

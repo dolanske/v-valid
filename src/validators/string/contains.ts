@@ -1,7 +1,7 @@
-import { isNil } from 'lodash-es'
 import { unref } from 'vue-demi'
 import { SKIP_PROTO } from '../../shared'
 import type { ValidationRule } from '../../types'
+import { isNil } from '../../utils'
 
 /**
  * @Rule Checks wether string input contains certain words or characters

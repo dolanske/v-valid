@@ -1,6 +1,6 @@
-import { isNil } from 'lodash-es'
 import { SKIP_PROTO } from '../shared'
 import type { ValidationRule } from '../types'
+import { isNil } from '../utils'
 
 /**
  * @Rule Input must pass the provided regex test

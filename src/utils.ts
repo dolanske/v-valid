@@ -1,4 +1,4 @@
-import { isFunction, isPlainObject } from 'lodash-es'
+import { isPlainObject } from 'lodash-es'
 
 export function delay<T = any>(ms: number) {
   return new Promise<T>(resolve => setTimeout(resolve, ms))
@@ -36,4 +36,24 @@ export function iterateInSync(
     else
       callback(key, obj[key], newPath)
   }
+}
+
+export function isNil(value: any): value is undefined | null {
+  return value === null || value === undefined 
+}
+
+export function isBoolean(value: any): value is boolean {
+  return typeof value === 'boolean'
+}
+
+export function isFunction(value: any): value is Function {
+  return typeof value === 'function' && value instanceof Function
+}
+
+export function isNumber(value: any): value is number {
+  return typeof value === 'number'
+}
+
+export function isDate(value: any): value is Date {
+  return value instanceof Date
 }

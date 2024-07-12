@@ -1,8 +1,8 @@
-import { isNil } from 'lodash-es'
 import type { Ref } from 'vue-demi'
 import { unref } from 'vue-demi'
 import { SKIP_PROTO } from '../shared'
 import { type } from './type'
+import { isNil } from '../utils'
 
 /**
  * @Rule Checks if value is between the provided range

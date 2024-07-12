@@ -1,8 +1,9 @@
-import { isBoolean, isFunction } from 'lodash-es'
+// import { isBoolean, isFunction } from 'lodash-es'
 import type { Ref } from 'vue-demi'
 import { isRef } from 'vue-demi'
 import type { ValidationRule } from '../types'
 import { SKIP_PROTO } from '../shared'
+import { isBoolean, isFunction } from '../utils'
 
 /**
  * @Rule Perform validation if provided condition is met
