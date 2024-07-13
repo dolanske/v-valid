@@ -18,7 +18,7 @@ describe('[Core] Main validation method', () => {
     const { validate, anyError } = useValidation(form, rules)
     validate()
       .catch((e) => {
-        expect(anyError).toBeTruthy()
+        expect(anyError.value).toBeTruthy()
         expect(e.identifier.invalid).toBeTruthy()
       })
   })
@@ -51,7 +51,8 @@ describe('[Core] Main validation method', () => {
 
     await validate()
       .catch((e) => {
-        expect(anyError).toBeTruthy()
+        console.log(e)
+        expect(anyError.value).toBeTruthy()
         expect(e.nested.foo.errors.minLength).toBe('Value must be greater or equal to 6')
       })
 
@@ -78,7 +79,7 @@ describe('[Core] Main validation method', () => {
     validate()
       .catch((e) => {
         expect(e.a.errors.minLength).toBe(`Value must be greater or equal to ${amount.value}`)
-        expect(anyError).toBeTruthy()
+        expect(anyError.value).toBeTruthy()
       })
   })
 

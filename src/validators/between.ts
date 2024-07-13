@@ -30,7 +30,6 @@ function between(min: number | Date | Ref<number | Date>, max: number | Date | R
       return value >= min && value <= max
     },
     label: () => {
-    // Add error that
       return `Value must be between ${unref(min)} and ${unref(max)}`
     },
   }

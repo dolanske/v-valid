@@ -22,7 +22,7 @@ function maxLength(max: number | Ref<number>): ValidationRule {
       if (isObject(value))
         return Object.keys(value).length <= max
 
-      return value?.length ? value.length <= max : false
+      return value.length <= max
     },
     /* c8 ignore next 3 */
     label: () => {

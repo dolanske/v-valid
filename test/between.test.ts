@@ -48,6 +48,7 @@ describe('[Validators] between', () => {
     const { validate } = useValidation(form2, rules)
 
     validate().catch((e) => {
+      console.log(e)
       expect(e.date1.invalid).toBeFalsy()
       expect(e.date2.invalid).toBeTruthy()
     })

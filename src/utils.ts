@@ -74,6 +74,9 @@ export function isEmpty(value: any) {
   if ('size' in value)
     return value.size <= 0
 
+  if (isObject(value))
+    return Object.keys(value).length <= 0
+
   return true
 }
 
@@ -93,8 +96,55 @@ export function isSymbol(value: any): value is symbol {
   return value instanceof Symbol
 }
 
-// TODO
-// Replace lodash's set & get methods
+// FIXME
+// keys in the same nesting get overwritten? or not saved at all?
 
-function setPath() {}
-function getPath() {}
+// Set deep value in an object at the provided path
+export function setDeep(obj: object, path: string, value: any) {
+  if (isNil(obj) || !isObject(obj))
+    return
+
+  // In case there are spaces, replace those with "."
+  path = parsePath(path.trim())
+  const segments = path.split('.')
+
+  let prevObjectLevel = obj
+
+  for (const segment of segments) {
+    // Skip empty strings
+    if (segment.length === 0)
+      continue
+
+    // FIXME
+    // Something here is WRONG
+    if (segment !== segments.at(-1)) {
+      const existingSegmentValue = Reflect.get(prevObjectLevel, segment)
+      Reflect.set(prevObjectLevel, segment, isObject(existingSegmentValue) ? existingSegmentValue : {})
+      prevObjectLevel = Reflect.get(prevObjectLevel, segment)
+    }
+    else {
+      Reflect.set(prevObjectLevel, segment, value)
+      break
+    }
+  }
+}
+
+// Get deep object value at given path
+export function getDeep(obj: object, path: string): any {
+  if (isNil(obj) || !isObject(obj))
+    return
+
+  path = parsePath(path.trim())
+  const segments = path.split('.')
+
+  let returnValue = obj
+
+  for (const segment of segments) {
+    // Skip empty strings
+    if (segment.length === 0)
+      continue
+    returnValue = Reflect.get(returnValue, segment)
+  }
+
+  return returnValue
+}

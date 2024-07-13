@@ -1,7 +1,6 @@
 import { isRef, reactive, ref, unref, watch } from 'vue-demi'
 import type { ComputedRef } from 'vue-demi'
-import { get, set } from 'lodash-es'
-import { iterateIn, parsePath } from '../utils'
+import { getDeep, iterateIn, parsePath, setDeep } from '../utils'
 import type {
   DeepKeys,
   ReplacePrimitives,
@@ -79,7 +78,7 @@ export function useValidation<F extends Record<string, any>, R extends Partial<R
     pending.value = false
 
     iterateIn(form, (_a, _b, path) => {
-      set(errors.value, parsePath(path), createErrorObject())
+      setDeep(errors.value, parsePath(path), createErrorObject())
     })
   }
 
@@ -110,12 +109,12 @@ export function useValidation<F extends Record<string, any>, R extends Partial<R
         path = parsePath(path)
 
         // Create an errors object following the structure of the form
-        set<any>(errors.value, path, createErrorObject())
+        setDeep(errors.value, path, createErrorObject())
 
         // Get all rules for an object
         const _rules = unref(rules)
         // Get the specific rules for the current form Key
-        const pathRules: Rule = get(_rules, path)
+        const pathRules: Rule = getDeep(_rules, path)
 
         if (!pathRules)
           return
@@ -134,14 +133,14 @@ export function useValidation<F extends Record<string, any>, R extends Partial<R
 
           const passed = await validate(value)
 
-          set<any>(errors.value, `${path}.id`, key)
-          set<any>(errors.value, `${path}.value`, value)
+          setDeep(errors.value, `${path}.id`, key)
+          setDeep(errors.value, `${path}.value`, value)
 
           if (!passed) {
             anyError.value = true
 
-            set<any>(errors.value, `${path}.invalid`, true)
-            set<any>(errors.value, `${path}.errors.${ruleKey}`, label(value))
+            setDeep(errors.value, `${path}.invalid`, true)
+            setDeep(errors.value, `${path}.errors.${ruleKey}`, label(value))
           }
         }
 
@@ -163,8 +162,8 @@ export function useValidation<F extends Record<string, any>, R extends Partial<R
    * Appends a new error key and its message to the errors object.
    */
   function addError(path: DeepKeys<F>, error: { key: string, message: string }) {
-    set<any>(errors.value, `${path}.errors.${error.key}`, error.message)
-    set<any>(errors.value, `${path}.invalid`, true)
+    setDeep(errors.value, `${path}.errors.${error.key}`, error.message)
+    setDeep(errors.value, `${path}.invalid`, true)
   }
 
   return {
