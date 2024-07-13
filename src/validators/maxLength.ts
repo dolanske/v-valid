@@ -1,8 +1,8 @@
-import { isMap, isNil, isObject, isSet } from 'lodash-es'
 import type { Ref } from 'vue-demi'
 import { unref } from 'vue-demi'
 import { SKIP_PROTO } from '../shared'
 import type { ValidationRule } from '../types'
+import { isMap, isNil, isObject, isSet } from '../utils'
 
 /**
  * @Rule Input must be equal or lesser than the provided amount

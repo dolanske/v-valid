@@ -1,4 +1,4 @@
-import { isRef, reactive, ref, toRef, unref, watch } from 'vue-demi'
+import { isRef, reactive, ref, unref, watch } from 'vue-demi'
 import type { ComputedRef } from 'vue-demi'
 import { get, set } from 'lodash-es'
 import { iterateIn, parsePath } from '../utils'
@@ -20,16 +20,11 @@ import type {
 // }
 
 function createErrorObject() {
-  return {  id: null,
-  value: null,
-  invalid: false,
-  errors: {},
-  }
+  return { id: null, value: null, invalid: false, errors: {} }
 }
 
 // TODO
 // Type errors object based on the form type
-
 
 // TODO
 // remove dependance on lodash-es

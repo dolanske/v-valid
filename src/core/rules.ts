@@ -1,6 +1,6 @@
-import { isArray, set } from 'lodash-es'
+import { set } from 'lodash-es'
 import type { ReplacePrimitivesOptional, ValidationRule, ValidationRuleObject } from '../types'
-import { iterateInSync } from '../utils'
+import { isArray, iterateInSync } from '../utils'
 
 type Rule = ValidationRule | ValidationRuleObject
 type DefineRuleType<T> = ReplacePrimitivesOptional<T, Record<string, Rule> | Array<Rule>>

@@ -1,7 +1,7 @@
 import { expect, it } from 'vitest'
 import { computed, reactive } from 'vue-demi'
-import { isArray } from 'lodash-es'
 import { $validateIf, maxLength, minLength, useValidation } from '../src'
+import { isArray } from '../src/utils'
 
 // Prepare testing form
 const form = reactive({ field: [1, 2] })

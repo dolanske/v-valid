@@ -1,7 +1,7 @@
-import { isArray, isNil, isString } from 'lodash-es'
 import { describe, expect, it } from 'vitest'
 import { computed, reactive } from 'vue-demi'
 import { createRule, createRuleArg, useValidation } from '../src'
+import { isArray, isNil, isString } from '../src/utils'
 
 // Rules without params
 const RULE_required = createRule(value => !isNil(value))

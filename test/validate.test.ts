@@ -4,7 +4,6 @@ import { type } from '../src/validators/type'
 import { minLength } from '../src/validators/minLength'
 import { maxLength } from '../src/validators/maxLength'
 import { useValidation } from '../src/core/validate'
-import { required } from '../src/validators/required'
 
 describe('[Core] Main validation method', () => {
   it('simple Test', async () => {
