@@ -1,7 +1,7 @@
 {
   "name": "@dolanske/v-valid",
   "type": "module",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Model based form validation made for vue 3. Inspired by vuelidate with personal take on the API and implementation",
   "author": "dolanske",
   "license": "MIT",
@@ -37,8 +37,6 @@
     "vue": "latest"
   },
   "dependencies": {
-    "@types/lodash-es": "^4.17.12",
-    "lodash-es": "^4.17.21",
     "vue-demi": "^0.14.8"
   },
   "devDependencies": {

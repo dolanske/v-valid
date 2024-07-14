@@ -10,23 +10,9 @@ import type {
   ValidationRule,
 } from '../types'
 
-// Default object
-// export const emptyErrorObject: ValidationError = {
-//   id: null,
-//   value: null,
-//   invalid: false,
-//   errors: {},
-// }
-
 function createErrorObject() {
   return { id: null, value: null, invalid: false, errors: {} }
 }
-
-// TODO
-// Type errors object based on the form type
-
-// TODO
-// remove dependance on lodash-es
 
 /**
  *
@@ -51,8 +37,6 @@ export function useValidation<F extends Record<string, any>, R extends Partial<R
 
   // Internal state not meant to be available to the end user
   const state = reactive({
-    // To improve speed, we do not perform autoclear when validation was
-    // not performed yet
     didValidate: false,
   })
 
@@ -88,7 +72,6 @@ export function useValidation<F extends Record<string, any>, R extends Partial<R
    */
   function reset() {
     state.didValidate = false
-    // Resets the form
     resetErrorObject()
   }
 
