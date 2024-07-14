@@ -104,7 +104,10 @@ export declare namespace contains {
  */
 export declare function createRule(rule: (value: any) => boolean | Promise<boolean>, label?: DefLabel, name?: string): ValidationRuleObject;
 
-export declare function createRuleArg<P = RuleParams>(rule: (value: any, params: P) => boolean | Promise<boolean>, label?: DefParamLabel<P>, name?: string): (params: P) => ValidationRule;
+export declare function createRuleArg<P = RuleParams>(rule: (value: any, params: P) => boolean | Promise<boolean>, label?: DefParamLabel<P>, name?: string): {
+    (params: P): ValidationRule;
+    skip: (..._args: any[]) => ValidationRule;
+};
 
 declare type DeepKeys<T> = DropInitDot<_DeepKeys<FixArr<T>>>;
 
@@ -336,7 +339,7 @@ export declare const url: ValidationRuleObject;
  * - `proactive`: Boolean - perform validation on every form change
  * - `autoclear`: Boolean - reset changes on first input after validation
  */
-export declare function useValidation<F extends Record<string, any>, R extends Partial<Record<keyof F, any>> | ComputedRef<Partial<Record<keyof F, any>>>>(form: F, rules: R, { proactive, autoclear }?: ValidationOptions): {
+export declare function useValidation<F extends Record<string, any>, R extends Partial<Record<keyof F, any>> | ComputedRef<Partial<Record<keyof F, any>>>>(form: F, rules: R, options?: ValidationOptions): {
     reset: () => void;
     validate: (...rulesToOnlyValidate: string[]) => Promise<ReplacePrimitives<F, ValidationError>>;
     addError: (path: DeepKeys<F>, error: {
@@ -389,6 +392,11 @@ declare namespace $not {
 }
 
 
+declare namespace minLength {
+    var skip: (..._args: any[]) => ValidationRule;
+}
+
+
 declare namespace sameAs {
     var skip: (..._args: any[]) => ValidationRule;
 }
@@ -409,11 +417,6 @@ declare namespace between {
 }
 
 
-declare namespace maxValue {
-    var skip: (..._args: any[]) => ValidationRule;
-}
-
-
 declare namespace minValue {
     var skip: (..._args: any[]) => ValidationRule;
 }
@@ -424,12 +427,7 @@ declare namespace maxLenNoSpace {
 }
 
 
-declare namespace minLength {
-    var skip: (..._args: any[]) => ValidationRule;
-}
-
-
-declare namespace minLenNoSpace {
+declare namespace maxValue {
     var skip: (..._args: any[]) => ValidationRule;
 }
 
@@ -445,6 +443,11 @@ declare namespace endsWith {
 
 
 declare namespace contains {
+    var skip: (..._args: any[]) => ValidationRule;
+}
+
+
+declare namespace minLenNoSpace {
     var skip: (..._args: any[]) => ValidationRule;
 }
 

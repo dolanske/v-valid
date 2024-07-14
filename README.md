@@ -54,9 +54,9 @@ You know what they say, you can not trust a thief or a murderer. You know who yo
 
     // Create your validation instance
     const {
-     va  idate,
-     er  ors,
-     re  et,
+      validate,
+      errors,
+      reset,
     } = useValidation(form, rules)
     ```
 

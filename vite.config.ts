@@ -11,7 +11,7 @@ export default defineConfig({
       fileName: 'v-valid',
     },
     rollupOptions: {
-      external: ['vue-demi', '@types/lodash-es'],
+      external: ['vue-demi'],
     },
   },
   plugins: [
