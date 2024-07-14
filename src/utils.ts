@@ -111,8 +111,6 @@ export function setDeep(obj: object, path: string, value: any) {
   let objectToUpdate = obj
   const segLen = segments.length
 
-  console.log(segments)
-
   if (segLen > 1) {
     for (let i = 0; i < segLen; i++) {
       const segment = segments[i]
@@ -121,20 +119,24 @@ export function setDeep(obj: object, path: string, value: any) {
         continue
 
       const current = Reflect.get(objectToUpdate, segment)
+      // We are nesting deeper
       if (isObject(current)) {
         objectToUpdate = current
       }
-      else if (typeof current === 'undefined') {
-        objectToUpdate = Object.create(null)
-      }
-
-      if (i === segLen - 1) {
-        Reflect.set(objectToUpdate, segments[segLen - 1], value)
+      // Set the actual final value
+      else if (i === segLen - 1) {
+        Reflect.set(objectToUpdate, segment, value)
         break
+      }
+      // We are creating the nesting
+      else if (current === undefined) {
+        Reflect.set(objectToUpdate, segment, {})
+        objectToUpdate = Reflect.get(objectToUpdate, segment)
       }
     }
   }
   else {
+    // Skip the whole iteration if key is 1 deep only
     Reflect.set(objectToUpdate, segments[0], value)
   }
 }

@@ -136,13 +136,10 @@ export function useValidation<F extends Record<string, any>, R extends Partial<R
           setDeep(errors.value, `${path}.value`, value)
 
           if (!passed) {
-            // console.log(errors.value)
             anyError.value = true
             setDeep(errors.value, `${path}.invalid`, true)
             setDeep(errors.value, `${path}.errors.${ruleKey}`, label(value))
           }
-
-          console.log(errors.value)
         }
 
         return Promise.resolve()
