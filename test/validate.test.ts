@@ -51,7 +51,6 @@ describe('[Core] Main validation method', () => {
 
     await validate()
       .catch((e) => {
-        console.log(e)
         expect(anyError.value).toBeTruthy()
         expect(e.nested.foo.errors.minLength).toBe('Value must be greater or equal to 6')
       })

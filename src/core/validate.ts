@@ -40,8 +40,9 @@ function createErrorObject() {
 export function useValidation<F extends Record<string, any>, R extends Partial<Record<keyof F, any>> | ComputedRef<Partial<Record<keyof F, any>>>>(
   form: F,
   rules: R,
-  { proactive = false, autoclear = false }: ValidationOptions = {},
+  options: ValidationOptions = {},
 ) {
+  const { proactive = false, autoclear = false } = options
   type Errors = ReplacePrimitives<F, ValidationError>
 
   const anyError = ref(false)
@@ -117,11 +118,9 @@ export function useValidation<F extends Record<string, any>, R extends Partial<R
         const pathRules: Rule = getDeep(_rules, path)
 
         if (!pathRules)
-          return
+          return Promise.resolve()
 
         // Iterate over available rules for a key and perform validation
-        // TODO:
-        // Here we could perform a serialization into an array, depending if an array of rules was input or an object
         for (const [ruleKey, ruleData] of Object.entries(pathRules)) {
           if (rulesToOnlyValidate.length > 0 && !rulesToOnlyValidate.includes(ruleKey))
             continue
@@ -137,11 +136,13 @@ export function useValidation<F extends Record<string, any>, R extends Partial<R
           setDeep(errors.value, `${path}.value`, value)
 
           if (!passed) {
+            // console.log(errors.value)
             anyError.value = true
-
             setDeep(errors.value, `${path}.invalid`, true)
             setDeep(errors.value, `${path}.errors.${ruleKey}`, label(value))
           }
+
+          console.log(errors.value)
         }
 
         return Promise.resolve()

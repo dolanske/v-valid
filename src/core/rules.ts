@@ -11,7 +11,7 @@ type DefineRuleType<T> = ReplacePrimitivesOptional<T, Record<string, Rule> | Arr
  * @returns Rules to be used within the composable
  */
 export function defineRules<F>(rules: DefineRuleType<F>): DefineRuleType<F> {
-  iterateInSync(rules, (key, value, path) => {
+  iterateInSync(rules, (_, value, path) => {
     if (!isArray(value))
       return
 

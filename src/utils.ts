@@ -14,8 +14,8 @@ export async function iterateIn(
   for (const key in obj) {
     const newPath = `${path} ${key}`.trim()
 
-    if (isObject(obj[key]))
-      iterateIn(obj[key], callback, newPath)
+    if (isObject(obj[key]) && !(obj[key] instanceof Date))
+      await iterateIn(obj[key], callback, newPath)
     else
       await callback(key, obj[key], newPath)
   }
@@ -29,7 +29,7 @@ export function iterateInSync(
   for (const key in obj) {
     const newPath = `${path} ${key}`.trim()
 
-    if (isObject(obj[key]))
+    if (isObject(obj[key]) && !(obj[key] instanceof Date))
       iterateIn(obj[key], callback, newPath)
     else
       callback(key, obj[key], newPath)
@@ -85,7 +85,7 @@ export function isMap(value: any): value is Map<any, any> {
 }
 
 export function isObject(value: any): value is object {
-  return typeof value === 'object' && !isArray(value) && !isNil(value) && !isFunction(value)
+  return typeof value === 'object' && !isArray(value) && value !== null && !isFunction(value)
 }
 
 export function isSet(value: any): value is Set<any> {
@@ -108,24 +108,29 @@ export function setDeep(obj: object, path: string, value: any) {
   path = parsePath(path.trim())
   const segments = path.split('.')
 
-  let prevObjectLevel = obj
+  let objectToUpdate = obj
+  const segLen = segments.length
 
-  for (const segment of segments) {
-    // Skip empty strings
-    if (segment.length === 0)
-      continue
+  if (segLen > 1) {
+    for (let i = 0; i < segLen; i++) {
+      const segment = segments[i]
 
-    // FIXME
-    // Something here is WRONG
-    if (segment !== segments.at(-1)) {
-      const existingSegmentValue = Reflect.get(prevObjectLevel, segment)
-      Reflect.set(prevObjectLevel, segment, isObject(existingSegmentValue) ? existingSegmentValue : {})
-      prevObjectLevel = Reflect.get(prevObjectLevel, segment)
+      if (segment.length === 0)
+        continue
+
+      const current = Reflect.get(objectToUpdate, segment)
+      if (isObject(current)) {
+        objectToUpdate = current
+      }
+
+      if (i === segLen - 1) {
+        Reflect.set(objectToUpdate, segments[segLen - 1], value)
+        break
+      }
     }
-    else {
-      Reflect.set(prevObjectLevel, segment, value)
-      break
-    }
+  }
+  else {
+    Reflect.set(objectToUpdate, segments[0], value)
   }
 }
 

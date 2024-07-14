@@ -29,9 +29,9 @@ const RULE_equals = createRuleArg<{ v: string }>((value, { v }) => {
 
 describe('[helpers] createRule and createRuleArgs', () => {
   it('no parameters rule', () => {
-    const form = reactive({ value: null })
+    const form = reactive({ data: null })
     const rules = {
-      value: {
+      data: {
         RULE_required,
         RULE_requiredMessage,
       },
@@ -40,9 +40,9 @@ describe('[helpers] createRule and createRuleArgs', () => {
 
     validate()
       .catch((err) => {
-        expect(err.value.invalid).toBeTruthy()
-        expect(err.value.errors.RULE_required).toBe('Value does not satisfy the validation rule.')
-        expect(err.value.errors.RULE_requiredMessage).toBe('huh?')
+        expect(err.data.invalid).toBeTruthy()
+        expect(err.data.errors.RULE_required).toBe('Value does not satisfy the validation rule.')
+        expect(err.data.errors.RULE_requiredMessage).toBe('huh?')
       })
   })
 

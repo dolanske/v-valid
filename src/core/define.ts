@@ -64,7 +64,7 @@ function createRuleArg<P = RuleParams>(rule: (value: any, params: P) => boolean 
     },
   })
 
-  // validator.skip = SKIP_PROTO
+  validator.skip = SKIP_PROTO
 
   return validator
 }

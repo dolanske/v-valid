@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import { ref } from 'vue-demi'
-import { getDeep, isNil, isObject, setDeep } from '../src/utils'
+import { getDeep, isNil, isObject, iterateInSync, setDeep } from '../src/utils'
 
-describe('utility methods', () => {
+describe('isX methods', () => {
   it('isNil', () => {
     expect(isNil({})).toBeFalsy()
     expect(isNil(Object.create(null))).toBeFalsy()
@@ -12,16 +12,20 @@ describe('utility methods', () => {
     expect(isObject({})).toBeTruthy()
     expect(isObject(Object.create(null))).toBeTruthy()
   })
+})
 
+describe('deep setters', () => {
   it('setDeep & getDeep', () => {
     const base = {}
     setDeep(base, 'one.two.three', 'test')
+    setDeep(base, 'two', 'test2')
     expect(base).toStrictEqual({
       one: {
         two: {
           three: 'test',
         },
       },
+      two: 'test2',
     })
 
     expect(getDeep(base, 'one.two')).toStrictEqual({
