@@ -111,6 +111,8 @@ export function setDeep(obj: object, path: string, value: any) {
   let objectToUpdate = obj
   const segLen = segments.length
 
+  console.log(segments)
+
   if (segLen > 1) {
     for (let i = 0; i < segLen; i++) {
       const segment = segments[i]
@@ -121,6 +123,9 @@ export function setDeep(obj: object, path: string, value: any) {
       const current = Reflect.get(objectToUpdate, segment)
       if (isObject(current)) {
         objectToUpdate = current
+      }
+      else if (typeof current === 'undefined') {
+        objectToUpdate = Object.create(null)
       }
 
       if (i === segLen - 1) {
