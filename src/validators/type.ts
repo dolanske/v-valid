@@ -1,16 +1,6 @@
-import {
-  isArray,
-  isDate,
-  isMap,
-  isNil,
-  isNumber,
-  isObject,
-  isSet,
-  isString,
-  isSymbol,
-} from 'lodash-es'
 import { SKIP_PROTO } from '../shared'
 import type { ValidationRuleObject } from '../types'
+import { isArray, isDate, isMap, isNil, isNumber, isObject, isSet, isString, isSymbol } from '../utils'
 
 interface Type {
   str: ValidationRuleObject

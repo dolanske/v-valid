@@ -1,7 +1,7 @@
-import { isNil } from 'lodash-es'
 import { noSpecialCharsRegex } from '../../regex'
 import { SKIP_PROTO } from '../../shared'
 import type { ValidationRuleObject } from '../../types'
+import { isNil } from '../../utils'
 
 /**
  * @Rule Checks wether an input contains any special characters

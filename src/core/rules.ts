@@ -1,6 +1,5 @@
-import { isArray, set } from 'lodash-es'
 import type { ReplacePrimitivesOptional, ValidationRule, ValidationRuleObject } from '../types'
-import { iterateInSync } from '../utils'
+import { isArray, iterateInSync, setDeep } from '../utils'
 
 type Rule = ValidationRule | ValidationRuleObject
 type DefineRuleType<T> = ReplacePrimitivesOptional<T, Record<string, Rule> | Array<Rule>>
@@ -12,11 +11,11 @@ type DefineRuleType<T> = ReplacePrimitivesOptional<T, Record<string, Rule> | Arr
  * @returns Rules to be used within the composable
  */
 export function defineRules<F>(rules: DefineRuleType<F>): DefineRuleType<F> {
-  iterateInSync(rules, (key, value, path) => {
+  iterateInSync(rules, (_, value, path) => {
     if (!isArray(value))
       return
 
-    set(rules, path, value.reduce((group, item, index) => {
+    setDeep(rules, path, value.reduce((group, item, index) => {
       if (item.name in group) {
         Reflect.set(group, item.name + index, item)
       }

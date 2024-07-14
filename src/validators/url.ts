@@ -1,6 +1,6 @@
-import { isNil } from 'lodash-es'
 import { SKIP_PROTO } from '../shared'
 import type { ValidationRuleObject } from '../types'
+import { isNil } from '../utils'
 
 /**
  * @Rule Input must be a valid URL

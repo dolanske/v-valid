@@ -1,7 +1,7 @@
-import { isNil } from 'lodash-es'
 import type { Ref } from 'vue-demi'
 import { unref } from 'vue-demi'
 import { SKIP_PROTO } from '../shared'
+import { isNil } from '../utils'
 import { type } from './type'
 
 /**
@@ -30,7 +30,6 @@ function between(min: number | Date | Ref<number | Date>, max: number | Date | R
       return value >= min && value <= max
     },
     label: () => {
-    // Add error that
       return `Value must be between ${unref(min)} and ${unref(max)}`
     },
   }

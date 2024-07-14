@@ -1,7 +1,6 @@
-import { isRef, reactive, ref, toRef, unref, watch } from 'vue-demi'
+import { isRef, reactive, ref, unref, watch } from 'vue-demi'
 import type { ComputedRef } from 'vue-demi'
-import { cloneDeep, get, isPlainObject, set } from 'lodash-es'
-import { iterateIn, parsePath } from '../utils'
+import { getDeep, iterateIn, parsePath, setDeep } from '../utils'
 import type {
   DeepKeys,
   ReplacePrimitives,
@@ -11,16 +10,9 @@ import type {
   ValidationRule,
 } from '../types'
 
-// Default object
-export const emptyErrorObject: ValidationError = {
-  id: null,
-  value: null,
-  invalid: false,
-  errors: {},
+function createErrorObject() {
+  return { id: null, value: null, invalid: false, errors: {} }
 }
-
-// TODO
-// Type errors object based on the form type
 
 /**
  *
@@ -34,8 +26,9 @@ export const emptyErrorObject: ValidationError = {
 export function useValidation<F extends Record<string, any>, R extends Partial<Record<keyof F, any>> | ComputedRef<Partial<Record<keyof F, any>>>>(
   form: F,
   rules: R,
-  { proactive = false, autoclear = false }: ValidationOptions = {},
+  options: ValidationOptions = {},
 ) {
+  const { proactive = false, autoclear = false } = options
   type Errors = ReplacePrimitives<F, ValidationError>
 
   const anyError = ref(false)
@@ -44,8 +37,6 @@ export function useValidation<F extends Record<string, any>, R extends Partial<R
 
   // Internal state not meant to be available to the end user
   const state = reactive({
-    // To improve speed, we do not perform autoclear when validation was
-    // not performed yet
     didValidate: false,
   })
 
@@ -68,10 +59,12 @@ export function useValidation<F extends Record<string, any>, R extends Partial<R
   reset()
 
   function resetErrorObject() {
+    anyError.value = false
+    pending.value = false
+
     iterateIn(form, (_a, _b, path) => {
-      set(errors.value, parsePath(path), cloneDeep(emptyErrorObject))
+      setDeep(errors.value, parsePath(path), createErrorObject())
     })
-    Object.assign(state, { anyError: false, pending: false })
   }
 
   /**
@@ -79,7 +72,6 @@ export function useValidation<F extends Record<string, any>, R extends Partial<R
    */
   function reset() {
     state.didValidate = false
-    // Resets the form
     resetErrorObject()
   }
 
@@ -101,19 +93,17 @@ export function useValidation<F extends Record<string, any>, R extends Partial<R
         path = parsePath(path)
 
         // Create an errors object following the structure of the form
-        set<any>(errors.value, path, cloneDeep(emptyErrorObject))
+        setDeep(errors.value, path, createErrorObject())
 
         // Get all rules for an object
         const _rules = unref(rules)
         // Get the specific rules for the current form Key
-        const pathRules: Rule = get(_rules, path)
+        const pathRules: Rule = getDeep(_rules, path)
 
         if (!pathRules)
-          return
+          return Promise.resolve()
 
         // Iterate over available rules for a key and perform validation
-        // TODO:
-        // Here we could perform a serialization into an array, depending if an array of rules was input or an object
         for (const [ruleKey, ruleData] of Object.entries(pathRules)) {
           if (rulesToOnlyValidate.length > 0 && !rulesToOnlyValidate.includes(ruleKey))
             continue
@@ -125,14 +115,13 @@ export function useValidation<F extends Record<string, any>, R extends Partial<R
 
           const passed = await validate(value)
 
-          set<any>(errors.value, `${path}.id`, key)
-          set<any>(errors.value, `${path}.value`, value)
+          setDeep(errors.value, `${path}.id`, key)
+          setDeep(errors.value, `${path}.value`, value)
 
           if (!passed) {
             anyError.value = true
-
-            set<any>(errors.value, `${path}.invalid`, true)
-            set<any>(errors.value, `${path}.errors.${ruleKey}`, label(value))
+            setDeep(errors.value, `${path}.invalid`, true)
+            setDeep(errors.value, `${path}.errors.${ruleKey}`, label(value))
           }
         }
 
@@ -154,8 +143,8 @@ export function useValidation<F extends Record<string, any>, R extends Partial<R
    * Appends a new error key and its message to the errors object.
    */
   function addError(path: DeepKeys<F>, error: { key: string, message: string }) {
-    set<any>(errors.value, `${path}.errors.${error.key}`, error.message)
-    set<any>(errors.value, `${path}.invalid`, true)
+    setDeep(errors.value, `${path}.errors.${error.key}`, error.message)
+    setDeep(errors.value, `${path}.invalid`, true)
   }
 
   return {

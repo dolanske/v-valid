@@ -1,6 +1,6 @@
-import { isNil } from 'lodash-es'
 import { SKIP_PROTO } from '../shared'
 import type { ValidationRule, ValidationRuleObject } from '../types'
+import { isNil } from '../utils'
 
 // REVIEW: Is this the best way to define this API
 
@@ -64,7 +64,7 @@ function createRuleArg<P = RuleParams>(rule: (value: any, params: P) => boolean 
     },
   })
 
-  // validator.skip = SKIP_PROTO
+  validator.skip = SKIP_PROTO
 
   return validator
 }

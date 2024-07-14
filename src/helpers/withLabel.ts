@@ -1,5 +1,5 @@
-import { isNil } from 'lodash-es'
 import type { Label, ValidationRule } from '../types'
+import { isNil } from '../utils'
 
 /**
  *

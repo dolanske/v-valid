@@ -54,9 +54,9 @@ You know what they say, you can not trust a thief or a murderer. You know who yo
 
     // Create your validation instance
     const {
-     validate,
-     errors,
-     reset,
+      validate,
+      errors,
+      reset,
     } = useValidation(form, rules)
     ```
 
@@ -111,9 +111,9 @@ Will reset the current state of the validation state.
 Appends a new error to the error object at the provided path. This is meant for complex usage or for library/plugin authors
 
 ```ts
-addError("info.contact", {
-  key: "required",
-  message: "In fact, the contact info is required."
+addError('info.contact', {
+  key: 'required',
+  message: 'In fact, the contact info is required.'
 })
 ```
 

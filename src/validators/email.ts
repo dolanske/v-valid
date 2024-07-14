@@ -1,7 +1,7 @@
-import { isNil } from 'lodash-es'
 import { SKIP_PROTO } from '../shared'
 import { emailRegex } from '../regex'
 import type { ValidationRuleObject } from '../types'
+import { isNil } from '../utils'
 
 /**
  * @Rule Input must be a valid email address

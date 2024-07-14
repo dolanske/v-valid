@@ -1,9 +1,9 @@
-import { isNil } from 'lodash-es'
 import type { Ref } from 'vue-demi'
 import { unref } from 'vue-demi'
 import { SKIP_PROTO } from '../../shared'
 import type { ValidationRule } from '../../types'
 import { noSpaceRegex } from '../../regex'
+import { isNil } from '../../utils'
 
 /**
  * @Rule Input must be a string and excluding spaces must be equal or greater to the provided min value

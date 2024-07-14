@@ -4,7 +4,6 @@ import { type } from '../src/validators/type'
 import { minLength } from '../src/validators/minLength'
 import { maxLength } from '../src/validators/maxLength'
 import { useValidation } from '../src/core/validate'
-import { required } from '../src/validators/required'
 
 describe('[Core] Main validation method', () => {
   it('simple Test', async () => {
@@ -19,7 +18,7 @@ describe('[Core] Main validation method', () => {
     const { validate, anyError } = useValidation(form, rules)
     validate()
       .catch((e) => {
-        expect(anyError).toBeTruthy()
+        expect(anyError.value).toBeTruthy()
         expect(e.identifier.invalid).toBeTruthy()
       })
   })
@@ -52,7 +51,7 @@ describe('[Core] Main validation method', () => {
 
     await validate()
       .catch((e) => {
-        expect(anyError).toBeTruthy()
+        expect(anyError.value).toBeTruthy()
         expect(e.nested.foo.errors.minLength).toBe('Value must be greater or equal to 6')
       })
 
@@ -79,7 +78,7 @@ describe('[Core] Main validation method', () => {
     validate()
       .catch((e) => {
         expect(e.a.errors.minLength).toBe(`Value must be greater or equal to ${amount.value}`)
-        expect(anyError).toBeTruthy()
+        expect(anyError.value).toBeTruthy()
       })
   })
 

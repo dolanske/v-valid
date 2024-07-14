@@ -7,11 +7,12 @@ const form = reactive({ num: 10, bad: 20, worst: null })
 const form2 = reactive({
   date1: new Date('10/10/2020'),
   date2: new Date('10/10/2020').getTime(),
+  date3: 50,
 })
 
 describe('[Validators] between', () => {
   it('using numbers', () => {
-    const rules = computed(() => ({
+    const rules = {
       num: {
         range: between(5, 15),
       },
@@ -21,7 +22,7 @@ describe('[Validators] between', () => {
       worst: {
         range: between(0, 10),
       },
-    }))
+    }
 
     const { validate } = useValidation(form, rules)
 
@@ -33,9 +34,12 @@ describe('[Validators] between', () => {
   })
 
   it('using Date', () => {
-    const rules = computed(() => ({
+    const rules = {
       date1: {
-        between: between(new Date('10/05/2020'), new Date('10/15/2020')),
+        between: between(
+          new Date('10/05/2020'),
+          new Date('10/15/2020'),
+        ),
       },
       date2: {
         notBetween: between(
@@ -43,13 +47,17 @@ describe('[Validators] between', () => {
           new Date('12/15/2020'),
         ),
       },
-    }))
+      date3: {
+        uhhh: between(0, 10000000000000),
+      },
+    }
 
     const { validate } = useValidation(form2, rules)
 
     validate().catch((e) => {
       expect(e.date1.invalid).toBeFalsy()
       expect(e.date2.invalid).toBeTruthy()
+      expect(e.date3.id).toBe('date3')
     })
   })
 })

@@ -1,8 +1,8 @@
-import { isDate, isNil, isNumber } from 'lodash-es'
 import type { Ref } from 'vue-demi'
 import { unref } from 'vue-demi'
 import { SKIP_PROTO } from '../shared'
 import type { ValidationRule } from '../types'
+import { isDate, isNil, isNumber } from '../utils'
 
 /**
  * @Rule Input must be a number or a date which satisfies the minimum provided value.

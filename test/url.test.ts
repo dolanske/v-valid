@@ -11,7 +11,7 @@ const valid = [
 ]
 
 const invalid = [
-  'cumcumcumc/cum',
+  'testetest/test',
   '1',
   'chantar;chantaro//chantaro@chantaro',
   ';./;.\';.\';.\'',

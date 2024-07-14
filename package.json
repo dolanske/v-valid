@@ -1,7 +1,7 @@
 {
   "name": "@dolanske/v-valid",
   "type": "module",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Model based form validation made for vue 3. Inspired by vuelidate with personal take on the API and implementation",
   "author": "dolanske",
   "license": "MIT",
@@ -37,14 +37,13 @@
     "vue": "latest"
   },
   "dependencies": {
-    "@types/lodash-es": "^4.17.12",
-    "lodash-es": "^4.17.21",
     "vue-demi": "^0.14.8"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^2.21.1",
     "@vitest/coverage-c8": "^0.22.1",
     "eslint": "^9.5.0",
+    "eslint-plugin-format": "^0.1.2",
     "typescript": "^5.4.5",
     "vite-plugin-dts": "^3.9.1",
     "vitest": "^1.6.0",
