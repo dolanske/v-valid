@@ -2,12 +2,13 @@
   "name": "@dolanske/v-valid",
   "type": "module",
   "version": "2.1.0",
+  "private": false,
   "description": "Model based form validation made for vue 3. Inspired by vuelidate with personal take on the API and implementation",
   "author": "dolanske",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/dolanske/v-valid.git"
+    "url": "git+https://github.com/dolanske/v-valid.git"
   },
   "keywords": [
     "form-validation",
@@ -48,8 +49,5 @@
     "vite-plugin-dts": "^3.9.1",
     "vitest": "^1.6.0",
     "vue": "latest"
-  },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
   }
 }
