@@ -4,10 +4,10 @@ You know what they say, you can not trust a thief or a murderer. You know who yo
 
 ## Example + Setup
 
-1. Make sure you clone this repository or install it with npm
+1. Install the package via npm
 
     ```cmd
-    npm i -S git+https://github.com/dolanske/v-valid.git
+    npm i @dolanske/v-valid
     ```
 
 2. Set up your component
