@@ -494,7 +494,7 @@ const arrAndMinLen = createRuleArg<{ length: number }> (
 const checkPassword = createRule(
   (password) =>
     new Promise((resolve) => {
-      const result = awiat someApiCall(password)
+      const result = await someApiCall(password)
       resolve(result)
     }),
   'Incorrect password. Please try again.'
