@@ -3,6 +3,7 @@
  */
 export { useValidation } from './core/validate'
 export { createRule, createRuleArg } from './core/define'
+export { defineRules } from './core/rules'
 
 /**
  * Helpers

@@ -115,6 +115,16 @@ declare type _DeepKeys<T> = T extends object ? ({
     [K in (string | number) & keyof T]: `${(`.${K}` | (`${K}` extends `${number}` ? `[${K}]` : never))}${'' | _DeepKeys<FixArr<T[K]>>}`;
 }[(string | number) & keyof T]) : never;
 
+/**
+ * Type safe helper to generating rules from form objects. Also allows array rule definition
+ *
+ * @param rules
+ * @returns Rules to be used within the composable
+ */
+export declare function defineRules<F>(rules: DefineRuleType<F>): DefineRuleType<F>;
+
+declare type DefineRuleType<T> = ReplacePrimitivesOptional<T, Record<string, Rule> | Array<Rule>>;
+
 declare type DefLabel = string | ((value: any) => string);
 
 /**
@@ -277,11 +287,17 @@ declare type ReplacePrimitives<T, ReplaceWith> = T extends Record<string, unknow
     [K in keyof T]: ReplacePrimitives<T[K], ReplaceWith>;
 } : ReplaceWith;
 
+declare type ReplacePrimitivesOptional<T, ReplaceWith> = T extends Record<string, unknown> ? {
+    [K in keyof T]?: ReplacePrimitivesOptional<T[K], ReplaceWith>;
+} : ReplaceWith;
+
 /**
  * @Rule Input must not be empty, null or undefined.
  * If input is number with value 0, it will return true as value was provided
  */
 export declare const required: ValidationRuleObject;
+
+declare type Rule = ValidationRule | ValidationRuleObject;
 
 declare type RuleParams = Record<string, any>;
 
@@ -382,13 +398,13 @@ declare namespace $and {
 }
 
 
-declare namespace $or {
-    var skip: (..._args: any[]) => ValidationRule;
+declare namespace $not {
+    var skip: ValidationRule;
 }
 
 
-declare namespace $not {
-    var skip: ValidationRule;
+declare namespace $or {
+    var skip: (..._args: any[]) => ValidationRule;
 }
 
 
@@ -397,12 +413,12 @@ declare namespace minLength {
 }
 
 
-declare namespace sameAs {
+declare namespace maxLength {
     var skip: (..._args: any[]) => ValidationRule;
 }
 
 
-declare namespace maxLength {
+declare namespace sameAs {
     var skip: (..._args: any[]) => ValidationRule;
 }
 
@@ -417,6 +433,11 @@ declare namespace between {
 }
 
 
+declare namespace maxValue {
+    var skip: (..._args: any[]) => ValidationRule;
+}
+
+
 declare namespace minValue {
     var skip: (..._args: any[]) => ValidationRule;
 }
@@ -427,18 +448,8 @@ declare namespace maxLenNoSpace {
 }
 
 
-declare namespace maxValue {
+declare namespace minLenNoSpace {
     var skip: (..._args: any[]) => ValidationRule;
-}
-
-
-declare namespace startsWith {
-    var skip: (..._args: any[]) => import("../../types").ValidationRule;
-}
-
-
-declare namespace endsWith {
-    var skip: (..._args: any[]) => import("../../types").ValidationRule;
 }
 
 
@@ -447,8 +458,13 @@ declare namespace contains {
 }
 
 
-declare namespace minLenNoSpace {
-    var skip: (..._args: any[]) => ValidationRule;
+declare namespace endsWith {
+    var skip: (..._args: any[]) => import("../../types").ValidationRule;
+}
+
+
+declare namespace startsWith {
+    var skip: (..._args: any[]) => import("../../types").ValidationRule;
 }
 
 

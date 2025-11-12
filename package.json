@@ -1,7 +1,7 @@
 {
   "name": "@dolanske/v-valid",
   "type": "module",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "private": false,
   "description": "Model based form validation made for vue 3. Inspired by vuelidate with personal take on the API and implementation",
   "author": "dolanske",

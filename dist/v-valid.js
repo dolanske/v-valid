@@ -1,134 +1,140 @@
-import { ref as L, reactive as Q, watch as R, isRef as E, unref as i } from "vue-demi";
+import { ref as z, reactive as Q, watch as E, isRef as A, unref as f } from "vue-demi";
 function y(e) {
   return e.trim().replace(" ", ".");
 }
-async function z(e, t, n = "") {
-  for (const s in e) {
-    const f = `${n} ${s}`.trim();
-    m(e[s]) && !(e[s] instanceof Date) ? await z(e[s], t, f) : await t(s, e[s], f);
+async function h(e, t, n = "") {
+  for (const r in e) {
+    const i = `${n} ${r}`.trim();
+    p(e[r]) && !(e[r] instanceof Date) ? await h(e[r], t, i) : await t(r, e[r], i);
   }
 }
-function a(e) {
+function X(e, t, n = "") {
+  for (const r in e) {
+    const i = `${n} ${r}`.trim();
+    p(e[r]) && !(e[r] instanceof Date) ? h(e[r], t, i) : t(r, e[r], i);
+  }
+}
+function u(e) {
   return e == null;
 }
-function q(e) {
+function M(e) {
   return typeof e == "boolean";
 }
-function A(e) {
+function O(e) {
   return typeof e == "function" && e instanceof Function;
 }
-function k(e) {
+function _(e) {
   return typeof e == "number" || e instanceof Number;
 }
-function h(e) {
+function $(e) {
   return e instanceof Date;
 }
-function O(e) {
+function V(e) {
   return Array.isArray(e);
 }
-function X(e) {
+function Y(e) {
   return typeof e == "string" || e instanceof String;
 }
-function Y(e) {
-  return a(e) ? !0 : "length" in e ? e.length <= 0 : "size" in e ? e.size <= 0 : m(e) ? Object.keys(e).length <= 0 : !0;
+function Z(e) {
+  return u(e) ? !0 : "length" in e ? e.length <= 0 : "size" in e ? e.size <= 0 : p(e) ? Object.keys(e).length <= 0 : !0;
 }
-function $(e) {
+function w(e) {
   return e instanceof Map;
 }
-function m(e) {
-  return typeof e == "object" && !O(e) && e !== null && !A(e);
+function p(e) {
+  return typeof e == "object" && !V(e) && e !== null && !O(e);
 }
-function V(e) {
+function D(e) {
   return e instanceof Set;
 }
-function Z(e) {
+function I(e) {
   return e instanceof Symbol;
 }
-function p(e, t, n) {
-  if (a(e) || !m(e))
+function c(e, t, n) {
+  if (u(e) || !p(e))
     return;
   t = y(t.trim());
-  const s = t.split(".");
-  let f = e;
-  const u = s.length;
-  if (u > 1)
-    for (let o = 0; o < u; o++) {
-      const l = s[o];
+  const r = t.split(".");
+  let i = e;
+  const a = r.length;
+  if (a > 1)
+    for (let o = 0; o < a; o++) {
+      const l = r[o];
       if (l.length === 0)
         continue;
-      const d = Reflect.get(f, l);
-      if (m(d))
-        f = d;
-      else if (o === u - 1) {
-        Reflect.set(f, l, n);
+      const d = Reflect.get(i, l);
+      if (p(d))
+        i = d;
+      else if (o === a - 1) {
+        Reflect.set(i, l, n);
         break;
       } else
-        d === void 0 && (Reflect.set(f, l, {}), f = Reflect.get(f, l));
+        d === void 0 && (Reflect.set(i, l, {}), i = Reflect.get(i, l));
     }
   else
-    Reflect.set(f, s[0], n);
+    Reflect.set(i, r[0], n);
 }
-function I(e, t) {
-  if (a(e) || !m(e))
+function x(e, t) {
+  if (u(e) || !p(e))
     return;
   t = y(t.trim());
   const n = t.split(".");
-  let s = e;
-  for (const f of n)
-    f.length !== 0 && (s = Reflect.get(s, f));
-  return s;
+  let r = e;
+  for (const i of n)
+    i.length !== 0 && (r = Reflect.get(r, i));
+  return r;
 }
-function P() {
+function q() {
   return { id: null, value: null, invalid: !1, errors: {} };
 }
 function Le(e, t, n = {}) {
-  const { proactive: s = !1, autoclear: f = !1 } = n, u = L(!1), o = L(!1), l = L({}), d = Q({
+  const { proactive: r = !1, autoclear: i = !1 } = n, a = z(!1), o = z(!1), l = z({}), d = Q({
     didValidate: !1
   });
-  f ? R(e, () => {
-    d.didValidate && _();
-  }, { deep: !0 }) : s && (R(e, () => w(), { deep: !0 }), E(t) && R(t, () => w(), { deep: !0 })), _();
-  function W() {
-    u.value = !1, o.value = !1, z(e, (b, g, D) => {
-      p(l.value, y(D), P());
+  i ? E(e, () => {
+    d.didValidate && b();
+  }, { deep: !0 }) : r && (E(e, () => R(), { deep: !0 }), A(t) && E(t, () => R(), { deep: !0 })), b();
+  function C() {
+    a.value = !1, o.value = !1, h(e, (k, g, S) => {
+      c(l.value, y(S), q());
     });
   }
-  function _() {
-    d.didValidate = !1, W();
+  function b() {
+    d.didValidate = !1, C();
   }
-  async function w(...b) {
-    return _(), o.value = !0, new Promise(async (g, D) => {
-      await z(e, async (U, S, c) => {
-        c = y(c), p(l.value, c, P());
-        const F = i(t), T = I(F, c);
-        if (!T)
+  async function R(...k) {
+    return b(), o.value = !0, new Promise(async (g, S) => {
+      await h(e, async (j, L, m) => {
+        m = y(m), c(l.value, m, q());
+        const F = f(t), P = x(F, m);
+        if (!P)
           return Promise.resolve();
-        for (const [j, B] of Object.entries(T)) {
-          if (b.length > 0 && !b.includes(j))
+        for (const [T, B] of Object.entries(P)) {
+          if (k.length > 0 && !k.includes(T))
             continue;
           const { label: K, validate: G, __skip: H } = B;
           if (H)
             continue;
-          const J = await G(S);
-          p(l.value, `${c}.id`, U), p(l.value, `${c}.value`, S), J || (u.value = !0, p(l.value, `${c}.invalid`, !0), p(l.value, `${c}.errors.${j}`, K(S)));
+          const J = await G(L);
+          c(l.value, `${m}.id`, j), c(l.value, `${m}.value`, L), J || (a.value = !0, c(l.value, `${m}.invalid`, !0), c(l.value, `${m}.errors.${T}`, K(L)));
         }
         return Promise.resolve();
-      }), o.value = !1, d.didValidate = !0, u.value ? D(l.value) : g(l.value);
+      }), o.value = !1, d.didValidate = !0, a.value ? S(l.value) : g(l.value);
     });
   }
-  function C(b, g) {
-    p(l.value, `${b}.errors.${g.key}`, g.message), p(l.value, `${b}.invalid`, !0);
+  function U(k, g) {
+    c(l.value, `${k}.errors.${g.key}`, g.message), c(l.value, `${k}.invalid`, !0);
   }
   return {
-    reset: _,
-    validate: w,
-    addError: C,
+    reset: b,
+    validate: R,
+    addError: U,
     errors: l,
-    anyError: u,
+    anyError: a,
     pending: o
   };
 }
-const r = function(...e) {
+const s = function(...e) {
   return {
     name: "skipped-rule",
     __skip: !0,
@@ -137,69 +143,74 @@ const r = function(...e) {
   };
 };
 function N(e, t, n) {
-  return new Promise(async (s) => {
-    const f = [];
-    for (const u of t) {
-      if (!u.validate)
+  return new Promise(async (r) => {
+    const i = [];
+    for (const a of t) {
+      if (!a.validate)
         throw new Error("Rule is missing a validator function");
-      const o = await u.validate(e);
-      f.push(o);
+      const o = await a.validate(e);
+      i.push(o);
     }
     switch (n) {
       case "every": {
-        s(f.every((u) => u));
+        r(i.every((a) => a));
         break;
       }
       case "some": {
-        s(f.some((u) => u));
+        r(i.some((a) => a));
         break;
       }
       case "none": {
-        s(!f.every((u) => u));
+        r(!i.every((a) => a));
         break;
       }
     }
   });
 }
-const v = "Value does not satisfy the validation rule.";
-function Re(e, t, n) {
+const W = "Value does not satisfy the validation rule.";
+function ze(e, t, n) {
   return {
-    skip: r,
+    skip: s,
     name: n ?? "custom-object-rule",
     __skip: !1,
-    validate: (s) => e(s),
-    label: (s) => a(t) ? v : typeof t == "string" ? t : t(s)
+    validate: (r) => e(r),
+    label: (r) => u(t) ? W : typeof t == "string" ? t : t(r)
   };
 }
-function ze(e, t, n) {
-  const s = (f) => ({
+function Ee(e, t, n) {
+  const r = (i) => ({
     // the value from validate is the actual value we are testing against
     // injected during validation
     __skip: !1,
     name: n ?? "custom-param-rule",
-    validate: (u) => e(u, f),
-    label: (u) => a(t) ? v : typeof t == "string" ? t : t(u, f)
+    validate: (a) => e(a, i),
+    label: (a) => u(t) ? W : typeof t == "string" ? t : t(a, i)
   });
-  return s.skip = r, s;
+  return r.skip = s, r;
 }
-function Ee(e, t) {
-  const { validate: n, __skip: s, name: f } = t;
-  if (a(n))
-    throw new Error("[withLabel] Missing validator function");
-  return {
-    name: f,
-    __skip: s,
-    validate: n,
-    label: (u) => typeof e == "string" ? e : e(u)
-  };
-}
-function Ae(e, t) {
-  return q(e) ? e ? t : r() : E(e) ? e.value ? t : r() : A(e) ? e() ? t : r() : e.then((n) => n ? t : r());
+function Ae(e) {
+  return X(e, (t, n, r) => {
+    V(n) && c(e, r, n.reduce((i, a, o) => (a.name in i ? Reflect.set(i, a.name + o, a) : Reflect.set(i, a.name, a), i), {}));
+  }), e;
 }
 function Oe(e, t) {
-  return q(e) ? e ? r() : t : E(e) ? e.value ? r() : t : A(e) ? e() ? r() : t : e.then((n) => n ? r() : t);
+  const { validate: n, __skip: r, name: i } = t;
+  if (u(n))
+    throw new Error("[withLabel] Missing validator function");
+  return {
+    name: i,
+    __skip: r,
+    validate: n,
+    label: (a) => typeof e == "string" ? e : e(a)
+  };
 }
-function x(...e) {
+function Ne(e, t) {
+  return M(e) ? e ? t : s() : A(e) ? e.value ? t : s() : O(e) ? e() ? t : s() : e.then((n) => n ? t : s());
+}
+function Pe(e, t) {
+  return M(e) ? e ? s() : t : A(e) ? e.value ? s() : t : O(e) ? e() ? s() : t : e.then((n) => n ? s() : t);
+}
+function ee(...e) {
   return {
     name: "and-validator",
     __skip: !1,
@@ -209,8 +220,8 @@ function x(...e) {
     }
   };
 }
-x.skip = r;
-function ee(...e) {
+ee.skip = s;
+function te(...e) {
   return {
     name: "or-validator",
     __skip: !1,
@@ -220,8 +231,8 @@ function ee(...e) {
     }
   };
 }
-ee.skip = r;
-function te(...e) {
+te.skip = s;
+function ne(...e) {
   return {
     name: "not-validator",
     __skip: !1,
@@ -231,73 +242,73 @@ function te(...e) {
     }
   };
 }
-te.skip = r();
-function Ne(e, t) {
+ne.skip = s();
+function Te(e, t) {
   return e.validate(t);
 }
-const Te = {
+const qe = {
   __skip: !1,
   name: "required",
-  skip: r,
-  validate: (e) => a(e) || e === "null" || e === "undefined" ? !1 : typeof e == "string" ? e.length > 0 : typeof e == "number" ? !0 : !Y(e),
+  skip: s,
+  validate: (e) => u(e) || e === "null" || e === "undefined" ? !1 : typeof e == "string" ? e.length > 0 : typeof e == "number" ? !0 : !Z(e),
   /* c8 ignore next 3 */
   label: () => "Value is required"
 };
-function ne(e) {
+function re(e) {
   return {
     name: "minLength",
     __skip: !1,
-    validate: (t) => a(t) ? !1 : (e = i(e), V(t) || $(t) ? t.size >= e : m(t) ? Object.keys(t).length >= e : t != null && t.length ? t.length >= e : !1),
+    validate: (t) => u(t) ? !1 : (e = f(e), D(t) || w(t) ? t.size >= e : p(t) ? Object.keys(t).length >= e : t != null && t.length ? t.length >= e : !1),
     /* c8 ignore next 3 */
-    label: () => `Value must be greater or equal to ${i(e)}`
+    label: () => `Value must be greater or equal to ${f(e)}`
   };
 }
-ne.skip = r;
-function re(e) {
+re.skip = s;
+function se(e) {
   return {
     name: "maxLength",
     __skip: !1,
-    validate: (t) => a(t) ? !1 : (e = i(e), V(t) || $(t) ? t.size <= e : m(t) ? Object.keys(t).length <= e : t.length <= e),
+    validate: (t) => u(t) ? !1 : (e = f(e), D(t) || w(t) ? t.size <= e : p(t) ? Object.keys(t).length <= e : t.length <= e),
     /* c8 ignore next 3 */
-    label: () => `Value must be lesser or equal to ${i(e)}`
+    label: () => `Value must be lesser or equal to ${f(e)}`
   };
 }
-re.skip = r;
-const se = /^([\w!#$%&'*+/=?^`{|}~-]+(?:\.[\w!#$%&'*+/=?^`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)$/i, ie = /[^a-z0-9]/i, M = /\S/g, je = {
+se.skip = s;
+const ie = /^([\w!#$%&'*+/=?^`{|}~-]+(?:\.[\w!#$%&'*+/=?^`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)$/i, ae = /[^a-z0-9]/i, v = /\S/g, Me = {
   __skip: !1,
   name: "email",
-  skip: r,
-  validate: (e) => a(e) ? !1 : se.test(e),
+  skip: s,
+  validate: (e) => u(e) ? !1 : ie.test(e),
   /* c8 ignore next 3 */
   label: () => "Value must be in a valid email format"
 };
-function ae(e, t = !1) {
+function fe(e, t = !1) {
   return {
     name: "sameAs",
     __skip: !1,
-    validate: (n) => (e = i(e), t ? i(n) == i(e) : i(n) === i(e)),
+    validate: (n) => (e = f(e), t ? f(n) == f(e) : f(n) === f(e)),
     /* c8 ignore next 3 */
     label: () => "Values must be matching"
   };
 }
-ae.skip = r;
-function fe(e) {
+fe.skip = s;
+function ue(e) {
   const t = typeof e == "string" ? new RegExp(e) : e;
   return {
     name: "match",
     __skip: !1,
-    validate: (n) => a(n) ? !1 : t.test(n),
+    validate: (n) => u(n) ? !1 : t.test(n),
     /* c8 ignore next 3 */
     label: () => "Value must match the provided rule."
   };
 }
-fe.skip = r;
-const Pe = {
+ue.skip = s;
+const We = {
   __skip: !1,
   name: "url",
-  skip: r,
+  skip: s,
   validate: (e) => {
-    if (a(e))
+    if (u(e))
       return !1;
     try {
       return new URL(e) instanceof URL;
@@ -306,203 +317,204 @@ const Pe = {
     }
   },
   label: () => "Value must be a valid URL"
-}, ue = {
+}, le = {
   __skip: !1,
   name: "str",
-  skip: r,
-  validate: (e) => a(e) ? !1 : X(e),
+  skip: s,
+  validate: (e) => u(e) ? !1 : Y(e),
   label: ({ value: e }) => `Value <${typeof e}> must be a string`
-}, le = {
+}, oe = {
   name: "num",
   __skip: !1,
-  skip: r,
-  validate: (e) => a(e) ? !1 : k(e),
+  skip: s,
+  validate: (e) => u(e) ? !1 : _(e),
   label: ({ value: e }) => `Value <${typeof e}> must be a number`
-}, oe = {
+}, ce = {
   name: "arr",
   __skip: !1,
-  skip: r,
-  validate: (e) => a(e) ? !1 : O(e),
+  skip: s,
+  validate: (e) => u(e) ? !1 : V(e),
   label: ({ value: e }) => `Value <${typeof e}> must be an Array`
-}, ce = {
+}, pe = {
   name: "obj",
   __skip: !1,
-  skip: r,
-  validate: (e) => a(e) || O(e) || V(e) || $(e) ? !1 : m(e),
+  skip: s,
+  validate: (e) => u(e) || V(e) || D(e) || w(e) ? !1 : p(e),
   label: ({ value: e }) => `Value <${typeof e}> must be an Object`
-}, pe = {
+}, me = {
   name: "set",
   __skip: !1,
-  skip: r,
-  validate: (e) => a(e) ? !1 : V(e),
+  skip: s,
+  validate: (e) => u(e) ? !1 : D(e),
   label: ({ value: e }) => `Value <${typeof e}> must be a Set`
-}, me = {
+}, de = {
   name: "map",
   __skip: !1,
-  skip: r,
-  validate: (e) => a(e) ? !1 : $(e),
+  skip: s,
+  validate: (e) => u(e) ? !1 : w(e),
   label: ({ value: e }) => `Value <${typeof e}> must be a Map`
-}, de = {
+}, ke = {
   name: "date",
   __skip: !1,
-  skip: r,
+  skip: s,
   validate: (e) => {
-    if (a(e) || e == "Invalid Date")
+    if (u(e) || e == "Invalid Date")
       return !1;
-    if (h(e) && e.getTime())
+    if ($(e) && e.getTime())
       return !0;
     const t = new Date(e);
-    return h(t);
+    return $(t);
   },
   label: ({ value: e }) => `Value <${typeof e}> must be a valid Date object`
-}, be = {
+}, ge = {
   name: "symbol",
   __skip: !1,
-  skip: r,
-  validate: (e) => a(e) ? !1 : Z(e),
+  skip: s,
+  validate: (e) => u(e) ? !1 : I(e),
   label: ({ value: e }) => `Value <${typeof e}> must be a Symbol`
-}, ge = {
-  str: ue,
-  num: le,
-  arr: oe,
-  obj: ce,
-  set: pe,
-  map: me,
-  date: de,
-  symbol: be
+}, _e = {
+  str: le,
+  num: oe,
+  arr: ce,
+  obj: pe,
+  set: me,
+  map: de,
+  date: ke,
+  symbol: ge
 };
-function ke(e, t) {
+function be(e, t) {
   return {
     __skip: !1,
     name: "between",
-    validate: (n) => a(n) ? !1 : (e = i(e), t = i(t), ge.date.validate(n) && (e = e instanceof Date ? e.getTime() : new Date(e).getTime(), t = t instanceof Date ? t.getTime() : new Date(t).getTime(), n = n instanceof Date ? n.getTime() : new Date(n).getTime()), n >= e && n <= t),
-    label: () => `Value must be between ${i(e)} and ${i(t)}`
+    validate: (n) => u(n) ? !1 : (e = f(e), t = f(t), _e.date.validate(n) && (e = e instanceof Date ? e.getTime() : new Date(e).getTime(), t = t instanceof Date ? t.getTime() : new Date(t).getTime(), n = n instanceof Date ? n.getTime() : new Date(n).getTime()), n >= e && n <= t),
+    label: () => `Value must be between ${f(e)} and ${f(t)}`
   };
 }
-ke.skip = r;
-function _e(e) {
+be.skip = s;
+function ye(e) {
   return {
     name: "minValue",
     __skip: !1,
-    validate: (t) => a(t) ? !1 : (e = i(e), k(t) && k(e) ? t >= e : h(t) ? new Date(t) >= new Date(e) : !1),
+    validate: (t) => u(t) ? !1 : (e = f(e), _(t) && _(e) ? t >= e : $(t) ? new Date(t) >= new Date(e) : !1),
     /* c8 ignore next 3 */
-    label: () => `Minimum allowed value is ${i(e)}`
+    label: () => `Minimum allowed value is ${f(e)}`
   };
 }
-_e.skip = r;
-function ye(e) {
+ye.skip = s;
+function he(e) {
   return {
     name: "maxValue",
     __skip: !1,
-    validate: (t) => a(t) ? !1 : (e = i(e), k(t) && k(e) ? t <= e : h(t) ? new Date(t) <= new Date(e) : !1),
+    validate: (t) => u(t) ? !1 : (e = f(e), _(t) && _(e) ? t <= e : $(t) ? new Date(t) <= new Date(e) : !1),
     /* c8 ignore next 3 */
-    label: () => `Value must be shorter or equal to ${i(e)}`
+    label: () => `Value must be shorter or equal to ${f(e)}`
   };
 }
-ye.skip = r;
-function he(e) {
+he.skip = s;
+function $e(e) {
   return {
     __skip: !1,
     name: "maxLenNoSpace",
     validate: (t) => {
-      if (a(t) || typeof t != "string")
+      if (u(t) || typeof t != "string")
         return !1;
-      e = i(e);
-      const n = t.match(M);
+      e = f(e);
+      const n = t.match(v);
       return n ? n.length <= e : !1;
     },
-    label: (t) => typeof t != "string" ? "Value must be a string and " : `Value must have maximal lenght of ${i(e)} excluding spaces`
+    label: (t) => typeof t != "string" ? "Value must be a string and " : `Value must have maximal lenght of ${f(e)} excluding spaces`
   };
 }
-he.skip = r;
-function $e(e) {
+$e.skip = s;
+function Ve(e) {
   return {
     name: "minLenNoSpace",
     __skip: !1,
     validate: (t) => {
-      if (a(t) || typeof t != "string")
+      if (u(t) || typeof t != "string")
         return !1;
-      e = i(e);
-      const n = t.match(M);
+      e = f(e);
+      const n = t.match(v);
       return n ? n.length >= e : !1;
     },
     /* c8 ignore next 3 */
-    label: () => `Value must have minimal lenght of ${i(e)} excluding spaces`
+    label: () => `Value must have minimal lenght of ${f(e)} excluding spaces`
   };
 }
-$e.skip = r;
-const qe = {
+Ve.skip = s;
+const ve = {
   __skip: !1,
   name: "hasSpecialChars",
-  skip: r,
-  validate: (e) => a(e) ? !1 : !ie.test(e),
+  skip: s,
+  validate: (e) => u(e) ? !1 : !ae.test(e),
   label: (e) => typeof e != "string" ? "Value must be a string and contain no special characters" : "Value must not contain any special characters"
 };
-function Ve(e, t = !1) {
+function we(e, t = !1) {
   return {
     __skip: !1,
     name: "contains",
-    validate: (n) => a(n) || typeof n != "string" ? !1 : (typeof e == "string" && (e = t ? [e] : e.trim().split(/\s+/)), e.every((s) => n.toLowerCase().includes(s.toLowerCase()))),
+    validate: (n) => u(n) || typeof n != "string" ? !1 : (typeof e == "string" && (e = t ? [e] : e.trim().split(/\s+/)), e.every((r) => n.toLowerCase().includes(r.toLowerCase()))),
     label: (n) => {
-      e = i(e);
-      const s = typeof e == "string" ? e : e.join(", ");
-      return typeof n != "string" ? `Value must be a string and contain <${s}>` : `Value must contain <${s}>`;
+      e = f(e);
+      const r = typeof e == "string" ? e : e.join(", ");
+      return typeof n != "string" ? `Value must be a string and contain <${r}>` : `Value must contain <${r}>`;
     }
   };
 }
-Ve.skip = r;
-function we(e, t) {
-  return {
-    __skip: !1,
-    name: "startsWith",
-    validate: (n) => (e = i(e), !n || typeof n != "string" ? !1 : n.startsWith(e, t)),
-    label: (n) => typeof n != "string" ? `Value must be a string and start with '${i(e)}'` : `Value must start with '${i(e)}'`
-  };
-}
-we.skip = r;
+we.skip = s;
 function De(e, t) {
   return {
     __skip: !1,
-    name: "endsWith",
-    validate: (n) => (e = i(e), !n || typeof n != "string" ? !1 : n.endsWith(e, t)),
-    label: (n) => typeof n != "string" ? `Value must be a string and end with '${i(e)}'` : `Value must end with '${i(e)}'`
+    name: "startsWith",
+    validate: (n) => (e = f(e), !n || typeof n != "string" ? !1 : n.startsWith(e, t)),
+    label: (n) => typeof n != "string" ? `Value must be a string and start with '${f(e)}'` : `Value must start with '${f(e)}'`
   };
 }
-De.skip = r;
+De.skip = s;
+function Re(e, t) {
+  return {
+    __skip: !1,
+    name: "endsWith",
+    validate: (n) => (e = f(e), !n || typeof n != "string" ? !1 : n.endsWith(e, t)),
+    label: (n) => typeof n != "string" ? `Value must be a string and end with '${f(e)}'` : `Value must end with '${f(e)}'`
+  };
+}
+Re.skip = s;
 export {
-  x as $and,
-  te as $not,
-  ee as $or,
-  Ne as $test,
-  Ae as $validateIf,
-  Oe as $validateIfNot,
-  Ee as $withLabel,
-  ke as between,
-  Ve as contains,
-  Re as createRule,
-  ze as createRuleArg,
-  je as email,
-  De as endsWith,
-  qe as hasSpecialChars,
-  oe as isArr,
-  de as isDate,
-  me as isMap,
-  le as isNum,
-  ce as isObj,
-  pe as isSet,
-  ue as isStr,
-  be as isSymbol,
-  fe as match,
-  he as maxLenNoSpace,
-  re as maxLength,
-  ye as maxValue,
-  $e as minLenNoSpace,
-  ne as minLength,
-  _e as minValue,
-  Te as required,
-  ae as sameAs,
-  we as startsWith,
-  ge as type,
-  Pe as url,
+  ee as $and,
+  ne as $not,
+  te as $or,
+  Te as $test,
+  Ne as $validateIf,
+  Pe as $validateIfNot,
+  Oe as $withLabel,
+  be as between,
+  we as contains,
+  ze as createRule,
+  Ee as createRuleArg,
+  Ae as defineRules,
+  Me as email,
+  Re as endsWith,
+  ve as hasSpecialChars,
+  ce as isArr,
+  ke as isDate,
+  de as isMap,
+  oe as isNum,
+  pe as isObj,
+  me as isSet,
+  le as isStr,
+  ge as isSymbol,
+  ue as match,
+  $e as maxLenNoSpace,
+  se as maxLength,
+  he as maxValue,
+  Ve as minLenNoSpace,
+  re as minLength,
+  ye as minValue,
+  qe as required,
+  fe as sameAs,
+  De as startsWith,
+  _e as type,
+  We as url,
   Le as useValidation
 };
