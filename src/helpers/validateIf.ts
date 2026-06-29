@@ -10,7 +10,7 @@ import { isBoolean, isFunction } from '../utils'
  * @param rule Validation rule
  */
 
-export function $validateIf(condition: boolean | (() => boolean) | Ref<boolean> | Promise<boolean>, rule: ValidationRule): ValidationRule | Promise<ValidationRule> {
+export function validateIf(condition: boolean | (() => boolean) | Ref<boolean> | Promise<boolean>, rule: ValidationRule): ValidationRule | Promise<ValidationRule> {
   // Boolean
   if (isBoolean(condition))
     return condition ? rule : SKIP_PROTO()

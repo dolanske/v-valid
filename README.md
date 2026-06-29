@@ -147,7 +147,7 @@ Requires input to have a minimal specified length.
 
 - **Parameters**
   - `Ref<number> | number` min
-- **Works with**
+- **Supports**
   - `string`, `Set<any>`, `Map<any, any>`, `any[]` and `Object`
 
 ```js
@@ -164,7 +164,7 @@ Requires input to have a maximum specified length.
 
 - **Parameters**
   - `Ref<number> | number` max
-- **Works with**
+- **Supports**
   - `string`, `Set<any>`, `Map<any, any>`, `any[]`, `Object`
 
 ```js
@@ -181,7 +181,7 @@ Input must be a string and excluding spaces must be equal or greater to the prov
 
 - **Parameters**
   - `Ref<number> | number` min - Minimum allowed string length
-- **Works with**
+- **Supports**
   - `string`
 
 ```js
@@ -202,7 +202,7 @@ Input must be a string and excluding spaces must be equal or lesser to the provi
 
 - **Parameters**
   - `Ref<number> | number` max - Maximum allowed string length
-- **Works with**
+- **Supports**
   - `string`
 
 ```js
@@ -224,7 +224,7 @@ Requires input to be a number or Date within the specified bounds.
 - **Parameters**
   - `Ref<number> | number | Date` min
   - `Ref<number> | number | Date` max
-- **Works with**
+- **Supports**
   - `number`, `Date`
 
 ```js
@@ -236,6 +236,17 @@ const rules = {
 }
 ```
 
+---
+
+### `before(Date)`
+
+Provided value must be a date and be at or before the rule
+
+---
+
+### `after(Date)`
+
+Provided value must be a date and be at or after the rule
 ---
 
 ### `url`
@@ -269,7 +280,7 @@ Requires input to be the same as the provided value in the rule.
 - **Parameters**
   - `Ref<any> | any` value
   - `boolean` (default: false) lenient - wether to only compare based on value or value and type (eg. `==` vs `===`)
-- **Works with**
+- **Supports**
   - `any`
 
 ```js
@@ -286,7 +297,7 @@ Requires value to match the provided regular expression check.
 
 - **Parameters**
   - `string | RegExp` regex
-- **Works with**
+- **Supports**
   - `string`
 
 ```js
@@ -307,7 +318,7 @@ Checks wether string input contains certain words or characters. If you write mu
 - **Parameters**
   - `string | string[]` items - Words to check for
   - `boolean` (default: false) exact - Wether to match against the entire input string or split it by spaces. Default to true
-- **Works With**
+- **Supports**
   - `string`
 
 ```js
@@ -332,7 +343,7 @@ You can optionally specify the position where the check begins in the input valu
   - `string | Ref<string>` String we are matching against
   - `number` Starting position of the matching
     - *Note*: When using `endsWith`, the position starts at the end and goes backwards
-- **Works with**
+- **Supports**
   - `string`
 
 ```js
@@ -343,38 +354,6 @@ const rules = {
     // Input 'Hello World' => false
     endsBad: endsWith('Hello')
   }
-}
-```
-
----
-
-### `type[typeToCheckFor]`
-
-This is a special object rule in which you need to specify the type you want to check against.
-Note, each type check is also available as a standalone import without using the `type` object. Only difference is
-that you need to prefix it.
-
-```js
-// This import method
-import { isMap, isStr } from 'v-valid'
-// Equals to this one
-import { type } from 'v-valid'
-const { str, map } = type
-```
-
-- **Available type checks**
-  - `type.str` - requires value to be an instance of `string`
-  - `type.num` - requires value to be an instance of `number`
-  - `type.arr` - requires value to be an instance of `Array`
-  - `type.obj` - requires value to be an instance of `Object`
-  - `type.set` - requires value to be an instance of `Set`
-  - `type.map` - requires value to be an instance of `Map`
-  - `type.date` - requires value to be an instance of `Date`
-  - `type.symbol` - requires value to be an instance of `Symbol`
-
-```js
-const rules = {
-  name: { array: type.arr }
 }
 ```
 
@@ -391,7 +370,7 @@ Allows you to add a custom error message to ant validation rule.
 ```js
 const rules = {
   name: {
-    required: withLabel('You MUST fill this input!!', required)
+    required: withLabel('You MUST fill this input!', required)
   }
 }
 ```
@@ -424,8 +403,8 @@ Used when we want to apply multiple rules together into one.
 ```js
 const rules = {
   name: {
-    // We want the value to be an array with at least 10 items in it
-    group: and(type.arr, minLength(10))
+    // We want
+    validEmail: and(decimal, minLength(10))
   }
 }
 ```
@@ -437,8 +416,8 @@ Used in situations where we want to invert a rule results. Can also be used with
 ```js
 const rules = {
   name: {
-    // We want the input value to be anything but a string
-    notString: not(type.str)
+    // We want the input value to only pass for characters
+    characters: not(match('[A-Za-z0-9]'))
   }
 }
 ```
@@ -499,23 +478,4 @@ const checkPassword = createRule(
     }),
   'Incorrect password. Please try again.'
 )
-```
-
----
-
-### `$test(rule, value): Promise<boolean> | boolean`
-
-Perform a synthetic validation outside of any validation scope.
-
-- **Parameters**
-  - `ValidationRule` rule
-  - `value` any
-
-```js
-const result = $test(minLength(5), [1, 2, 3]) // False
-const result = $test(maxLength(5), [1, 2, 3]) // True
-const result = $test(type.symbol, Symbol('Symbol')) // True
-
-// With `and`, `not`, `or` and any async custom validators we have to await the returned promise
-const result = await $test(or(type.str, type.num), 'Hello World') // True
 ```

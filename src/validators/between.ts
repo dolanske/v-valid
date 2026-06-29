@@ -1,8 +1,7 @@
 import type { Ref } from 'vue-demi'
 import { unref } from 'vue-demi'
 import { SKIP_PROTO } from '../shared'
-import { isNil } from '../utils'
-import { type } from './type'
+import { isDate, isNil } from '../utils'
 
 /**
  * @Rule Checks if value is between the provided range
@@ -21,7 +20,7 @@ function between(min: number | Date | Ref<number | Date>, max: number | Date | R
       min = unref(min)
       max = unref(max)
 
-      if (type.date.validate(value)) {
+      if (isDate(value)) {
         min = min instanceof Date ? min.getTime() : new Date(min).getTime()
         max = max instanceof Date ? max.getTime() : new Date(max).getTime()
         value = value instanceof Date ? value.getTime() : new Date(value).getTime()

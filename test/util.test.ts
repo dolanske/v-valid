@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { ref } from 'vue-demi'
-import { getDeep, isNil, isObject, iterateInSync, setDeep } from '../src/utils'
+import { getDeep, isNil, isObject, setDeep } from '../src/utils'
 
 describe('isX methods', () => {
   it('isNil', () => {

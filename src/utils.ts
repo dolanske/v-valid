@@ -92,10 +92,6 @@ export function isSet(value: any): value is Set<any> {
   return value instanceof Set
 }
 
-export function isSymbol(value: any): value is symbol {
-  return value instanceof Symbol
-}
-
 // FIXME
 // keys in the same nesting get overwritten? or not saved at all?
 

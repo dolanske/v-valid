@@ -1,16 +1,16 @@
 import { describe, expect, it } from 'vitest'
 import { computed, nextTick, reactive, ref } from 'vue-demi'
-import { type } from '../src/validators/type'
 import { minLength } from '../src/validators/minLength'
 import { maxLength } from '../src/validators/maxLength'
 import { useValidation } from '../src/core/validate'
+import { decimal } from '../src/validators/decimal'
+import { required } from '../src'
 
 describe('[Core] Main validation method', () => {
   it('simple Test', async () => {
     const form = reactive({ identifier: 10 })
     const rules = {
       identifier: {
-        number: type.num,
         minLength: minLength(15),
       },
     }
@@ -25,7 +25,7 @@ describe('[Core] Main validation method', () => {
 
   it('test Deep Nesting', async () => {
     const form = reactive({
-      first: 10,
+      first: 10.5,
       nested: {
         foo: 'Hello',
         bar: [1, 2, 3, 4, 5],
@@ -34,11 +34,10 @@ describe('[Core] Main validation method', () => {
     })
 
     const rules = {
-      first: { mustBeANum: type.num },
+      first: { mustBeANum: decimal },
       nested: {
         foo: { minLength: minLength(6) },
         bar: {
-          mustBeAnArray: type.arr,
           maxLength: maxLength(3),
         },
       },
@@ -54,12 +53,6 @@ describe('[Core] Main validation method', () => {
         expect(anyError.value).toBeTruthy()
         expect(e.nested.foo.errors.minLength).toBe('Value must be greater or equal to 6')
       })
-
-    // await run()
-    //   .catch((e) => {
-    //     expect($.anyError).toBeTruthy()
-    //     expect(e.nested.foo.errors.minLength).toBe('Value must be greater or equal to 6')
-    //   })
   })
 
   it('change rule parameters after defining useValidation', async () => {
@@ -99,35 +92,35 @@ describe('[Core] Main validation method', () => {
     }
   })
 
-  // it('manually add an error', async () => {
-  //   const { validate, errors, addError } = useValidation(reactive({
-  //     first: 5,
-  //     second: 10,
-  //   }), {
-  //     first: {
-  //       minLength: minLength(10),
-  //     },
-  //     second: {
-  //       required,
-  //     },
-  //   })
+  it('manually add an error', async () => {
+    const { validate, errors, addError } = useValidation(reactive({
+      first: 5,
+      second: 10,
+    }), {
+      first: {
+        minLength: minLength(10),
+      },
+      second: {
+        required,
+      },
+    })
 
-  //   await validate()
-  //     .catch(() => {
-  //       expect(errors.first.invalid).toBeTruthy()
-  //     })
+    await validate()
+      .catch(() => {
+        expect(errors.value.first.invalid).toBeTruthy()
+      })
 
-  //   const _errorKey = 'shouldFail'
-  //   const _errorMessage = 'This is a test error'
+    const _errorKey = 'shouldFail'
+    const _errorMessage = 'This is a test error'
 
-  //   addError('second', {
-  //     key: _errorKey,
-  //     message: _errorMessage,
-  //   })
+    addError('second', {
+      key: _errorKey,
+      message: _errorMessage,
+    })
 
-  //   expect(errors.second.invalid).toBeTruthy()
-  //   expect(errors.second.errors[_errorKey]).toBe(_errorMessage)
-  // })
+    expect(errors.value.second.invalid).toBeTruthy()
+    expect(errors.value.second.errors[_errorKey]).toBe(_errorMessage)
+  })
 
   it('submitting multiple times without change', async () => {
     const { validate, errors } = useValidation(reactive({
@@ -144,6 +137,9 @@ describe('[Core] Main validation method', () => {
         },
         "id": "first",
         "invalid": true,
+        "messages": [
+          "Value must be greater or equal to 1",
+        ],
         "value": 5,
       },
     }

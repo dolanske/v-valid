@@ -1,6 +1,6 @@
 import { expect, it } from 'vitest'
 import { computed, reactive } from 'vue-demi'
-import { $and, between, type, useValidation } from '../src'
+import { and, between, email, not, useValidation } from '../src'
 
 const form = reactive({
   first: 10,
@@ -8,7 +8,7 @@ const form = reactive({
 })
 
 const check = {
-  all: $and(type.num, between(2, 100)),
+  all: and(not(email), between(2, 100)),
 }
 
 it('[Helpers] and', () => {

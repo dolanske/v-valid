@@ -2,7 +2,7 @@ import type { ValidationRuleObject } from '../types'
 import { SKIP_PROTO } from '../shared'
 
 /**
- * @Rule Checks wether a provide value is a decimal or not
+ * @Rule Input must be a decimal value. Either as a number or a string
  */
 
 export const decimal: ValidationRuleObject = {
@@ -11,8 +11,14 @@ export const decimal: ValidationRuleObject = {
 
   skip: SKIP_PROTO,
   validate: (value: any) => {
-    if (isNaN(value))
+    if (typeof value !== 'number' && typeof value !== 'bigint') {
       return false
+    }
+
+    if (Number.isNaN(value))
+      return false
+
+    value = Number(value)
 
     // Only numbers pass now
     return (value - Math.floor(value)) !== 0

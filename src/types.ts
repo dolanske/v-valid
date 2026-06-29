@@ -1,8 +1,24 @@
 export interface ValidationError {
+  /**
+   * Form object property name
+   */
   id: string | null
+  /**
+   * Received value
+   */
   value: any
+  /**
+   * Status
+   */
   invalid: boolean
+  /**
+   * Errors object where the key is the name of the rule and the value is the error message
+   */
   errors: Record<string, string>
+  /**
+   * Flat array of error messages so it can be easily consumed by UI libraries
+   */
+  messages: string[]
 }
 
 export type Label = (value: any, args?: Record<string, unknown>) => string
@@ -23,8 +39,13 @@ export interface Rule {
 }
 
 export interface ValidationOptions {
-  // Perform validation on each value update
+  /**
+   * Performs validation whenever the form object updates
+   */
   proactive?: boolean
+  /**
+   * Clears errors on new input
+   */
   autoclear?: boolean
 }
 

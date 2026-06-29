@@ -1,6 +1,6 @@
 import { expect, it } from 'vitest'
 import { computed, reactive } from 'vue-demi'
-import { $validateIf, maxLength, minLength, useValidation } from '../src'
+import { maxLength, minLength, useValidation, validateIf } from '../src'
 import { isArray } from '../src/utils'
 
 // Prepare testing form
@@ -12,12 +12,12 @@ it('[Helpers] validateIf', () => {
       // If condition is met (in this example it is); the condition should
       // normally apply. There fore we expect the array to have length of at
       // least 5
-      minLength: $validateIf(true, minLength(5)),
+      minLength: validateIf(true, minLength(5)),
 
       // We can also provide a callback which must return a boolean. In this
       // case we're check if the field is an array and then applying a validator
       // for its length
-      maxLength: $validateIf(() => isArray(form.field), maxLength(1)),
+      maxLength: validateIf(() => isArray(form.field), maxLength(1)),
     },
   }))
 

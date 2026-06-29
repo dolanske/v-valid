@@ -11,7 +11,7 @@ import type {
 } from '../types'
 
 function createErrorObject() {
-  return { id: null, value: null, invalid: false, errors: {} }
+  return { id: null, value: null, invalid: false, errors: {}, messages: [] }
 }
 
 /**
@@ -75,9 +75,6 @@ export function useValidation<F extends Record<string, any>, R extends Partial<R
     resetErrorObject()
   }
 
-  // TODO
-  // Fully type rulesToOnlyValidate to only include actual available keys
-
   /**
    * Performs the form validation by running all user provided rules
    * against the form data.
@@ -122,6 +119,12 @@ export function useValidation<F extends Record<string, any>, R extends Partial<R
             anyError.value = true
             setDeep(errors.value, `${path}.invalid`, true)
             setDeep(errors.value, `${path}.errors.${ruleKey}`, label(value))
+
+            // Save errors as a flat array of messages so they can be consumed by VUI
+            const messagesPath = `${path}.messages`
+            const messages = getDeep(errors.value, messagesPath)
+            messages.push(label(value))
+            setDeep(errors.value, messagesPath, messages)
           }
         }
 

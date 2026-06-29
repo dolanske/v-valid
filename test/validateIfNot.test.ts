@@ -1,6 +1,7 @@
 import { expect, it } from 'vitest'
 import { computed, reactive } from 'vue-demi'
-import { $validateIfNot, minLength, type, useValidation } from '../src'
+import { minLength, useValidation, validateIfNot } from '../src'
+import { decimal } from '../src/validators/decimal'
 
 it('[Helpers] validateIfNot', () => {
   const form = reactive({
@@ -10,10 +11,10 @@ it('[Helpers] validateIfNot', () => {
 
   const rules = computed(() => ({
     first: {
-      shouldValidate: $validateIfNot(false, type.num),
+      shouldValidate: validateIfNot(false, decimal),
     },
     second: {
-      shouldNotValidate: $validateIfNot(
+      shouldNotValidate: validateIfNot(
         () => typeof form.first === 'number',
         minLength(2),
       ),

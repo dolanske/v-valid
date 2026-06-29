@@ -5,7 +5,7 @@ import { SKIP_PROTO, validateEntries } from '../shared'
  * @rule Value must pass every provided check
  * @param rules Single or multiple validation rules
  */
-function $and(...rules: ValidationRule[]): ValidationRule {
+function and(...rules: ValidationRule[]): ValidationRule {
   return {
     name: 'and-validator',
     __skip: false,
@@ -16,6 +16,6 @@ function $and(...rules: ValidationRule[]): ValidationRule {
   }
 }
 
-$and.skip = SKIP_PROTO
+and.skip = SKIP_PROTO
 
-export { $and }
+export { and }

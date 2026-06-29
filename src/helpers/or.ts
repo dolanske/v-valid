@@ -5,7 +5,7 @@ import { SKIP_PROTO, validateEntries } from '../shared'
  * @rule Value must pass at least one of the provided checks
  * @param rules Single or multiple validation rules
  */
-function $or(...rules: ValidationRule[]): ValidationRule {
+function or(...rules: ValidationRule[]): ValidationRule {
   return {
     name: 'or-validator',
     __skip: false,
@@ -16,6 +16,6 @@ function $or(...rules: ValidationRule[]): ValidationRule {
   }
 }
 
-$or.skip = SKIP_PROTO
+or.skip = SKIP_PROTO
 
-export { $or }
+export { or }

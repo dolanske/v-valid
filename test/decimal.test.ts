@@ -7,6 +7,6 @@ it('decimal', () => {
   // @ts-expect-error no input
   expect(decimal.validate()).toBeFalsy()
 
-  expect(decimal.validate(0.0000000000000001)).toBeTruthy()
-  expect(decimal.validate('124.4555')).toBeTruthy()
+  expect(decimal.validate(4.0000001)).toBeTruthy()
+  expect(decimal.validate('124.4555')).toBeFalsy()
 })

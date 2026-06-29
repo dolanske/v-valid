@@ -13,7 +13,7 @@ import { isNil } from '../utils'
  * @param validator Validation rule
  */
 
-export function $withLabel(message: string | Label, validator: ValidationRule): ValidationRule {
+export function withLabel(message: string | Label, validator: ValidationRule): ValidationRule {
   const { validate, __skip, name } = validator
 
   if (isNil(validate))

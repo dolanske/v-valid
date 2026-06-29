@@ -1,15 +1,15 @@
 import { expect, it } from 'vitest'
 import { computed, reactive } from 'vue-demi'
-import { $or, between, type, useValidation } from '../src'
+import { between, email, or, useValidation } from '../src'
 
 const form = reactive({
-  first: 10,
-  second: 200,
-  third: 'NONE OF THESE',
+  first: 'blumf@gmail.com',
+  second: 50,
+  third: 1,
 })
 
 const check = {
-  all: $or(type.num, between(2, 100)),
+  all: or(email, between(10, 100)),
 }
 
 it('[Helpers] or', () => {
@@ -19,14 +19,14 @@ it('[Helpers] or', () => {
     third: { ...check },
   }))
 
-  const { validate } = useValidation(form, rules)
+  const { validate, errors } = useValidation(form, rules)
 
-  validate().catch((e) => {
+  validate().catch(() => {
     // At least one of the checks passed
-    expect(e.first.invalid).toBeFalsy() // Is within range && number
-    expect(e.second.invalid).toBeFalsy() // is number
+    expect(errors.value.first.invalid).toBeFalsy() // Is email
+    expect(errors.value.second.invalid).toBeFalsy() // Is within the range
 
     // None passed
-    expect(e.third.invalid).toBeTruthy() // Is not number and not in range
+    expect(errors.value.third.invalid).toBeTruthy()
   })
 })

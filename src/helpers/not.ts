@@ -5,7 +5,7 @@ import { SKIP_PROTO, validateEntries } from '../shared'
  * @rule Value must fail the check or list of all provided checks
  * @param rules Single or multiple validation rules
  */
-function $not(...rules: ValidationRule[]): ValidationRule {
+function not(...rules: ValidationRule[]): ValidationRule {
   return {
     name: 'not-validator',
     __skip: false,
@@ -16,6 +16,6 @@ function $not(...rules: ValidationRule[]): ValidationRule {
   }
 }
 
-$not.skip = SKIP_PROTO()
+not.skip = SKIP_PROTO()
 
-export { $not }
+export { not }

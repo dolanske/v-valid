@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { computed, reactive } from 'vue-demi'
+import { reactive } from 'vue-demi'
 import { useValidation } from '../src/core/validate'
 import { between } from '../src/validators/between'
 
