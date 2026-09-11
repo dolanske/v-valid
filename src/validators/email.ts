@@ -1,24 +1,12 @@
-import { SKIP_PROTO } from '../shared'
+import { defineRule, skippable } from '../core/rule'
 import { emailRegex } from '../regex'
-import type { ValidationRuleObject } from '../types'
-import { isNil } from '../utils'
+import { isString } from '../utils'
 
 /**
- * @Rule Input must be a valid email address
+ * @rule Value must be a valid email address
  */
-
-export const email: ValidationRuleObject = {
-  __skip: false,
+export const email = skippable(defineRule({
   name: 'email',
-  skip: SKIP_PROTO,
-  validate: (value: string) => {
-    if (isNil(value))
-      return false
-
-    return emailRegex.test(value)
-  },
-  /* c8 ignore next 3 */
-  label: () => {
-    return 'Value must be in a valid email format'
-  },
-}
+  validate: value => isString(value) && emailRegex.test(value),
+  label: 'Value must be a valid email address',
+}))

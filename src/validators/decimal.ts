@@ -1,27 +1,11 @@
-import type { ValidationRuleObject } from '../types'
-import { SKIP_PROTO } from '../shared'
+import { defineRule, skippable } from '../core/rule'
+import { isNumber } from '../utils'
 
 /**
- * @Rule Input must be a decimal value. Either as a number or a string
+ * @rule Value must be a number with a fractional part
  */
-
-export const decimal: ValidationRuleObject = {
-  __skip: false,
+export const decimal = skippable(defineRule({
   name: 'decimal',
-
-  skip: SKIP_PROTO,
-  validate: (value: any) => {
-    if (typeof value !== 'number' && typeof value !== 'bigint') {
-      return false
-    }
-
-    if (Number.isNaN(value))
-      return false
-
-    value = Number(value)
-
-    // Only numbers pass now
-    return (value - Math.floor(value)) !== 0
-  },
-  label: () => 'Value must be an integer',
-}
+  validate: value => isNumber(value) && Number.isFinite(value) && !Number.isInteger(value),
+  label: 'Value must be a decimal number',
+}))

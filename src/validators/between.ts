@@ -1,39 +1,28 @@
-import type { Ref } from 'vue-demi'
-import { unref } from 'vue-demi'
-import { SKIP_PROTO } from '../shared'
-import { isDate, isNil } from '../utils'
+import type { MaybeRefOrGetter } from '../types'
+import { defineRule, skippableFactory } from '../core/rule'
+import { isDate, isNumber, toValue } from '../utils'
 
-/**
- * @Rule Checks if value is between the provided range
- * @param min Minimum value
- * @param max Maximum value
- */
+type Bound = number | Date
 
-function between(min: number | Date | Ref<number | Date>, max: number | Date | Ref<number | Date>) {
-  return {
-    __skip: false,
-    name: 'between',
-    validate: (value: any) => {
-      if (isNil(value))
-        return false
-
-      min = unref(min)
-      max = unref(max)
-
-      if (isDate(value)) {
-        min = min instanceof Date ? min.getTime() : new Date(min).getTime()
-        max = max instanceof Date ? max.getTime() : new Date(max).getTime()
-        value = value instanceof Date ? value.getTime() : new Date(value).getTime()
-      }
-
-      return value >= min && value <= max
-    },
-    label: () => {
-      return `Value must be between ${unref(min)} and ${unref(max)}`
-    },
-  }
+function toNumber(value: unknown): number {
+  if (isNumber(value))
+    return value
+  if (isDate(value))
+    return value.getTime()
+  return Number.NaN
 }
 
-between.skip = SKIP_PROTO
-
-export { between }
+/**
+ * @rule Value must be a number or Date within the range (inclusive)
+ * @param min Lower bound
+ * @param max Upper bound
+ */
+export const between = skippableFactory((min: MaybeRefOrGetter<Bound>, max: MaybeRefOrGetter<Bound>) => defineRule({
+  name: 'between',
+  params: () => ({ min: toValue(min), max: toValue(max) }),
+  validate: (value, { min, max }) => {
+    const num = toNumber(value)
+    return num >= toNumber(min) && num <= toNumber(max)
+  },
+  label: (_, { min, max }) => `Value must be between ${min} and ${max}`,
+}))

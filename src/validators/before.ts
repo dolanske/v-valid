@@ -1,33 +1,27 @@
-import type { MaybeRef } from 'vue-demi'
-import { unref } from 'vue-demi'
-import { SKIP_PROTO } from '../shared'
-import type { ValidationRule } from '../types'
-import { isDate, isNil } from '../utils'
+import type { MaybeRefOrGetter } from '../types'
+import { defineRule, skippableFactory } from '../core/rule'
+import { isDate, isNumber, isString, toValue } from '../utils'
 
 /**
- * @Rule Input must be a date before or at the provided rule
- * @param max maximum allowed value
+ * Timestamp of a Date, number or date string. `NaN` when it is not a date, so
+ * every comparison fails.
  */
-
-function before(max: MaybeRef<Date>) {
-  return {
-    name: 'before',
-    __skip: false,
-    validate: (value: Date) => {
-      if (isNil(value) || !isDate(value))
-        return false
-
-      return new Date(value) <= new Date(max = unref(max))
-    },
-    /* c8 ignore next 3 */
-    label: () => {
-      return `Date must be before or at ${unref(max)}`
-    },
-  } as ValidationRule
+export function toTime(value: unknown): number {
+  if (isDate(value))
+    return value.getTime()
+  if (isNumber(value) || isString(value))
+    return new Date(value).getTime()
+  return Number.NaN
 }
 
-before.skip = SKIP_PROTO
-
-export {
-  before,
-}
+/**
+ * @rule Value must be a date at or before `max`. Accepts Date objects,
+ * timestamps and date strings.
+ * @param max Latest allowed date
+ */
+export const before = skippableFactory((max: MaybeRefOrGetter<Date | number | string>) => defineRule({
+  name: 'before',
+  params: () => ({ max: toValue(max) }),
+  validate: (value, { max }) => toTime(value) <= toTime(max),
+  label: (_, { max }) => `Date must be at or before ${max}`,
+}))

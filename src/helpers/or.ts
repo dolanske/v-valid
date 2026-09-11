@@ -1,21 +1,21 @@
-import type { ValidationRule } from '../types'
-import { SKIP_PROTO, validateEntries } from '../shared'
+import type { MaybePromise, ValidationRule } from '../types'
+import { defineRule, runRule, skippableFactory } from '../core/rule'
+import { chain } from '../utils'
 
 /**
- * @rule Value must pass at least one of the provided checks
- * @param rules Single or multiple validation rules
+ * @rule Value must pass at least one of the provided rules. Rules run in order
+ * and stop at the first pass.
+ * @param rules Validation rules
  */
-function or(...rules: ValidationRule[]): ValidationRule {
-  return {
-    name: 'or-validator',
-    __skip: false,
-    validate: (value: any) => validateEntries(value, rules, 'some'),
-    label() {
-      return 'Value must pass some of the checks'
-    },
-  }
-}
-
-or.skip = SKIP_PROTO
-
-export { or }
+export const or = skippableFactory((...rules: ValidationRule[]) => defineRule({
+  name: 'or',
+  validate: (value) => {
+    const step = (index: number): MaybePromise<boolean> => {
+      if (index >= rules.length)
+        return false
+      return chain(runRule(rules[index], value), result => result === true ? true : step(index + 1))
+    }
+    return step(0)
+  },
+  label: 'Value must pass at least one of the checks',
+}))

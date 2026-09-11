@@ -1,161 +1,360 @@
-import { isRef, reactive, ref, unref, watch } from 'vue-demi'
-import type { ComputedRef } from 'vue-demi'
-import { getDeep, iterateIn, parsePath, setDeep } from '../utils'
+import { ref, shallowRef, triggerRef, watch } from 'vue'
+import type { Ref, ShallowRef } from 'vue'
 import type {
-  DeepKeys,
-  ReplacePrimitives,
-  Rule,
+  ErrorsFor,
+  MaybeRef,
+  MaybeRefOrGetter,
+  Path,
+  RuleGroup,
+  RulesFor,
   ValidationError,
   ValidationOptions,
   ValidationRule,
 } from '../types'
+import type { PathSegments } from '../utils'
+import { getIn, isArray, isNil, isPathPrefix, isPlainObject, isPromise, setIn, toSegments, toValue } from '../utils'
+import { isRule, runRule } from './rule'
 
-function createErrorObject() {
-  return { id: null, value: null, invalid: false, errors: {}, messages: [] }
+type ErrorTree = Record<string, any>
+
+function createErrorEntry(path: PathSegments, value: unknown): ValidationError {
+  return {
+    id: path[path.length - 1],
+    path: path.join('.'),
+    value,
+    invalid: false,
+    errors: {},
+    messages: [],
+  }
+}
+
+function isErrorEntry(node: unknown): node is ValidationError {
+  return isPlainObject(node) && isArray(node.messages) && 'invalid' in node
 }
 
 /**
- *
- * @param form Reactive object which will be validated
- * @param rules Object which includes rules appended to the keys which match the structure of the `form`
- *
- * Optionally, you can pass in an options object
- * - `proactive`: Boolean - perform validation on every form change
- * - `autoclear`: Boolean - reset changes on first input after validation
+ * Builds an error tree mirroring the form, with every leaf valid
  */
-export function useValidation<F extends Record<string, any>, R extends Partial<Record<keyof F, any>> | ComputedRef<Partial<Record<keyof F, any>>>>(
-  form: F,
-  rules: R,
-  options: ValidationOptions = {},
-) {
-  const { proactive = false, autoclear = false } = options
-  type Errors = ReplacePrimitives<F, ValidationError>
+function createErrorTree(form: unknown, path: PathSegments = []): ErrorTree {
+  const tree: ErrorTree = {}
+  if (!isPlainObject(form))
+    return tree
 
+  for (const key in form) {
+    const value = form[key]
+    const childPath = [...path, key]
+    tree[key] = isPlainObject(value)
+      ? createErrorTree(value, childPath)
+      : createErrorEntry(childPath, toValue(value))
+  }
+
+  return tree
+}
+
+/**
+ * Calls `callback` for every error entry in the tree
+ */
+function forEachEntry(tree: ErrorTree, callback: (entry: ValidationError, path: PathSegments) => void, path: PathSegments = []) {
+  for (const key in tree) {
+    const node = tree[key]
+    const childPath = [...path, key]
+    if (isErrorEntry(node))
+      callback(node, childPath)
+    else if (isPlainObject(node))
+      forEachEntry(node, callback, childPath)
+  }
+}
+
+/**
+ * Falsy entries are allowed in rule groups so rules can be left out
+ * conditionally, e.g. `{ email: form.needsEmail && email }`
+ */
+function isOmitted(node: unknown): node is undefined | null | false {
+  return isNil(node) || node === false
+}
+
+function isRuleGroup(node: unknown): node is RuleGroup {
+  if (isArray(node))
+    return true
+  if (!isPlainObject(node))
+    return false
+  for (const key in node) {
+    if (isRule(node[key]))
+      return true
+  }
+  return false
+}
+
+function invalidRule(path: PathSegments, node: unknown, expected: string) {
+  const got = isPromise(node) ? 'a Promise' : `type ${typeof node}`
+  return new TypeError(`[v-valid] Invalid rule at "${path.join('.')}": expected ${expected}, got ${got}`)
+}
+
+/**
+ * Calls `callback` for every rule group in the rules tree along with its path
+ */
+function forEachRuleGroup(rules: unknown, callback: (path: PathSegments, group: RuleGroup) => void, path: PathSegments = []) {
+  if (!isPlainObject(rules))
+    return
+
+  for (const key in rules) {
+    const node = rules[key]
+    const childPath = [...path, key]
+
+    if (isOmitted(node))
+      continue
+    if (isRuleGroup(node))
+      callback(childPath, node)
+    else if (isPlainObject(node))
+      forEachRuleGroup(node, callback, childPath)
+    else
+      throw invalidRule(childPath, node, 'a validation rule or nested rules')
+  }
+}
+
+/**
+ * Turns a rule group into an ordered list of `[key, rule]` pairs. Array items
+ * are keyed by rule name; duplicate names get their index appended.
+ */
+function normalizeGroup(group: RuleGroup, path: PathSegments): Array<[string, ValidationRule]> {
+  const entries: Array<[string, ValidationRule]> = []
+  const seen = new Set<string>()
+
+  const items: Array<[string, unknown]> = isArray(group)
+    ? group.map((rule, index) => [isRule(rule) ? rule.name : String(index), rule])
+    : Object.entries(group)
+
+  items.forEach(([name, rule], index) => {
+    if (isOmitted(rule))
+      return
+    if (!isRule(rule))
+      throw invalidRule([...path, name], rule, 'a validation rule')
+    const key = seen.has(name) ? `${name}${index}` : name
+    seen.add(key)
+    entries.push([key, rule])
+  })
+
+  return entries
+}
+
+/**
+ * Reads the parameters of every rule. Called inside a watcher so that refs
+ * and getters used by rules (`minLength(min)`, `sameAs(() => form.password)`,
+ * `validateIf(flag, ...)`) become reactive dependencies.
+ */
+function touchRuleParams(rules: unknown) {
+  forEachRuleGroup(rules, (_, group) => {
+    const items = isArray(group) ? group : Object.values(group)
+    for (const rule of items) {
+      if (isRule(rule))
+        rule.params?.()
+    }
+  })
+}
+
+async function validateEntry(entry: ValidationError, rules: Array<[string, ValidationRule]>, bail: boolean) {
+  const fail = (key: string, message: string) => {
+    entry.invalid = true
+    entry.errors[key] = message
+    entry.messages.push(message)
+  }
+
+  if (bail) {
+    for (const [key, rule] of rules) {
+      const result = await runRule(rule, entry.value)
+      if (result !== true) {
+        fail(key, result)
+        break
+      }
+    }
+    return
+  }
+
+  const results = await Promise.all(rules.map(([, rule]) => runRule(rule, entry.value)))
+  results.forEach((result, index) => {
+    if (result !== true)
+      fail(rules[index][0], result)
+  })
+}
+
+export interface ValidationContext<F extends object> {
+  /**
+   * Runs the rules against the form. Resolves with `true` when everything
+   * passed. Pass one or more field paths to validate only those fields; errors
+   * of the other fields are left untouched.
+   */
+  validate: (...paths: Path<F>[]) => Promise<boolean>
+  /**
+   * Clears every error and marks the form as not validated
+   */
+  reset: () => void
+  /**
+   * Adds an error to a field, for example one returned by a server
+   */
+  addError: (path: Path<F>, error: { key: string, message: string }) => void
+  /**
+   * Validation results, shaped like the form
+   */
+  errors: ShallowRef<ErrorsFor<F>>
+  /**
+   * Whether any field is currently invalid
+   */
+  anyError: Ref<boolean>
+  /**
+   * Whether a validation run is in progress
+   */
+  pending: Ref<boolean>
+  /**
+   * Whether `validate()` has completed since the last `reset()`
+   */
+  validated: Ref<boolean>
+}
+
+/**
+ * Creates a validation context for a form.
+ *
+ * @param form Reactive form object (or a ref to one)
+ * @param rules Rules shaped like the form. Can be a plain object, a ref, a
+ * computed or a getter. Refs and getters are re-read on every validation.
+ * @param options
+ * - `proactive` re-validate on every form change
+ * - `autoclear` clear errors on the first change after validation
+ * - `bail` stop at the first failing rule of each field
+ */
+export function useValidation<F extends object>(
+  form: Ref<F>,
+  rules: MaybeRefOrGetter<RulesFor<F>>,
+  options?: ValidationOptions,
+): ValidationContext<F>
+export function useValidation<F extends object>(
+  form: F,
+  rules: MaybeRefOrGetter<RulesFor<F>>,
+  options?: ValidationOptions,
+): ValidationContext<F>
+export function useValidation<F extends object>(
+  form: MaybeRef<F>,
+  rules: MaybeRefOrGetter<RulesFor<F>>,
+  options: ValidationOptions = {},
+): ValidationContext<F> {
+  const { proactive = false, autoclear = false, bail = false } = options
+
+  const errors = shallowRef(createErrorTree(toValue(form))) as ShallowRef<ErrorsFor<F>>
   const anyError = ref(false)
   const pending = ref(false)
-  const errors = ref({} as Errors)
+  const validated = ref(false)
 
-  // Internal state not meant to be available to the end user
-  const state = reactive({
-    didValidate: false,
-  })
+  // Incremented on every run and reset so that a slow, superseded validation
+  // never overwrites the results of a newer one
+  let runId = 0
 
   if (autoclear) {
     watch(form, () => {
-      if (state.didValidate)
+      if (validated.value)
         reset()
     }, { deep: true })
   }
   else if (proactive) {
     watch(form, () => validate(), { deep: true })
-
-    // In case rules object is a REF, we can expect it might update If
-    // it does, perform validation too
-    if (isRef(rules))
-      watch(rules, () => validate(), { deep: true })
+    watch(() => {
+      const current = toValue(rules)
+      touchRuleParams(current)
+      return current
+    }, () => validate(), { deep: true })
   }
 
-  // Initial assignment
-  reset()
-
-  function resetErrorObject() {
+  function reset() {
+    runId++
+    validated.value = false
     anyError.value = false
     pending.value = false
-
-    iterateIn(form, (_a, _b, path) => {
-      setDeep(errors.value, parsePath(path), createErrorObject())
-    })
+    errors.value = createErrorTree(toValue(form)) as ErrorsFor<F>
   }
 
-  /**
-   * Resets the validation object
-   */
-  function reset() {
-    state.didValidate = false
-    resetErrorObject()
-  }
-
-  /**
-   * Performs the form validation by running all user provided rules
-   * against the form data.
-   * @returns Promise which resolves with the validation results
-   */
-  async function validate(...rulesToOnlyValidate: string[]) {
-    reset()
+  async function validate(...paths: Path<F>[]): Promise<boolean> {
+    const run = ++runId
     pending.value = true
 
-    // eslint-disable-next-line no-async-promise-executor
-    return new Promise<Errors>(async (resolve, reject) => {
-      await iterateIn(form, async (key, value, path) => {
-        path = parsePath(path)
+    const formValue = toValue(form)
+    const selectors = paths.map(toSegments)
+    const isSelected = (path: PathSegments) =>
+      selectors.length === 0 || selectors.some(selector => isPathPrefix(selector, path))
 
-        // Create an errors object following the structure of the form
-        setDeep(errors.value, path, createErrorObject())
+    const tree = createErrorTree(formValue)
 
-        // Get all rules for an object
-        const _rules = unref(rules)
-        // Get the specific rules for the current form Key
-        const pathRules: Rule = getDeep(_rules, path)
-
-        if (!pathRules)
-          return Promise.resolve()
-
-        // Iterate over available rules for a key and perform validation
-        for (const [ruleKey, ruleData] of Object.entries(pathRules)) {
-          if (rulesToOnlyValidate.length > 0 && !rulesToOnlyValidate.includes(ruleKey))
-            continue
-
-          const { label, validate, __skip }: ValidationRule = ruleData
-
-          if (__skip)
-            continue
-
-          const passed = await validate(value)
-
-          setDeep(errors.value, `${path}.id`, key)
-          setDeep(errors.value, `${path}.value`, value)
-
-          if (!passed) {
-            anyError.value = true
-            setDeep(errors.value, `${path}.invalid`, true)
-            setDeep(errors.value, `${path}.errors.${ruleKey}`, label(value))
-
-            // Save errors as a flat array of messages so they can be consumed by VUI
-            const messagesPath = `${path}.messages`
-            const messages = getDeep(errors.value, messagesPath)
-            messages.push(label(value))
-            setDeep(errors.value, messagesPath, messages)
-          }
-        }
-
-        return Promise.resolve()
+    // Partial validation keeps the previous results of unselected fields
+    if (selectors.length > 0) {
+      forEachEntry(errors.value, (entry, path) => {
+        if (!isSelected(path))
+          setIn(tree, path, entry)
       })
+    }
 
-      pending.value = false
-      state.didValidate = true
+    const jobs: Promise<void>[] = []
 
-      // Expose errors object either way
-      if (anyError.value)
-        reject(errors.value)
-      else
-        resolve(errors.value as Errors)
+    forEachRuleGroup(toValue(rules), (path, group) => {
+      if (!isSelected(path))
+        return
+
+      const entry = createErrorEntry(path, toValue(getIn(formValue, path)))
+      setIn(tree, path, entry)
+      jobs.push(validateEntry(entry, normalizeGroup(group, path), bail))
     })
+
+    try {
+      await Promise.all(jobs)
+    }
+    finally {
+      if (run === runId)
+        pending.value = false
+    }
+
+    let valid = true
+    forEachEntry(tree, (entry) => {
+      if (entry.invalid)
+        valid = false
+    })
+
+    // A newer run or a reset happened while we were waiting
+    if (run !== runId)
+      return valid
+
+    errors.value = tree as ErrorsFor<F>
+    anyError.value = !valid
+    validated.value = true
+
+    return valid
   }
 
-  /**
-   * Appends a new error key and its message to the errors object.
-   */
-  function addError(path: DeepKeys<F>, error: { key: string, message: string }) {
-    setDeep(errors.value, `${path}.errors.${error.key}`, error.message)
-    setDeep(errors.value, `${path}.invalid`, true)
+  function addError(path: Path<F>, error: { key: string, message: string }) {
+    const segments = toSegments(path)
+    let entry = getIn(errors.value, segments)
+
+    if (!isErrorEntry(entry)) {
+      entry = createErrorEntry(segments, getIn(toValue(form), segments))
+      setIn(errors.value, segments, entry)
+    }
+
+    const previous = entry.errors[error.key]
+    if (previous !== undefined) {
+      const index = entry.messages.indexOf(previous)
+      if (index !== -1)
+        entry.messages.splice(index, 1)
+    }
+
+    entry.invalid = true
+    entry.errors[error.key] = error.message
+    entry.messages.push(error.message)
+    anyError.value = true
+    triggerRef(errors)
   }
 
   return {
-    reset,
     validate,
+    reset,
     addError,
     errors,
     anyError,
     pending,
+    validated,
   }
 }

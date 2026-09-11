@@ -1,29 +1,18 @@
-import type { Ref } from 'vue-demi'
-import { isRef } from 'vue-demi'
 import type { ValidationRule } from '../types'
-import { SKIP_PROTO } from '../shared'
-import { isBoolean, isFunction } from '../utils'
+import type { Condition } from './validateIf'
+import { conditional } from './validateIf'
 
 /**
- * @Rule Perform validation if provided condition is not met
- * @param condition Boolean or function returning boolean
+ * @rule Runs the rule only if the condition is not met
+ * @param condition Boolean, ref, getter or promise resolving to a boolean
  * @param rule Validation rule
+ *
+ * ```ts
+ * const rules = {
+ *   phone: { required: validateIfNot(() => form.email, required) },
+ * }
+ * ```
  */
-
-export function validateIfNot(condition: boolean | (() => boolean) | Ref<boolean> | Promise<boolean>, rule: ValidationRule): ValidationRule | Promise<ValidationRule> {
-  // Boolean
-  if (isBoolean(condition))
-    return condition ? SKIP_PROTO() : rule
-
-  // ref
-  if (isRef(condition))
-    return condition.value ? SKIP_PROTO() : rule
-
-  // Function returning boolean
-  if (isFunction(condition))
-    return condition() ? SKIP_PROTO() : rule
-
-  return condition.then((result) => {
-    return result ? SKIP_PROTO() : rule
-  })
+export function validateIfNot(condition: Condition, rule: ValidationRule): ValidationRule {
+  return conditional(condition, rule, false)
 }

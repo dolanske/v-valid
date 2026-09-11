@@ -1,47 +1,44 @@
 # TODO
 
-- [Core] [] Fix coverage
-- [Documentation] [] Review entire documentation
+- [Core] [ ] Array item validation (`items.*.name`), similar to vuelidate's `$each`
+- [Core] [ ] Per-field dirty / touched tracking
+- [Validators] [ ] `url` option to restrict allowed protocols (currently any absolute URL passes, including `javascript:`)
+- [Documentation] [ ] Review entire documentation
 
-## Done
+## Done in 4.0
+
+- [Core] [x] `validate()` resolves with a boolean instead of rejecting
+- [Core] [x] Rules-driven traversal, fields validated in parallel, single reactive write per run
+- [Core] [x] Partial validation keeps other fields' results, accepts parent paths
+- [Core] [x] `bail` option
+- [Core] [x] Rules accept getters, arrays, falsy entries; conditions evaluated lazily
+- [Core] [x] Superseded runs are discarded
+- [Core] [x] Fix deep path handling (4+ levels), Map/Set/Date fields, `required` on booleans
+- [Core] [x] Fix refs passed to validators being frozen after the first run
+- [Core] [x] `addError` updates `messages` and `anyError`
+- [Helpers] [x] `not` matches its documentation (passes only if every rule fails)
+- [Helpers] [x] `and` reports the failing rule's message
+- [Helpers] [x] `withLabel` callback receives rule params
+- [Helpers] [x] `optional`, `skip`
+- [Validators] [x] Rename `hasSpecialChars` to `noSpecialChars`
+- [Validators] [x] Remove unfinished `password`
+- [Build] [x] Drop vue-demi, fix `exports.types`, `sideEffects: false`
+- [Build] [x] Fix coverage (`@vitest/coverage-v8`)
+
+## Done before 4.0
 
 - [Label] [x] unref all values within label
 - [Validators] [x] Add tests for decimal
 - [Label] [x] Update error messages to follow the same rules
 - [Types] [x] Correctly type all functions
-- [Helpers] [x] Add a $ prefix to make them visually stand out
 - [Core] [x] Add tests for core
 - [Core] [x] Make it possible to use a simple object for rules
-- [Core] [x] Add tests for core
 - [Validators] [x] Check if there is more detailed regex for validating email address
 - [Core] [x] Pass parameters into `validate(...args)` to only validate part of the form
 - [Core] [x] Merge errors into state
-- [Helpers] [x] do() / test() should be able to perform validation outside of the
-  scope, essentially as shortening `method(params).validate(value)`
-- [Helpers] [x] async() - Implemented in defineRule
-- [Helpers] [x] validateIf()
-- [Helpers] [x] defineRule
-- [Validators] [x] isNum()
-- [Validators] [x] isUrl()
-- [Validators] [x] between() - number / date
-- [Validators] [x] match() - regex matching
-- [Helpers] [x] withLabel() accept callback function which will expose stuff
-  from useValidation.ts line 92
-- [Helpers] [x] skip() - when writing large forms, this would allow you to
-  quickly skip validation instead of commenting or whatever
-- [Helpers] [x] and()
-- [Helpers] [x] or()
-- [Helpers] [x] not() inverts the result
-- [Helpers] [x] validateIfNot()
-  validateIf(not(...rules))
-- [Types] [x] Allow passing any validator value as a ref (use unref())
-- [Core] [x] Validate nested params? ()
+- [Helpers] [x] validateIf(), validateIfNot(), and(), or(), not(), withLabel(), skip()
+- [Helpers] [x] defineRule / createRule / createRuleArg
+- [Validators] [x] url, between, match, minLength, maxLength, minLenNoSpace, maxLenNoSpace, contains, before, after
+- [Core] [x] Validate nested params
 - [Core] [x] Make error object form structure
-- [Validators] [x] minValue `<number | date>`
-- [Validators] [x] maxValue `<number | date>`
 - [Core] [x] Fix async validation timing out
-- [Validator] [x] minLenWithoutSpace()
-- [Validator] [x] maxLenWithoutSpace()
-- [Validator] [x] hasSpecialChars()
-- [Validator] [x] contains(...words | words[])
-- [Fix_Helpers] [x] defineRule does not properly type parameters (I did it tho)

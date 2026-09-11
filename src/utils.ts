@@ -1,158 +1,142 @@
-export function delay<T = any>(ms: number) {
-  return new Promise<T>(resolve => setTimeout(resolve, ms))
-}
+import { unref } from 'vue'
+import type { MaybePromise, MaybeRefOrGetter } from './types'
 
-export function parsePath(path: string) {
-  return path.trim().replace(' ', '.')
-}
-
-export async function iterateIn(
-  obj: Record<string, any>,
-  callback: (key: string, value: any, path: string) => Promise<void> | void,
-  path = '',
-): Promise<void> {
-  for (const key in obj) {
-    const newPath = `${path} ${key}`.trim()
-
-    if (isObject(obj[key]) && !(obj[key] instanceof Date))
-      await iterateIn(obj[key], callback, newPath)
-    else
-      await callback(key, obj[key], newPath)
-  }
-}
-
-export function iterateInSync(
-  obj: Record<string, any>,
-  callback: (key: string, value: any, path: string) => void,
-  path = '',
-) {
-  for (const key in obj) {
-    const newPath = `${path} ${key}`.trim()
-
-    if (isObject(obj[key]) && !(obj[key] instanceof Date))
-      iterateIn(obj[key], callback, newPath)
-    else
-      callback(key, obj[key], newPath)
-  }
-}
-
-export function isNil(value: any): value is undefined | null {
+export function isNil(value: unknown): value is undefined | null {
   return value === null || value === undefined
 }
 
-export function isBoolean(value: any): value is boolean {
-  return typeof value === 'boolean'
+export function isFunction(value: unknown): value is (...args: any[]) => any {
+  return typeof value === 'function'
 }
 
-export function isFunction(value: any): value is Function {
-  return typeof value === 'function' && value instanceof Function
+export function isNumber(value: unknown): value is number {
+  return typeof value === 'number'
 }
 
-export function isNumber(value: any): value is number {
-  return typeof value === 'number' || value instanceof Number
+export function isString(value: unknown): value is string {
+  return typeof value === 'string'
 }
 
-export function isDate(value: any): value is Date {
+export function isDate(value: unknown): value is Date {
   return value instanceof Date
 }
 
-export function isArray(value: any): value is any[] {
+export function isArray(value: unknown): value is any[] {
   return Array.isArray(value)
 }
 
-export function isString(value: any): value is string {
-  return typeof value === 'string' || value instanceof String
-}
-
-export function isEmpty(value: any) {
-  if (isNil(value))
-    return true
-
-  if ('length' in value)
-    return value.length <= 0
-
-  if ('size' in value)
-    return value.size <= 0
-
-  if (isObject(value))
-    return Object.keys(value).length <= 0
-
-  return true
-}
-
-export function isMap(value: any): value is Map<any, any> {
+export function isMap(value: unknown): value is Map<any, any> {
   return value instanceof Map
 }
 
-export function isObject(value: any): value is object {
-  return typeof value === 'object' && !isArray(value) && value !== null && !isFunction(value)
-}
-
-export function isSet(value: any): value is Set<any> {
+export function isSet(value: unknown): value is Set<any> {
   return value instanceof Set
 }
 
-// FIXME
-// keys in the same nesting get overwritten? or not saved at all?
-
-// Set deep value in an object at the provided path
-export function setDeep(obj: object, path: string, value: any) {
-  if (isNil(obj) || !isObject(obj))
-    return
-
-  // In case there are spaces, replace those with "."
-  path = parsePath(path.trim())
-  const segments = path.split('.')
-
-  let objectToUpdate = obj
-  const segLen = segments.length
-
-  if (segLen > 1) {
-    for (let i = 0; i < segLen; i++) {
-      const segment = segments[i]
-
-      if (segment.length === 0)
-        continue
-
-      const current = Reflect.get(objectToUpdate, segment)
-      // We are nesting deeper
-      if (isObject(current)) {
-        objectToUpdate = current
-      }
-      // Set the actual final value
-      else if (i === segLen - 1) {
-        Reflect.set(objectToUpdate, segment, value)
-        break
-      }
-      // We are creating the nesting
-      else if (current === undefined) {
-        Reflect.set(objectToUpdate, segment, {})
-        objectToUpdate = Reflect.get(objectToUpdate, segment)
-      }
-    }
-  }
-  else {
-    // Skip the whole iteration if key is 1 deep only
-    Reflect.set(objectToUpdate, segments[0], value)
-  }
+export function isPromise(value: unknown): value is Promise<any> {
+  return !isNil(value) && isFunction((value as any).then)
 }
 
-// Get deep object value at given path
-export function getDeep(obj: object, path: string): any {
-  if (isNil(obj) || !isObject(obj))
-    return
+/**
+ * Object literal (or `Object.create(null)`), including Vue reactive proxies of
+ * them. Class instances such as Date, Map, File... are not plain.
+ */
+export function isPlainObject(value: unknown): value is Record<string, any> {
+  if (typeof value !== 'object' || value === null)
+    return false
+  const proto = Object.getPrototypeOf(value)
+  return proto === Object.prototype || proto === null
+}
 
-  path = parsePath(path.trim())
-  const segments = path.split('.')
+/**
+ * Resolves a plain value, a ref or a getter to its current value
+ */
+export function toValue<T>(source: MaybeRefOrGetter<T>): T {
+  return isFunction(source) ? source() : unref(source)
+}
 
-  let returnValue = obj
+/**
+ * Number of items in a string, array, Map, Set or plain object. `NaN` for
+ * anything else so that every comparison against it fails.
+ */
+export function sizeOf(value: unknown): number {
+  if (isString(value) || isArray(value))
+    return value.length
+  if (isMap(value) || isSet(value))
+    return value.size
+  if (isPlainObject(value))
+    return Object.keys(value).length
+  return Number.NaN
+}
 
-  for (const segment of segments) {
-    // Skip empty strings
-    if (segment.length === 0)
-      continue
-    returnValue = Reflect.get(returnValue, segment)
+/**
+ * `true` for null, undefined, NaN, invalid dates, empty strings and empty
+ * collections. Numbers (including 0) and booleans are never empty.
+ */
+export function isEmpty(value: unknown): boolean {
+  if (isNil(value))
+    return true
+  if (isNumber(value))
+    return Number.isNaN(value)
+  if (isDate(value))
+    return Number.isNaN(value.getTime())
+  const size = sizeOf(value)
+  return Number.isNaN(size) ? false : size === 0
+}
+
+/**
+ * Applies `fn` to `value`, awaiting it first only if it is a promise. Keeps
+ * synchronous code paths synchronous.
+ */
+export function chain<T, R>(value: MaybePromise<T>, fn: (value: T) => MaybePromise<R>): MaybePromise<R> {
+  return isPromise(value) ? value.then(fn) : fn(value)
+}
+
+export type PathSegments = readonly string[]
+
+export function toSegments(path: string | PathSegments): PathSegments {
+  return isString(path) ? path.split('.') : path
+}
+
+/**
+ * Reads a nested value. Returns `undefined` if any segment is missing.
+ */
+export function getIn(obj: unknown, path: PathSegments): any {
+  let current: any = obj
+  for (const segment of path) {
+    if (isNil(current))
+      return undefined
+    current = current[segment]
+  }
+  return current
+}
+
+/**
+ * Writes a nested value, creating intermediate plain objects as needed.
+ */
+export function setIn(obj: Record<string, any>, path: PathSegments, value: unknown) {
+  let current = obj
+  const last = path.length - 1
+
+  for (let i = 0; i < last; i++) {
+    const segment = path[i]
+    if (!isPlainObject(current[segment]))
+      current[segment] = {}
+    current = current[segment]
   }
 
-  return returnValue
+  current[path[last]] = value
+}
+
+/**
+ * Whether `selector` is equal to or a parent of `path`
+ */
+export function isPathPrefix(selector: PathSegments, path: PathSegments) {
+  if (selector.length > path.length)
+    return false
+  for (let i = 0; i < selector.length; i++) {
+    if (selector[i] !== path[i])
+      return false
+  }
+  return true
 }

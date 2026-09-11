@@ -1,33 +1,23 @@
-import type { Ref } from 'vue-demi'
-import { unref } from 'vue-demi'
-import { SKIP_PROTO } from '../shared'
-import type { ValidationRule } from '../types'
+import type { MaybeRefOrGetter } from '../types'
+import { defineRule, skippableFactory } from '../core/rule'
+import { toValue } from '../utils'
 
 /**
- * @Rule Input must match the provided `compared` value, either by value or by type & value
- * @param compared The value we compare to the input
- * @param lenient Wether to compare values as == or === (default ===)
+ * @rule Value must equal `compared`. Pass a ref or getter to compare against
+ * another live form field.
+ * @param compared The value to compare against
+ * @param lenient Compare with `==` instead of `===`
+ *
+ * ```ts
+ * const rules = {
+ *   passwordRepeat: { sameAs: sameAs(() => form.password) },
+ * }
+ * ```
  */
-
-function sameAs(compared: any | Ref<any>, lenient = false): ValidationRule {
-  return {
-    name: 'sameAs',
-    __skip: false,
-    validate: (value: any) => {
-      compared = unref(compared)
-
-      return lenient
-        // eslint-disable-next-line eqeqeq
-        ? unref(value) == unref(compared)
-        : unref(value) === unref(compared)
-    },
-    /* c8 ignore next 3 */
-    label: () => {
-      return 'Values must be matching'
-    },
-  }
-}
-
-sameAs.skip = SKIP_PROTO
-
-export { sameAs }
+export const sameAs = skippableFactory((compared: MaybeRefOrGetter<unknown>, lenient = false) => defineRule({
+  name: 'sameAs',
+  params: () => ({ compared: toValue(compared) }),
+  // eslint-disable-next-line eqeqeq
+  validate: (value, { compared }) => lenient ? value == compared : value === compared,
+  label: 'Values must match',
+}))

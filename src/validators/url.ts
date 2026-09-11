@@ -1,27 +1,20 @@
-import { SKIP_PROTO } from '../shared'
-import type { ValidationRuleObject } from '../types'
-import { isNil } from '../utils'
+import { defineRule, skippable } from '../core/rule'
+import { isString } from '../utils'
 
 /**
- * @Rule Input must be a valid URL
+ * @rule Value must be an absolute URL
  */
-
-export const url: ValidationRuleObject = {
-  __skip: false,
+export const url = skippable(defineRule({
   name: 'url',
-  skip: SKIP_PROTO,
-  validate: (value: any) => {
-    if (isNil(value))
+  validate: (value) => {
+    if (!isString(value))
       return false
-
     try {
-      return new URL(value) instanceof URL
+      return Boolean(new URL(value))
     }
-    catch (e) {
+    catch {
       return false
     }
   },
-  label: () => {
-    return 'Value must be a valid URL'
-  },
-}
+  label: 'Value must be a valid URL',
+}))

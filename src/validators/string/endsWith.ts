@@ -1,37 +1,17 @@
-import type { Ref } from 'vue-demi'
-import { unref } from 'vue-demi'
-import { SKIP_PROTO } from '../../shared'
+import type { MaybeRefOrGetter } from '../../types'
+import { defineRule, skippableFactory } from '../../core/rule'
+import { isString, toValue } from '../../utils'
 
 /**
- * @Rule Checks wether a string ends with the provided value
- * @param str The checked value
- * @param position At which character index from the end  should the matching begin
+ * @rule Value must be a string ending with `search`
+ * @param search Expected suffix
+ * @param position Treat the value as if it were only this long
  */
-
-function endsWith(str: string | Ref<string>, position?: number) {
-  return {
-    __skip: false,
-    name: 'endsWith',
-
-    validate: (value: any) => {
-      str = unref(str)
-
-      if (!value || typeof value !== 'string')
-        return false
-
-      return value.endsWith(str, position)
-    },
-    label: (value: any) => {
-      if (typeof value !== 'string')
-        return `Value must be a string and end with '${unref(str)}'`
-
-      return `Value must end with '${unref(str)}'`
-    },
-  }
-}
-
-endsWith.skip = SKIP_PROTO
-
-export {
-  endsWith,
-}
+export const endsWith = skippableFactory((search: MaybeRefOrGetter<string>, position?: number) => defineRule({
+  name: 'endsWith',
+  params: () => ({ search: toValue(search), position }),
+  validate: (value, { search, position }) => isString(value) && value.endsWith(search, position),
+  label: (value, { search }) => isString(value)
+    ? `Value must end with '${search}'`
+    : 'Value must be a string',
+}))

@@ -1,33 +1,16 @@
-import type { MaybeRef } from 'vue-demi'
-import { unref } from 'vue-demi'
-import { SKIP_PROTO } from '../shared'
-import type { ValidationRule } from '../types'
-import { isDate, isNil } from '../utils'
+import type { MaybeRefOrGetter } from '../types'
+import { defineRule, skippableFactory } from '../core/rule'
+import { toValue } from '../utils'
+import { toTime } from './before'
 
 /**
- * @Rule Input must be a date after or at the provided rule
- * @param min Minimum allowed value
+ * @rule Value must be a date at or after `min`. Accepts Date objects,
+ * timestamps and date strings.
+ * @param min Earliest allowed date
  */
-
-function after(min: MaybeRef<Date>): ValidationRule {
-  return {
-    name: 'after',
-    __skip: false,
-    validate: (value: Date) => {
-      if (isNil(value) || !isDate(value))
-        return false
-
-      return new Date(value) >= new Date(unref(min))
-    },
-    /* c8 ignore next 3 */
-    label: () => {
-      return `Date must be after or at ${unref(min)}`
-    },
-  }
-}
-
-after.skip = SKIP_PROTO
-
-export {
-  after,
-}
+export const after = skippableFactory((min: MaybeRefOrGetter<Date | number | string>) => defineRule({
+  name: 'after',
+  params: () => ({ min: toValue(min) }),
+  validate: (value, { min }) => toTime(value) >= toTime(min),
+  label: (_, { min }) => `Date must be at or after ${min}`,
+}))

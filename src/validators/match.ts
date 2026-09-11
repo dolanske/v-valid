@@ -1,32 +1,23 @@
-import { SKIP_PROTO } from '../shared'
-import type { ValidationRule } from '../types'
-import { isNil } from '../utils'
+import type { MaybeRefOrGetter } from '../types'
+import { defineRule, skippableFactory } from '../core/rule'
+import { isString, toValue } from '../utils'
 
 /**
- * @Rule Input must pass the provided regex test
- * @param regex Regex validation rule
+ * @rule Value must match the regular expression
+ * @param regex Regular expression or pattern string
  */
-
-function match(regex: RegExp | string): ValidationRule {
-  const r = typeof regex === 'string' ? new RegExp(regex) : regex
-
-  return {
-    name: 'match',
-
-    __skip: false,
-    validate: (value: string) => {
-      if (isNil(value))
-        return false
-
-      return r.test(value)
-    },
-    /* c8 ignore next 3 */
-    label: () => {
-      return 'Value must match the provided rule.'
-    },
-  }
-}
-
-match.skip = SKIP_PROTO
-
-export { match }
+export const match = skippableFactory((regex: MaybeRefOrGetter<RegExp | string>) => defineRule({
+  name: 'match',
+  params: () => {
+    const pattern = toValue(regex)
+    return { regex: isString(pattern) ? new RegExp(pattern) : pattern }
+  },
+  validate: (value, { regex }) => {
+    if (!isString(value))
+      return false
+    // Reset stateful (global / sticky) expressions so repeated runs agree
+    regex.lastIndex = 0
+    return regex.test(value)
+  },
+  label: (_, { regex }) => `Value must match ${regex}`,
+}))

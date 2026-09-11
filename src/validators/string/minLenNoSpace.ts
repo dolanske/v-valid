@@ -1,39 +1,21 @@
-import type { Ref } from 'vue-demi'
-import { unref } from 'vue-demi'
-import { SKIP_PROTO } from '../../shared'
-import type { ValidationRule } from '../../types'
-import { noSpaceRegex } from '../../regex'
-import { isNil } from '../../utils'
+import type { MaybeRefOrGetter } from '../../types'
+import { defineRule, skippableFactory } from '../../core/rule'
+import { whitespaceRegex } from '../../regex'
+import { isString, toValue } from '../../utils'
 
-/**
- * @Rule Input must be a string and excluding spaces must be equal or greater to the provided min value
- * @param min Minimum allowed length
- */
-
-function minLenNoSpace(min: number | Ref<number>): ValidationRule {
-  return {
-    name: 'minLenNoSpace',
-
-    __skip: false,
-    validate: (value: string) => {
-      if (isNil(value) || typeof value !== 'string')
-        return false
-
-      min = unref(min)
-      const match = value.match(noSpaceRegex)
-
-      if (!match)
-        return false
-
-      return match.length >= min
-    },
-    /* c8 ignore next 3 */
-    label: () => {
-      return `Value must have minimal lenght of ${unref(min)} excluding spaces`
-    },
-  }
+export function lengthWithoutSpaces(value: string) {
+  return value.replace(whitespaceRegex, '').length
 }
 
-minLenNoSpace.skip = SKIP_PROTO
-
-export { minLenNoSpace }
+/**
+ * @rule Value must be a string with at least `min` non-whitespace characters
+ * @param min Minimum length excluding whitespace
+ */
+export const minLenNoSpace = skippableFactory((min: MaybeRefOrGetter<number>) => defineRule({
+  name: 'minLenNoSpace',
+  params: () => ({ min: toValue(min) }),
+  validate: (value, { min }) => isString(value) && lengthWithoutSpaces(value) >= min,
+  label: (value, { min }) => isString(value)
+    ? `Value must have a length of at least ${min} excluding spaces`
+    : 'Value must be a string',
+}))

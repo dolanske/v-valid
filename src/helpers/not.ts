@@ -1,21 +1,21 @@
-import type { ValidationRule } from '../types'
-import { SKIP_PROTO, validateEntries } from '../shared'
+import type { MaybePromise, ValidationRule } from '../types'
+import { defineRule, runRule, skippableFactory } from '../core/rule'
+import { chain } from '../utils'
 
 /**
- * @rule Value must fail the check or list of all provided checks
- * @param rules Single or multiple validation rules
+ * @rule Value must fail every provided rule. Rules run in order and stop at
+ * the first pass.
+ * @param rules Validation rules
  */
-function not(...rules: ValidationRule[]): ValidationRule {
-  return {
-    name: 'not-validator',
-    __skip: false,
-    validate: (value: any) => validateEntries(value, rules, 'none'),
-    label() {
-      return 'Value must pass none of the checks'
-    },
-  }
-}
-
-not.skip = SKIP_PROTO()
-
-export { not }
+export const not = skippableFactory((...rules: ValidationRule[]) => defineRule({
+  name: 'not',
+  validate: (value) => {
+    const step = (index: number): MaybePromise<boolean> => {
+      if (index >= rules.length)
+        return true
+      return chain(runRule(rules[index], value), result => result === true ? false : step(index + 1))
+    }
+    return step(0)
+  },
+  label: 'Value must pass none of the checks',
+}))

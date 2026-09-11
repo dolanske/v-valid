@@ -1,43 +1,28 @@
-import { unref } from 'vue-demi'
-import { SKIP_PROTO } from '../../shared'
-import type { ValidationRule } from '../../types'
-import { isNil } from '../../utils'
+import type { MaybeRefOrGetter } from '../../types'
+import { defineRule, skippableFactory } from '../../core/rule'
+import { isString, toValue } from '../../utils'
 
 /**
- * @Rule Checks wether string input contains certain words or characters
- * @param toInclude Word(s) or character(s) to check for
- * @param exact Should it split sentences into words or check against the entire string
+ * @rule Value must be a string containing every given word (case insensitive)
+ * @param words A word, a whitespace separated list of words, or an array of words
+ * @param exact Treat a string with spaces as a single phrase instead of splitting it into words
  */
-function contains(toInclude: string | string[], exact = false): ValidationRule {
-  return {
-    __skip: false,
-    name: 'contains',
-    validate: (value) => {
-      if (isNil(value) || typeof value !== 'string')
-        return false
-
-      // Split searched input into words
-      if (typeof toInclude === 'string')
-        toInclude = !exact ? toInclude.trim().split(/\s+/) : [toInclude]
-
-      return toInclude.every((s: string) => value.toLowerCase().includes(s.toLowerCase()))
-    },
-    label: (value: any) => {
-      toInclude = unref(toInclude)
-
-      // toInclude is either a string or an array of strings
-      const vals = typeof toInclude === 'string' ? toInclude : toInclude.join(', ')
-
-      if (typeof value !== 'string')
-        return `Value must be a string and contain <${vals}>`
-
-      return `Value must contain <${vals}>`
-    },
-  }
-}
-
-contains.skip = SKIP_PROTO
-
-export {
-  contains,
-}
+export const contains = skippableFactory((words: MaybeRefOrGetter<string | string[]>, exact = false) => defineRule({
+  name: 'contains',
+  params: () => {
+    const resolved = toValue(words)
+    const list = isString(resolved)
+      ? (exact ? [resolved] : resolved.trim().split(/\s+/))
+      : resolved
+    return { words: list.map(word => word.toLowerCase()) }
+  },
+  validate: (value, { words }) => {
+    if (!isString(value))
+      return false
+    const haystack = value.toLowerCase()
+    return words.every(word => haystack.includes(word))
+  },
+  label: (value, { words }) => isString(value)
+    ? `Value must contain <${words.join(', ')}>`
+    : 'Value must be a string',
+}))

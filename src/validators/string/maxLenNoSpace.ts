@@ -1,41 +1,17 @@
-import type { Ref } from 'vue-demi'
-import { unref } from 'vue-demi'
-import { SKIP_PROTO } from '../../shared'
-import type { ValidationRule } from '../../types'
-import { noSpaceRegex } from '../../regex'
-import { isNil } from '../../utils'
+import type { MaybeRefOrGetter } from '../../types'
+import { defineRule, skippableFactory } from '../../core/rule'
+import { isString, toValue } from '../../utils'
+import { lengthWithoutSpaces } from './minLenNoSpace'
 
 /**
- * @Rule Input must be a string and excluding spaces must be equal or lesser to the provided max value
- * @param max Maximum allowed length
+ * @rule Value must be a string with at most `max` non-whitespace characters
+ * @param max Maximum length excluding whitespace
  */
-
-function maxLenNoSpace(max: number | Ref<number>): ValidationRule {
-  return {
-    __skip: false,
-    name: 'maxLenNoSpace',
-
-    validate: (value: string) => {
-      if (isNil(value) || typeof value !== 'string')
-        return false
-
-      max = unref(max)
-      const match = value.match(noSpaceRegex)
-
-      if (!match)
-        return false
-
-      return match.length <= max
-    },
-    label: (value) => {
-      if (typeof value !== 'string')
-        return 'Value must be a string and '
-
-      return `Value must have maximal lenght of ${unref(max)} excluding spaces`
-    },
-  }
-}
-
-maxLenNoSpace.skip = SKIP_PROTO
-
-export { maxLenNoSpace }
+export const maxLenNoSpace = skippableFactory((max: MaybeRefOrGetter<number>) => defineRule({
+  name: 'maxLenNoSpace',
+  params: () => ({ max: toValue(max) }),
+  validate: (value, { max }) => isString(value) && lengthWithoutSpaces(value) <= max,
+  label: (value, { max }) => isString(value)
+    ? `Value must have a length of at most ${max} excluding spaces`
+    : 'Value must be a string',
+}))

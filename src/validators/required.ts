@@ -1,35 +1,13 @@
-import { SKIP_PROTO } from '../shared'
-import type { ValidationRuleObject } from '../types'
-import { isEmpty, isNil } from '../utils'
+import { defineRule, skippable } from '../core/rule'
+import { isEmpty } from '../utils'
 
 /**
- * @Rule Input must not be empty, null or undefined.
- * If input is number with value 0, it will return true as value was provided
+ * @rule Value must be present: not `null`, `undefined`, `NaN`, an invalid
+ * date, an empty string or an empty collection. `0` and `false` count as
+ * present.
  */
-
-export const required: ValidationRuleObject = {
-  __skip: false,
+export const required = skippable(defineRule({
   name: 'required',
-  skip: SKIP_PROTO,
-  validate: (value: any) => {
-    // If value is missing in general
-    if (isNil(value) || value === 'null' || value === 'undefined')
-      return false
-
-    // If value is string, check if length is > 0
-    if (typeof value === 'string')
-      return value.length > 0
-
-    // If number has passed the nil check and it is a number
-    // we can assume it is truthy, as idk how it would not be?
-    if (typeof value === 'number')
-      return true
-
-    // For the last check, we look into Arrays, Objects, Maps and Sets
-    return !isEmpty(value)
-  },
-  /* c8 ignore next 3 */
-  label: () => {
-    return 'Value is required'
-  },
-}
+  validate: value => !isEmpty(value),
+  label: 'Value is required',
+}))

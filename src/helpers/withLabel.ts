@@ -1,32 +1,24 @@
 import type { Label, ValidationRule } from '../types'
-import { isNil } from '../utils'
+import { chain, isString } from '../utils'
 
 /**
- *
- * Helper method which adds custom message to any validation.
+ * Replaces the error message of a rule.
  *
  * ```ts
- * minLength: withLabel("Too short!", minLength(10))
+ * minLength: withLabel('Too short!', minLength(10))
+ * between: withLabel((value, { min, max }) => `${value} is not between ${min} and ${max}`, between(5, 10))
  * ```
  *
- * @param message Custom message to display in the returned error
- * @param validator Validation rule
+ * @param message Message, or a callback receiving the value and the rule's parameters
+ * @param rule Validation rule
  */
-
-export function withLabel(message: string | Label, validator: ValidationRule): ValidationRule {
-  const { validate, __skip, name } = validator
-
-  if (isNil(validate))
-    throw new Error('[withLabel] Missing validator function')
-
+export function withLabel<P>(message: Label<P>, rule: ValidationRule<P>): ValidationRule<P> {
   return {
-    name,
-    __skip,
-    validate,
-    label: (args) => {
-      if (typeof message === 'string')
-        return message
-      return message(args)
-    },
+    name: rule.name,
+    params: rule.params,
+    skipped: rule.skipped,
+    // Messages returned by the wrapped rule are discarded in favour of ours
+    validate: value => chain(rule.validate(value), result => result === true),
+    label: (value, params) => isString(message) ? message : message(value, params),
   }
 }

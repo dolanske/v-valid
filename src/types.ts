@@ -1,76 +1,152 @@
+import type { Ref } from 'vue'
+
+export type MaybePromise<T> = T | Promise<T>
+export type MaybeRef<T> = T | Ref<T>
+export type MaybeRefOrGetter<T> = T | Ref<T> | (() => T)
+
+/**
+ * What a rule's `validate` may return.
+ *
+ * - `true` – the value passed
+ * - `false` – the value failed, the rule's `label` is used as the message
+ * - `string` – the value failed and the string is used as the message
+ */
+export type RuleResult = boolean | string
+
+/**
+ * Error message or a function producing it. Receives the validated value and
+ * the rule's resolved parameters (if it has any).
+ */
+export type Label<P = any> = string | ((value: any, params: P) => string)
+
+export interface ValidationRule<P = any> {
+  /**
+   * Rule name. Used as the error key when rules are provided as an array.
+   */
+  name: string
+  /**
+   * Runs the check. May be asynchronous.
+   */
+  validate: (value: any) => MaybePromise<RuleResult>
+  /**
+   * Produces the error message for a failed check.
+   */
+  label: (value: any, params: P) => string
+  /**
+   * Returns the rule's parameters with refs and getters resolved. Passed to
+   * `label` so messages can reflect live values, and read by the `proactive`
+   * watcher so that changing a parameter re-validates the form.
+   */
+  params: () => P
+  /**
+   * Skipped rules are never run and never produce errors.
+   */
+  skipped?: boolean
+}
+
+/**
+ * A rule without parameters. Call `.skip()` to get a skipped copy.
+ */
+export interface RuleObject<P = any> extends ValidationRule<P> {
+  skip: () => ValidationRule<P>
+}
+
+/**
+ * A rule with parameters. Call `.skip(...args)` to get a skipped copy.
+ */
+export type RuleFactory<A extends any[], P = any> = ((...args: A) => ValidationRule<P>) & {
+  skip: (...args: A) => ValidationRule<P>
+}
+
+/**
+ * A rule, or something falsy to leave out. Lets you write
+ * `{ email: form.needsEmail && email }` or spread conditionally.
+ */
+export type RuleEntry = ValidationRule | undefined | null | false
+
+/**
+ * The set of rules applied to a single form field. Either an object where the
+ * key becomes the error key, or an array where the rule's `name` is used.
+ */
+export type RuleGroup = Record<string, RuleEntry> | RuleEntry[]
+
 export interface ValidationError {
   /**
-   * Form object property name
+   * Form property name (last segment of `path`)
    */
-  id: string | null
+  id: string
   /**
-   * Received value
+   * Dot separated path of the field within the form
+   */
+  path: string
+  /**
+   * The value that was validated
    */
   value: any
   /**
-   * Status
+   * Whether any rule failed
    */
   invalid: boolean
   /**
-   * Errors object where the key is the name of the rule and the value is the error message
+   * Failed rules keyed by rule key, value is the message
    */
   errors: Record<string, string>
   /**
-   * Flat array of error messages so it can be easily consumed by UI libraries
+   * Flat list of messages in rule order, for easy consumption by UI libraries
    */
   messages: string[]
 }
 
-export type Label = (value: any, args?: Record<string, unknown>) => string
-
-export interface ValidationRule {
-  __skip: boolean
-  validate: (arg: any) => Promise<boolean> | boolean
-  label: Label
-  name: string
-}
-
-export interface ValidationRuleObject extends ValidationRule {
-  skip: () => void
-}
-
-export interface Rule {
-  [key: string]: ValidationRule
-}
-
 export interface ValidationOptions {
   /**
-   * Performs validation whenever the form object updates
+   * Re-run validation whenever the form (or rules) change
    */
   proactive?: boolean
   /**
-   * Clears errors on new input
+   * Clear all errors on the first form change after `validate()` ran
    */
   autoclear?: boolean
+  /**
+   * Stop at the first failing rule of each field instead of running them all.
+   * Rules run in definition order.
+   */
+  bail?: boolean
 }
 
-// Replaces all (even deeply nested) primitives with the provided object. Marks
-// the field as optional
-export type ReplacePrimitivesOptional<T, ReplaceWith> = T extends Record<string, unknown>
-  ? { [K in keyof T]?: ReplacePrimitivesOptional<T[K], ReplaceWith> }
-  : ReplaceWith
+/**
+ * Values that are validated as a whole rather than recursed into
+ */
+export type Leaf =
+  | string | number | boolean | bigint | symbol | null | undefined
+  | Date | RegExp | Map<any, any> | Set<any> | WeakMap<any, any> | WeakSet<any>
+  | readonly unknown[]
+  | ((...args: any[]) => any)
 
-// Replaces all (even deeply nested) primitives with the provided object
-export type ReplacePrimitives<T, ReplaceWith> = T extends Record<string, unknown>
-  ? { [K in keyof T]: ReplacePrimitives<T[K], ReplaceWith> }
-  : ReplaceWith
+/**
+ * Strips `null` and `undefined` from optional objects so they still map to
+ * nested rules / errors, but leaves fields typed as exactly `null` alone.
+ */
+type NonNil<T> = [NonNullable<T>] extends [never] ? T : NonNullable<T>
 
-// Type helpers for the nexty one -----vvvv
-type FixArr<T> = T extends readonly any[] ? Omit<T, Exclude<keyof any[], number>> : T
-type _DeepKeys<T> = T extends object ? (
-  { [K in (string | number) & keyof T]:
-        `${(
-            `.${K}` | (`${K}` extends `${number}` ? `[${K}]` : never)
-        )}${'' | _DeepKeys<FixArr<T[K]>>}` }[
-    (string | number) & keyof T]
-) : never
+/**
+ * Rules shaped like the form `T`. Every property is optional. A rule group can
+ * be attached to a nested object as well, in which case the object is
+ * validated as a single value.
+ */
+export type RulesFor<T> = T extends Leaf
+  ? RuleGroup
+  : RuleGroup | { [K in keyof T]?: RulesFor<NonNil<T[K]>> }
 
-type DropInitDot<T> = T extends `.${infer U}` ? U : T
+/**
+ * Error object shaped like the form `T`
+ */
+export type ErrorsFor<T> = T extends Leaf
+  ? ValidationError
+  : { [K in keyof T]-?: ErrorsFor<NonNil<T[K]>> }
 
-// Takes in an object and returns a union of all possible paths
-export type DeepKeys<T> = DropInitDot<_DeepKeys<FixArr<T>>>
+/**
+ * Union of every dot separated path in `T`, including intermediate objects
+ */
+export type Path<T> = T extends Leaf
+  ? never
+  : { [K in keyof T & string]: K | `${K}.${Path<NonNil<T[K]>>}` }[keyof T & string]

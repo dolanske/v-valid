@@ -1,5 +1,5 @@
 import { resolve } from 'node:path'
-import { defineConfig } from 'vite'
+import { defineConfig } from 'vitest/config'
 import dts from 'vite-plugin-dts'
 
 export default defineConfig({
@@ -11,7 +11,7 @@ export default defineConfig({
       fileName: 'v-valid',
     },
     rollupOptions: {
-      external: ['vue-demi'],
+      external: ['vue'],
     },
   },
   plugins: [
@@ -19,7 +19,11 @@ export default defineConfig({
       rollupTypes: true,
     }),
   ],
-  optimizeDeps: {
-    exclude: ['vue-demi'],
+  test: {
+    include: ['test/**/*.test.ts'],
+    coverage: {
+      provider: 'v8',
+      include: ['src/**'],
+    },
   },
 })

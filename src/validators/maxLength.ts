@@ -1,36 +1,15 @@
-import type { Ref } from 'vue-demi'
-import { unref } from 'vue-demi'
-import { SKIP_PROTO } from '../shared'
-import type { ValidationRule } from '../types'
-import { isMap, isNil, isObject, isSet } from '../utils'
+import type { MaybeRefOrGetter } from '../types'
+import { defineRule, skippableFactory } from '../core/rule'
+import { sizeOf, toValue } from '../utils'
 
 /**
- * @Rule Input must be equal or lesser than the provided amount
- * @param max Maximum allowed length the input must satisfy
+ * @rule Length of the value must be at most `max`. Works with strings,
+ * arrays, Maps, Sets and plain objects.
+ * @param max Maximum length
  */
-
-function maxLength(max: number | Ref<number>): ValidationRule {
-  return {
-    name: 'maxLength',
-    __skip: false,
-    validate: (value: string | Set<any> | Map<any, any> | any[] | object) => {
-      if (isNil(value))
-        return false
-      max = unref(max)
-      if (isSet(value) || isMap(value))
-        return value.size <= max
-      if (isObject(value))
-        return Object.keys(value).length <= max
-
-      return value.length <= max
-    },
-    /* c8 ignore next 3 */
-    label: () => {
-      return `Value must be lesser or equal to ${unref(max)}`
-    },
-  }
-}
-
-maxLength.skip = SKIP_PROTO
-
-export { maxLength }
+export const maxLength = skippableFactory((max: MaybeRefOrGetter<number>) => defineRule({
+  name: 'maxLength',
+  params: () => ({ max: toValue(max) }),
+  validate: (value, { max }) => sizeOf(value) <= max,
+  label: (_, { max }) => `Value must have a length of at most ${max}`,
+}))

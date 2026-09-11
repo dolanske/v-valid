@@ -1,30 +1,15 @@
-import type { ReplacePrimitivesOptional, ValidationRule, ValidationRuleObject } from '../types'
-import { isArray, iterateInSync, setDeep } from '../utils'
-
-type Rule = ValidationRule | ValidationRuleObject
-type DefineRuleType<T> = ReplacePrimitivesOptional<T, Record<string, Rule> | Array<Rule>>
+import type { RulesFor } from '../types'
 
 /**
- * Type safe helper to generating rules from form objects. Also allows array rule definition
+ * Type helper for writing rules against a form type. Returns the rules as-is.
  *
- * @param rules
- * @returns Rules to be used within the composable
+ * ```ts
+ * const rules = defineRules<typeof form>({
+ *   name: [required, maxLength(64)],
+ *   info: { contact: { required, email } },
+ * })
+ * ```
  */
-export function defineRules<F>(rules: DefineRuleType<F>): DefineRuleType<F> {
-  iterateInSync(rules, (_, value, path) => {
-    if (!isArray(value))
-      return
-
-    setDeep(rules, path, value.reduce((group, item, index) => {
-      if (item.name in group) {
-        Reflect.set(group, item.name + index, item)
-      }
-      else {
-        Reflect.set(group, item.name, item)
-      }
-      return group
-    }, {} as DefineRuleType<F>))
-  })
-
+export function defineRules<F extends object>(rules: RulesFor<F>): RulesFor<F> {
   return rules
 }
